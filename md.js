@@ -2,7 +2,7 @@
 // (c) 2012 Alasdair Mercer  
 // Freely distributable under the MIT license.  
 // Based on [Make.text](http://homepage.mac.com/tjim/) 1.5  
-// (c) Trevor Jim  
+// (c) 2007 Trevor Jim  
 // Licensed under the GPL Version 2 license.  
 // For all details and documentation:  
 // <http://neocotic.com/html.md>
@@ -13,11 +13,11 @@
   // -----------------
 
   var
-    // TODO: Comment
+    // Default configuration values.
     DEFAULT_CONFIG = {
       debug: false
     },
-    // TODO: Comment
+    // Replacement strings for special Markdown characters.
     REPLACEMENTS   = {
       '\\\\':              '\\\\',
       '\\[':               '\\[',
@@ -44,7 +44,7 @@
       '\u2013':            '--',
       '\u2014':            '---'
     },
-    // TODO: Comment
+    // Create regular expressions for all of the special Markdown characters.
     REGEX          = (function () {
       var result = {};
       for (var key in REPLACEMENTS) {
@@ -59,37 +59,39 @@
   // -----------------
 
   var
-    // TODO: Comment
+    // Indicate whether or not the parser is at the beginning of a new line.
     atLeft        = true,
-    // TODO: Comment
+    // Indicate whether or not the parser is at the beginning of an indentation.
     atNoWS        = true,
-    // TODO: Comment
+    // Indicate whether or not the parser in at the beginning of a paragraph.
     atP           = true,
-    // TODO: Comment
+    // String buffer containing the parsed Markdown.
     buffer        = '',
-    // TODO: Comment
+    // Configuration, default or customized.
     config        = {},
-    // TODO: Comment
+    // List of exceptions thrown while parsing the HTML.  
+    // This is only populated when debug mode is enabled.
     exceptions    = [],
-    // TODO: Comment
+    // Indicate whether or not the parser is within a `code` element.
     inCode        = false,
-    // TODO: Comment
+    // Indicate whether or not the parser is within a `pre` element.
     inPre         = false,
-    // TODO: Comment
+    // Indicate whether or not the parser is within an `ol` element.
     inOrderedList = false,
-    // TODO: Comment
+    // Markdown created from the last HTML parsed.
     last          = null,
-    // TODO: Comment
+    // Shortcut reference to append a new line.
     left          = '\n',
-    // TODO: Comment
+    // List of URLs for all previously parsed unique anchors.
     links         = [],
-    // TODO: Comment
+    // List of titles for all previously parsed unique anchors.
     linkTitles    = [],
     // Save the previous value of the `md` variable.
     previousMd    = window.md,
-    // TODO: Comment
+    // Map of anchor URLs to their corresponding reference index.
     rlinks        = {},
-    // TODO: Comment
+    // List of tag names that were not handled by the parser.  
+    // This is only populated when debug mode is enabled.
     unhandled     = {};
 
   // Try to ensure Node is available with the required constants.
@@ -100,19 +102,19 @@
   // Private functions
   // -----------------
 
-  // TODO: Comment
+  // Append `str` to the buffer string.
   function append(str) {
     if (last != null) buffer += last;
     last = str;
   }
 
-  // TODO: Comment
+  // Append a Markdown line break to the buffer string.
   function br() {
     append('  ' + left);
     atLeft = atNoWS = true;
   }
 
-  // TODO: Comment
+  // Prepare the parser for a `code` element.
   function code() {
     var old = inCode;
     inCode = true;
@@ -121,12 +123,12 @@
     };
   }
 
-  // TODO: Comment
-  function inCodeProc(str) {
+  // Replace any special characters that can cause problems within code.
+  function inCodeProcess(str) {
     return str.replace(/`/g, '\\`');
   }
 
-  // TODO: Comment
+  // Replace any special characters that can cause problems in normal Markdown.
   function nonPreProcess(str) {
     str = str.replace(/\n([ \t]*\n)+/g, '\n');
     str = str.replace(/\n[ \t]+/g, '\n');
@@ -139,7 +141,7 @@
     return str;
   }
 
-  // TODO: Comment
+  // Prepare the parser for an `ol` element.
   function ol() {
     var old = inOrderedList;
     inOrderedList = true;
@@ -148,29 +150,34 @@
     };
   }
 
-  // TODO: Comment
+  // Append `str` to the buffer string while keeping the parser in context.
   function output(str) {
     if (!str) return;
     if (!inPre) {
-      if (atNoWS) str = str.replace(/^[ \t\n]+/, '');
-      else if (/^[ \t]*\n/.test(str)) str = str.replace(/^[ \t\n]+/, '\n');
-      else str = str.replace(/^[ \t]+/, ' ');
+      if (atNoWS) {
+        str = str.replace(/^[ \t\n]+/, '');
+      } else if (/^[ \t]*\n/.test(str)) {
+        str = str.replace(/^[ \t\n]+/, '\n');
+      } else {
+        str = str.replace(/^[ \t]+/, ' ');
+      }
     }
     if (str === '') return;
-    atP = /\n\n$/.test(str);
+    atP    = /\n\n$/.test(str);
     atLeft = /\n$/.test(str);
     atNoWS = /[ \t\n]$/.test(str);
     append(str.replace(/\n/g, left));
   }
 
-  // TODO: Comment
+  // Create a function that can be called later to append `str` to the buffer
+  // string while keeping the parser in context.
   function outputLater(str) {
     return function () {
       output(str);
     };
   }
 
-  // TODO: Comment
+  // Append a Markdown paragraph to the buffer string.
   function p() {
     if (atP) return;
     if (!atLeft) {
@@ -181,7 +188,7 @@
     atNoWS = atP = true;
   }
 
-  // TODO: Comment
+  // Prepare the parser for a `pre` element.
   function pre() {
     var old = inPre;
     inPre = true;
@@ -190,7 +197,8 @@
     };
   }
 
-  // TODO: Comment
+  // Parse the specified element and append the generated Markdown to the buffer
+  // string.
   function process(e) {
     if (typeof getComputedStyle !== 'undefined') {
       try {
@@ -203,6 +211,8 @@
     if (e.nodeType === Node.ELEMENT_NODE) {
       var
         after        = null,
+        after1       = null,
+        after2       = null,
         skipChildren = false;
       try {
         switch (e.tagName) {
@@ -264,7 +274,7 @@
         case 'U':
           output('_');
           atNoWS = true;
-          after = outputLater('_');
+          after  = outputLater('_');
           break;
         case 'DT':
           p();
@@ -272,22 +282,22 @@
         case 'B':
           output('**');
           atNoWS = true;
-          after = outputLater('**');
+          after  = outputLater('**');
           break;
         case 'OL':
-          var r1 = pushLeft('    ');
-          var r2 = ol();
-          after = function () {
-            r1();
-            r2();
+          after1 = pushLeft('    ');
+          after2 = ol();
+          after  = function () {
+            after1();
+            after2();
           };
           break;
         case 'UL':
-          var r1 = pushLeft('    ');
-          var r2 = ul();
-          after = function () {
-            r1();
-            r2();
+          after1 = pushLeft('    ');
+          after2 = ul();
+          after  = function () {
+            after1();
+            after2();
           };
           break;
         case 'LI':
@@ -298,21 +308,21 @@
           }
           break;
         case 'PRE':
-          var r1 = pushLeft('    ');
-          var r2 = pre();
-          after = function () {
-            r1();
-            r2();
+          after1 = pushLeft('    ');
+          after2 = pre();
+          after  = function () {
+            after1();
+            after2();
           };
           break;
         case 'CODE':
           if (!inPre) {
             output('`');
-            var r1 = code();
-            var r2 = outputLater('`');
-            after = function () {
-              r1();
-              r2();
+            after1 = code();
+            after2 = outputLater('`');
+            after  = function () {
+              after1();
+              after2();
             };
           }
           break;
@@ -322,18 +332,18 @@
           break;
         case 'A':
           if (!e.href) break;
-          var n;
+          var index;
           if (rlinks[e.href]) {
-            n = rlinks[e.href];
+            index = rlinks[e.href];
           } else {
-            n = links.length;
-            links[n] = e.href;
-            rlinks[e.href] = n;
-            if (e.title) linkTitles[n] = e.title;
+            index = links.length;
+            links[index]   = e.href;
+            rlinks[e.href] = index;
+            if (e.title) linkTitles[index] = e.title;
           }
           output('[');
           atNoWS = true;
-          after = outputLater('][' + n + ']');
+          after  = outputLater('][' + index + ']');
           break;
         case 'IMG':
           skipChildren = true;
@@ -371,14 +381,14 @@
       if (inPre) {
         output(e.nodeValue);
       } else if (inCode) {
-        output(inCodeProc(e.nodeValue));
+        output(inCodeProcess(e.nodeValue));
       } else {
         output(nonPreProcess(e.nodeValue));
       }
     }
   }
 
-  // TODO: Comment
+  // Attach `str` to the start of the current line.
   function pushLeft(str) {
     var oldLeft = left;
     left += str;
@@ -394,19 +404,20 @@
     };
   }
 
-  // TODO: Comment
+  // Replace the left indent with `str`.
   function replaceLeft(str) {
     if (!atLeft) {
-      append(left.replace(/    $/, str));
+      append(left.replace(/[ ]{4}$/, str));
       atLeft = atNoWS = atP = true;
     } else if (last) {
-      last = last.replace(/    $/, str);
+      last = last.replace(/[ ]{4}$/, str);
     }
   }
 
-  // TODO: Comment
+  // Reset the variables used by the parser and configure it using the `options`
+  // provided.
   function resetAndConfigure(options) {
-    // Reset
+    // Reset necessary variables.
     atLeft        = true;
     atNoWS        = true;
     atP           = true;
@@ -421,7 +432,7 @@
     linkTitles    = [];
     rlinks        = {};
     unhandled     = {};
-    // Configure
+    // Configure html.md.
     if (typeof options !== 'object') options = {};
     for (var property in DEFAULT_CONFIG) {
       if (DEFAULT_CONFIG.hasOwnProperty(property)) {
@@ -434,12 +445,12 @@
     }
   }
 
-  // TODO: Comment
+  // Log the exception and the corresponding message if debug mode is enabled.
   function thrown(exception, message) {
     if (config.debug) exceptions.push(message + ': ' + exception);
   }
 
-  // TODO: Comment
+  // Prepare the parser for a `ul` element.
   function ul() {
     var old = inOrderedList;
     inOrderedList = false;

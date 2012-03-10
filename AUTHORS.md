@@ -1,4 +1,4 @@
 # Authors ordered by first contribution
 
-* Trevor Jim
+* Trevor Jim <trever@research.att.com>
 * Alasdair Mercer <mercer.alasdair@gmail.com>
