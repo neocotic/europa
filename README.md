@@ -15,6 +15,12 @@
 md(html[, options])
 ```
 
+## Configuration
+
+``` javascript
+options.debug = true
+```
+
 ## Miscellaneous
 
 ``` javascript
