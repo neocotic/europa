@@ -61,7 +61,8 @@
   var
     // Indicate whether or not the parser is at the beginning of a new line.
     atLeft        = true,
-    // Indicate whether or not the parser is at the beginning of an indentation.
+    // Indicate whether or not the parser is at the beginning of an
+    // indentation.
     atNoWS        = true,
     // Indicate whether or not the parser in at the beginning of a paragraph.
     atP           = true,
@@ -197,13 +198,16 @@
     };
   }
 
-  // Parse the specified element and append the generated Markdown to the buffer
-  // string.
+  // Parse the specified element and append the generated Markdown to the
+  // buffer string.
   function process(e) {
     if (typeof getComputedStyle !== 'undefined') {
       try {
         var style = getComputedStyle(e, null);
-        if (style && style.getPropertyValue && style.getPropertyValue('display') === 'none') return;
+        if (style && style.getPropertyValue &&
+            style.getPropertyValue('display') === 'none') {
+          return;
+        }
       } catch (ex) {
         thrown(ex, 'getComputedStyle');
       }
@@ -216,18 +220,33 @@
         skipChildren = false;
       try {
         switch (e.tagName) {
+        case 'APPLET':
+        case 'AREA':
+        case 'AUDIO':
+        case 'BUTTON':
+        case 'CANVAS':
+        case 'COMMAND':
+        case 'DATALIST':
+        case 'EMBED':
         case 'HEAD':
-        case 'STYLE':
+        case 'INPUT':
+        case 'KEYGEN':
+        case 'MAP':
+        case 'MENU':
+        case 'METER':
+        case 'NOFRAMES':
+        case 'NOSCRIPT':
+        case 'OBJECT':
+        case 'OPTION':
+        case 'PARAM':
+        case 'PROGRESS':
         case 'SCRIPT':
         case 'SELECT':
-        case 'OPTION':
-        case 'NOSCRIPT':
-        case 'NOFRAMES':
-        case 'INPUT':
-        case 'BUTTON':
-        case 'SELECT':
+        case 'SOURCE':
+        case 'STYLE':
         case 'TEXTAREA':
-        case 'LABEL':
+        case 'TRACK':
+        case 'VIDEO':
           skipChildren = true;
           break;
         case 'BODY':
@@ -257,9 +276,25 @@
           p();
           output('###### ');
           break;
-        case 'P':
+        case 'ADDRESS':
+        case 'ARTICLE':
+        case 'ASIDE':
         case 'DIV':
+        case 'FOOTER':
+        case 'HEADER':
+        case 'P':
+        case 'SECTION':
           p();
+          break;
+        case 'DETAILS':
+          p();
+          if (e.getAttribute('open') == null) {
+            skipChildren = true;
+            var summary = e.getElementsByTagName('summary')[0];
+            if (summary) {
+              process(summary);
+            }
+          }
           break;
         case 'BR':
           br();
@@ -269,20 +304,28 @@
           output('--------------------------------');
           p();
           break;
+        case 'CITE':
+        case 'DFN':
         case 'EM':
         case 'I':
         case 'U':
+        case 'VAR':
           output('_');
           atNoWS = true;
           after  = outputLater('_');
           break;
         case 'DT':
           p();
-        case 'STRONG':
         case 'B':
+        case 'STRONG':
           output('**');
           atNoWS = true;
           after  = outputLater('**');
+          break;
+        case 'Q':
+          output('"');
+          atNoWS = true;
+          after  = outputLater('"');
           break;
         case 'OL':
           after1 = pushLeft('    ');
@@ -316,6 +359,8 @@
           };
           break;
         case 'CODE':
+        case 'KBD':
+        case 'SAMP':
           if (!inPre) {
             output('`');
             after1 = code();
@@ -326,8 +371,8 @@
             };
           }
           break;
-        case 'DD':
         case 'BLOCKQUOTE':
+        case 'DD':
           after = pushLeft('> ');
           break;
         case 'A':
@@ -350,8 +395,8 @@
           if (!e.src) break;
           output('![' + e.alt + '](' + e.src + ')');
           break;
-        case 'IFRAME':
         case 'FRAME':
+        case 'IFRAME':
           skipChildren = true;
           try {
             if (e.contentDocument && e.contentDocument.documentElement) {
@@ -414,8 +459,8 @@
     }
   }
 
-  // Reset the variables used by the parser and configure it using the `options`
-  // provided.
+  // Reset the variables used by the parser and configure it using the
+  // `options` provided.
   function resetAndConfigure(options) {
     // Reset necessary variables.
     atLeft        = true;
@@ -496,7 +541,7 @@
       if (exceptions.length) console.log(exceptions.join('\n'));
     }
     append('');
-    return buffer;
+    return buffer.trim();
   };
 
   // Public constants
