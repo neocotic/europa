@@ -1,4 +1,5 @@
-# OS generated files #
+npm_modules/
+
 .DS_Store?
 ehthumbs.db
 Icon?

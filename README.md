@@ -47,7 +47,7 @@ visit the project's homepage;
 
 http://neocotic.com/html.md
 
-[@neocotic]: https://twitter.com/#!/neocotic
+[@neocotic]: https://twitter.com/neocotic
 [html]: http://en.wikipedia.org/wiki/HTML
 [html.md]: http://neocotic.com/html.md
 [markdown]: http://en.wikipedia.org/wiki/Markdown
