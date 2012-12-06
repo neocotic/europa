@@ -12,8 +12,8 @@
 
 # Default option values.
 DEFAULT_OPTIONS = debug: off
-# Save the previous value of the `md` variable.
-PREVIOUS_MD = window.md
+# Save the previous value of the global `md` variable.
+PREVIOUS_MD = @md
 # Replacement strings for special Markdown characters.
 REPLACEMENTS =
   '\\\\':              '\\\\'
@@ -90,8 +90,15 @@ REGEX = (
   result
 )
 
+# Create a DOM for NodeJS environment.
+win = window ? null
+unless window?
+  jsdom = require 'jsdom'
+  doc = jsdom.jsdom null, null, features: FetchExternalResources: no
+  win = doc.createWindow()
+
 # Try to ensure Node is available with the required constants.
-Node = window.Node ? {}
+Node = win.Node ? {}
 Node.ELEMENT_NODE ?= 1
 Node.TEXT_NODE ?= 3
 
@@ -103,11 +110,14 @@ class HtmlParser
   constructor: (@html = '', @options = {}) ->
     @atLeft = @atNoWS = @atP = yes
     @buffer = ''
-    @exceptions = @links = @linkTitles = []
+    @exceptions = []
     @inCode = @inPre = @inOrderedList = @parsed = no
     @last = null
     @left = '\n'
-    @linkCache = @unhandled = {}
+    @links = []
+    @linkCache = {}
+    @linkTitles = []
+    @unhandled = {}
     @options = {} if typeof @options isnt 'object'
     for own key, defaultValue of DEFAULT_OPTIONS
       @options[key] = defaultValue unless @options.hasOwnProperty key
@@ -181,15 +191,15 @@ class HtmlParser
   parse: ->
     return '' unless @html
     return @buffer if @parsed
-    container = document.createElement 'div'
+    container = win.document.createElement 'div'
     if typeof @html is 'string'
       container.innerHTML = @html
     else
       container.appendChild @html
     @process container
-    @append '\n\n'
-    for link, i in @links
-      do (link, i) =>
+    if @links.length
+      @append '\n\n'
+      for link, i in @links
         title = if @linkTitles[i] then " \"#{@linkTitles[i]}\"\n" else '\n'
         @append "[#{i}]: #{link}#{title}" if link
     if @options.debug
@@ -201,7 +211,13 @@ class HtmlParser
         """
       else
         console.log 'No tags were ignored'
-      console.log @exceptions.join '\n' if @exceptions.length
+      if @exceptions.length
+        console.log """
+          Exceptions;
+          #{@exceptions.join '\n'}
+        """
+      else
+        console.log 'No exceptions were thrown'
     @append ''
     @parsed = yes
     @buffer = @buffer.trim()
@@ -215,9 +231,9 @@ class HtmlParser
   # Parse the specified element and append the generated Markdown to the buffer
   # string.
   process: (ele) ->
-    if getComputedStyle?
+    if win.getComputedStyle?
       try
-        style = getComputedStyle ele, null
+        style = win.getComputedStyle ele, null
         return if style?.getPropertyValue?('display') is 'none'
       catch err
         @thrown err, 'getComputedStyle'
@@ -354,8 +370,14 @@ class HtmlParser
 # -------------
 
 # Build the publicly exposed API.
-md = window.md = (html, options) ->
+@md = md = (html, options) ->
   new HtmlParser(html, options).parse()
+
+# Export `md` for NodeJS and CommonJS.
+if module?.exports
+  module.exports = md
+else if typeof define is 'function' and define.amd
+  define 'md', -> md
 
 # Public constants
 # ----------------
@@ -369,6 +391,6 @@ md.VERSION = '1.0.0'
 # Run html.md in *noConflict* mode, returning the `md` variable to its
 # previous owner.  
 # Returns a reference to `md`.
-md.noConflict = ->
-  window.md = PREVIOUS_MD
-  this
+md.noConflict = =>
+  @md = PREVIOUS_MD
+  md

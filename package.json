@@ -10,6 +10,9 @@
   "keywords"        : ["html", "markdown", "convert"],
   "repository"      : {"type"  : "git",
                        "url"   : "git://github.com/neocotic/html.md.git"},
+  "dependencies"    : {
+    "jsdom"         : "0.2.x"
+  },
   "devDependencies" : {
     "coffee-script" : "1.4.x",
     "docco"         : "0.4.x",
