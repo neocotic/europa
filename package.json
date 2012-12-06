@@ -1,5 +1,5 @@
 {
-  "name"            : "md",
+  "name"            : "html-md",
   "description"     : "JavaScript library for converting HTML in to valid Markdown",
   "version"         : "1.0.0",
   "homepage"        : "http://neocotic.com/html.md",
