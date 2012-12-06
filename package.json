@@ -27,11 +27,12 @@
       , "url": "git://github.com/neocotic/html.md.git"
     }
   , "dependencies": {
-    "jsdom": "0.2.x"
+      "coffee-script": "1.4.x"
+    , "jsdom": "0.2.x"
+    , "optparse": "1.0.x"
   }
   , "devDependencies": {
-      "coffee-script": "1.4.x"
-    , "docco": "0.4.x"
+      "docco": "0.4.x"
     , "tap": "0.3.x"
     , "uglify-js": "2.2.x"
   }
@@ -41,5 +42,8 @@
   , "scripts": {
     "test": "tap ./test"
   }
+  , "bin": {
+      "md": "./bin/md"
+    }
   , "main": "./lib/md"
 }

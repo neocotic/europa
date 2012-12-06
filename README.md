@@ -11,6 +11,14 @@
 
 [![Build Status](https://secure.travis-ci.org/neocotic/html.md.png)](http://travis-ci.org/neocotic/html.md)
 
+## Install
+
+Install from [npm][]:
+
+``` bash
+$ npm install html-md
+```
+
 ## Standard Usage
 
 ``` javascript
@@ -53,3 +61,4 @@ http://neocotic.com/html.md
 [html]: http://en.wikipedia.org/wiki/HTML
 [html.md]: http://neocotic.com/html.md
 [markdown]: http://en.wikipedia.org/wiki/Markdown
+[npm]: http://npmjs.org

@@ -1,0 +1,56 @@
+#!/usr/bin/env coffee
+
+# md [options] [ -e html | file.html ] [arguments]
+#
+# Convert HTML into valid Markdown
+
+fs       = require 'fs'
+md       = require '../lib/md'
+optparse = require 'optparse'
+path     = require 'path'
+
+R_HYPHEN_CAMEL = /-([a-z])/gi
+SWITCHES       = [
+  ['-d', '--debug',        'print additional debug information']
+  ['-e', '--eval',         'pass a string from the command line as input']
+  ['-h', '--help',         'display this help information']
+  ['-l', '--long-ext',     'use long extension for Markdown files']
+  ['-o', '--output [DIR]', 'set the output directory for converted Markdown']
+  ['-p', '--print',        'print out the converted Markdown']
+  ['-v', '--version',      'display the version number']
+]
+
+exit = (code = 0) ->
+  process.exit code
+
+toCamelCase = (str) ->
+  str.replace R_HYPHEN_CAMEL, (match, char) -> char.toUpperCase()
+
+options =
+  debug:   no
+  eval:    no
+  longExt: no
+  output:  process.cwd()
+  print:   no
+
+parser = new optparse.OptionParser SWITCHES
+parser.banner = 'md [options] [ -e html | file.html ] [arguments]'
+parser.on '*', (opt, val) ->
+  opt = toCamelCase opt
+  if typeof options[opt] is 'boolean'
+    options[opt] = not options[opt]
+  else if val?
+    options[opt] = val
+parser.on 'help', ->
+  console.log parser.toString()
+  exit()
+parser.on 'version', ->
+  console.log "html.md version #{md.VERSION}"
+  exit()
+
+parser.parse process.argv
+
+unless process.platform is 'win32'
+  process.on 'SIGTERM', -> exit()
+
+# TODO: Complete script
