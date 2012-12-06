@@ -1,4 +1,4 @@
-npm_modules/
+node_modules/
 npm-debug.log
 
 .DS_Store?
