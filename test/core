@@ -1,0 +1,6 @@
+#!/usr/bin/env coffee
+
+md = require '../lib/md'
+{test} = require 'tap'
+
+# TODO: Complete core tests

@@ -16,7 +16,14 @@
   "devDependencies" : {
     "coffee-script" : "1.4.x",
     "docco"         : "0.4.x",
+    "tap"           : "0.3.x",
     "uglify-js"     : "2.2.x"
+  },
+  "engines"         : {
+    "node"          : "*"
+  },
+  "scripts"         : {
+    "test"          : "tap ./test"
   },
   "main"            : "./lib/md"
 }

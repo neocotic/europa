@@ -9,6 +9,8 @@
 [html.md][] is a pure JavaScript library for converting [HTML][] in to valid
 [Markdown][].
 
+[![Build Status](https://secure.travis-ci.org/neocotic/html.md.png)](http://travis-ci.org/neocotic/html.md)
+
 ## Standard Usage
 
 ``` javascript
