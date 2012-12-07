@@ -11,11 +11,11 @@
 # -----------------
 
 # Default option values.
-DEFAULT_OPTIONS = debug: off
+DEFAULT_OPTIONS   = debug: off
 # Save the previous value of the global `md` variable.
-PREVIOUS_MD = @md
+PREVIOUS_MD       = @md
 # Replacement strings for special Markdown characters.
-REPLACEMENTS =
+REPLACEMENTS      =
   '\\\\':              '\\\\'
   '\\[':               '\\['
   '\\]':               '\\]'
@@ -72,7 +72,7 @@ R_IGNORE_CHILDREN = /// ^ (
   | VIDEO
 ) $ ///
 # Regular expression to identify elements to be parsed simply as paragraphs.
-R_PARAGRAPH_ONLY = /// ^ (
+R_PARAGRAPH_ONLY  = /// ^ (
     ADDRESS
   | ARTICLE
   | ASIDE
@@ -83,7 +83,7 @@ R_PARAGRAPH_ONLY = /// ^ (
   | SECTION
 ) $ ///
 # Create regular expressions for all of the special Markdown characters.
-REGEX = (
+REGEX             = (
   result = {}
   for own key, value of REPLACEMENTS
     result[key] = new RegExp key, 'g'
@@ -94,13 +94,13 @@ REGEX = (
 win = window ? null
 unless window?
   jsdom = require 'jsdom'
-  doc = jsdom.jsdom null, null, features: FetchExternalResources: no
-  win = doc.createWindow()
+  doc   = jsdom.jsdom null, null, features: FetchExternalResources: no
+  win   = doc.createWindow()
 
 # Try to ensure Node is available with the required constants.
 Node = win.Node ? {}
 Node.ELEMENT_NODE ?= 1
-Node.TEXT_NODE ?= 3
+Node.TEXT_NODE    ?= 3
 
 # Parses HTML code/elements into valid Markdown.
 # Elements are parsed recursively, meaning their children are also parsed.
@@ -108,24 +108,24 @@ class HtmlParser
 
   # Creates a new `HtmlParser` for the arguments provided.
   constructor: (@html = '', @options = {}) ->
-    @atLeft = @atNoWS = @atP = yes
-    @buffer = ''
+    @atLeft     = @atNoWS = @atP = yes
+    @buffer     = ''
     @exceptions = []
-    @inCode = @inPre = @inOrderedList = @parsed = no
-    @last = null
-    @left = '\n'
-    @links = []
-    @linkCache = {}
+    @inCode     = @inPre = @inOrderedList = @parsed = no
+    @last       = null
+    @left       = '\n'
+    @links      = []
+    @linkCache  = {}
     @linkTitles = []
-    @unhandled = {}
-    @options = {} if typeof @options isnt 'object'
+    @unhandled  = {}
+    @options    = {} if typeof @options isnt 'object'
     for own key, defaultValue of DEFAULT_OPTIONS
       @options[key] = defaultValue unless @options.hasOwnProperty key
 
   # Append `str` to the buffer string.
   append: (str) ->
     @buffer += @last if @last?
-    @last = str;
+    @last    = str;
 
   # Append a Markdown line break to the buffer string.
   br: ->
@@ -134,7 +134,7 @@ class HtmlParser
 
   # Prepare the parser for a `code` element.
   code: ->
-    old = @inCode
+    old     = @inCode
     @inCode = yes
     => @inCode = old
 
@@ -147,13 +147,12 @@ class HtmlParser
     str = str.replace /\n([ \t]*\n)+/g, '\n'
     str = str.replace /\n[ \t]+/g, '\n'
     str = str.replace /[ \t]+/g, ' '
-    for own key, value of REPLACEMENTS
-      str = str.replace REGEX[key], value
+    str = str.replace REGEX[key], value for own key, value of REPLACEMENTS
     str
 
   # Prepare the parser for an `ol` element.
   ol: ->
-    old = @inOrderedList
+    old            = @inOrderedList
     @inOrderedList = yes
     => @inOrderedList = old
 
@@ -168,7 +167,7 @@ class HtmlParser
       else
         str = str.replace /^[ \t]+/, ' '
     return if str is ''
-    @atP = /\n\n$/.test str
+    @atP    = /\n\n$/.test str
     @atLeft = /\n$/.test str
     @atNoWS = /[ \t\n]$/.test str
     @append str.replace /\n/g, @left
@@ -200,8 +199,8 @@ class HtmlParser
     if @links.length
       @append '\n\n'
       for link, i in @links
-        title = if @linkTitles[i] then " \"#{@linkTitles[i]}\"\n" else '\n'
-        @append "[#{i}]: #{link}#{title}" if link
+        title = if @linkTitles[i] then " \"#{@linkTitles[i]}\"" else ''
+        @append "[#{i}]: #{link}#{title}\n" if link
     if @options.debug
       unhandledTags = (tag for own tag of @unhandled).sort()
       if unhandledTags.length
@@ -224,7 +223,7 @@ class HtmlParser
 
   # Prepare the parser for a `pre` element.
   pre: ->
-    old = @inPre
+    old    = @inPre
     @inPre = yes
     => @inPre = old
 
@@ -255,7 +254,7 @@ class HtmlParser
               @p()
               unless ele.getAttribute('open')?
                 skipChildren = yes
-                summary = ele.getElementsByTagName('summary')[0]
+                summary      = ele.getElementsByTagName('summary')[0]
                 @process summary if summary
             when 'BR' then @br()
             when 'HR'
@@ -265,23 +264,23 @@ class HtmlParser
             when 'CITE', 'DFN', 'EM', 'I', 'U', 'VAR'
               @output '_'
               @atNoWS = yes
-              after = @outputLater '_'
+              after   = @outputLater '_'
             when 'DT', 'B', 'STRONG'
               @p() if ele.tagName is 'DT'
               @output '**'
               @atNoWS = yes
-              after = @outputLater '**'
+              after   = @outputLater '**'
             when 'Q'
               @output '"'
               @atNoWS = yes
-              after = @outputLater '"'
+              after   = @outputLater '"'
             when 'OL', 'PRE', 'UL'
               after1 = @pushLeft '    '
               after2 = switch ele.tagName
-                when 'OL' then @ol()
+                when 'OL'  then @ol()
                 when 'PRE' then @pre()
-                when 'UL' then @ul()
-              after = ->
+                when 'UL'  then @ul()
+              after  = ->
                 after1()
                 after2()
             when 'LI'
@@ -291,22 +290,22 @@ class HtmlParser
                 @output '`'
                 after1 = @code()
                 after2 = @outputLater '`'
-                after = ->
+                after  = ->
                   after1()
                   after2()
             when 'BLOCKQUOTE', 'DD' then after = @pushLeft '> '
             when 'A'
               break unless ele.href
               if @linkCache[ele.href]
-                index = @linkCache[ele.href]
+                index                = @linkCache[ele.href]
               else
-                index = @links.length
-                @links[index] = ele.href
+                index                = @links.length
+                @links[index]        = ele.href
                 @linkCache[ele.href] = index
-                @linkTitles[index] = ele.title if ele.title
+                @linkTitles[index]   = ele.title if ele.title
               @output '['
               @atNoWS = yes
-              after = @outputLater "][#{index}]"
+              after   = @outputLater "][#{index}]"
             when 'IMG'
               skipChildren = yes
               break unless ele.src
@@ -337,14 +336,14 @@ class HtmlParser
 
   # Attach `str` to the start of the current line.
   pushLeft: (str) ->
-    old = @left
+    old    = @left
     @left += str
     if @atP
       @append str
     else
       @p()
     =>
-      @left = old
+      @left   = old
       @atLeft = @atP = no
       @p()
 
@@ -354,7 +353,7 @@ class HtmlParser
       @append @left.replace /[ ]{4}$/, str
       @atLeft = @atNoWS = @atP = yes
     else if @last
-      @last = @last.replace /[ ]{4}$/, str
+      @last   = @last.replace /[ ]{4}$/, str
 
   # Log the exception and the corresponding message if debug mode is enabled.
   thrown: (exception, message) ->
@@ -362,7 +361,7 @@ class HtmlParser
 
   # Prepare the parser for a `ul` element.
   ul: ->
-    old = @inOrderedList
+    old            = @inOrderedList
     @inOrderedList = no
     => @inOrderedList = old
 
