@@ -262,7 +262,7 @@ string.</p>             </td>             <td class="code">               <div c
         <span class="nx">@thrown</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">tagName</span>
       <span class="nx">unless</span> <span class="nx">skipChildren</span>
         <span class="nx">@process</span> <span class="nx">childNode</span> <span class="k">for</span> <span class="nx">childNode</span> <span class="k">in</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">childNodes</span>
-      <span class="nx">after</span><span class="o">?</span><span class="p">()</span>
+      <span class="nx">after</span><span class="o">?</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span>
     <span class="k">else</span> <span class="k">if</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">nodeType</span> <span class="o">is</span> <span class="nx">Node</span><span class="p">.</span><span class="nx">TEXT_NODE</span>
       <span class="k">if</span> <span class="nx">@inPre</span>
         <span class="nx">@output</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">nodeValue</span>

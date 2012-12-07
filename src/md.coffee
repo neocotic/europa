@@ -326,7 +326,7 @@ class HtmlParser
         @thrown err, ele.tagName
       unless skipChildren
         @process childNode for childNode in ele.childNodes
-      after?()
+      after?.call this
     else if ele.nodeType is Node.TEXT_NODE
       if @inPre
         @output ele.nodeValue
