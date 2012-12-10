@@ -40,6 +40,11 @@ REPLACEMENTS      =
   '\u2026':            '...'
   '\u2013':            '--'
   '\u2014':            '---'
+# Regular expression to extract all `display` and `visibility` CSS properties
+# from an inline style attribute.
+R_HIDDEN_STYLES   = /(display|visibility)\s*:\s*[a-z]+/gi
+# Regular expression to check for *hidden* values of CSS properties.
+R_HIDDEN_VALUE    = /(none|hidden)\s*$/i
 # Regular expression to identify elements to be generally ignored along with
 # their children.
 R_IGNORE_CHILDREN = /// ^ (
@@ -142,6 +147,23 @@ class HtmlParser
   inCodeProcess: (str) ->
     str.replace /`/g, '\\`'
 
+  # Determine whether or not `ele` is visible based on its style.
+  isVisible: (ele) ->
+    properties = ele.attributes.style?.value?.match R_HIDDEN_STYLES
+    visible    = yes
+    if properties?
+      visible  = not R_HIDDEN_VALUE.test property for property in properties
+    if visible and win.getComputedStyle?
+      try
+        style  = win.getComputedStyle ele, null
+        if typeof style?.getPropertyValue is 'function'
+          display     = style.getPropertyValue 'display'
+          visibility  = style.getPropertyValue 'visibility'
+          visible     = display isnt 'none' and visibility isnt 'hidden'
+      catch err
+        @thrown err, 'getComputedStyle'
+    visible
+
   # Replace any special characters that can cause problems in normal Markdown.
   nonPreProcess: (str) ->
     str = str.replace /\n([ \t]*\n)+/g, '\n'
@@ -230,12 +252,7 @@ class HtmlParser
   # Parse the specified element and append the generated Markdown to the buffer
   # string.
   process: (ele) ->
-    if win.getComputedStyle?
-      try
-        style = win.getComputedStyle ele, null
-        return if style?.getPropertyValue?('display') is 'none'
-      catch err
-        @thrown err, 'getComputedStyle'
+    return unless @isVisible ele
     if ele.nodeType is Node.ELEMENT_NODE
       skipChildren = no
       try
