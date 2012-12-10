@@ -149,7 +149,7 @@ class HtmlParser
 
   # Determine whether or not `ele` is visible based on its style.
   isVisible: (ele) ->
-    properties = ele.attributes.style?.value?.match R_HIDDEN_STYLES
+    properties = ele.attributes?.style?.value?.match R_HIDDEN_STYLES
     visible    = yes
     if properties?
       visible  = not R_HIDDEN_VALUE.test property for property in properties
