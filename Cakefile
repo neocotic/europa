@@ -71,14 +71,17 @@ extractHeader = (code = '', r_comment, replacement) ->
   header
 
 finish = (header = '') ->
-  secs     = parseInt process.uptime()
-  mins     = parseInt secs / 60
-  secs    %= 60 if mins > 0
   message  = """
     #{header}
 
-    Total time: #{secs} second
+    Total time:
   """
+  time     = process.uptime()
+  secs     = parseInt time
+  mins     = parseInt secs / 60
+  secs    %= 60 if mins > 0
+  secs     = time.toFixed 3 if secs < 1
+  message += " #{secs} second"
   message += 's' if secs isnt 1
   if mins > 0
     message += " #{mins} minute"
