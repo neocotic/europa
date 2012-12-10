@@ -11,6 +11,9 @@
 
 [![Build Status](https://secure.travis-ci.org/neocotic/html.md.png)](http://travis-ci.org/neocotic/html.md)
 
+[html.md][] can be used normally in any browser as well as in the [node.js][]
+environment where it also provides a command line interface.
+
 ## Install
 
 Install from [npm][]:
@@ -19,24 +22,77 @@ Install from [npm][]:
 $ npm install html-md
 ```
 
-## Standard Usage
+## Usage
 
-``` javascript
-md(html[, options])
+```
+Usage: md [options] [ -e html | file.html ] [arguments]
+
+Options:
+  -d, --debug        print additional debug information
+  -e, --eval         pass a string from the command line as input
+  -h, --help         display this help information
+  -l, --long-ext     use long extension for Markdown files
+  -o, --output DIR   set the output directory for converted Markdown
+  -p, --print        print out the converted Markdown
+  -v, --version      display the version number
 ```
 
-## Configuration
+### Examples
 
-``` javascript
-options.debug = true
+Provide HTML to be converted and print it out into the terminal:
+
+``` bash
+$ md -ep "I <b>love</b> <a href='https://github.com/neocotic/html.md'>html.md</a>"
+I **love** [html.md][0]
+
+[0]: https://github.com/neocotic/html.md
 ```
 
-## Miscellaneous
+Convert HTML files and output them into another directory:
 
-``` javascript
-md.noConflict()
-md.VERSION
+``` bash
+$ md -o ./markdown ./html/*.html
 ```
+
+Convert all `.html` files in the current directory into `.markdown` files:
+
+``` bash
+$ md -l .
+```
+
+## Programmatically
+
+`md(html[, options])` is used primarily:
+
+``` html
+<script src="md.js"></script>
+<script>
+  var markdown = md(document.querySelector('.content'))
+  console.log(markdown)
+</script>
+```
+
+### Options
+
+The following options are recognised by this method (all of which are optional);
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>debug</td>
+    <td>Prepends additional debug information to the Markdown output</td>
+  </tr>
+</table>
+
+### Miscellaneous
+
+`md.noConflict()` returns `md` in a no-conflict state, reallocating the `md`
+global variable name to its previous owner, where possible.
+
+`md.VERSION` returns the current version.
 
 ## Bugs
 
@@ -61,4 +117,5 @@ http://neocotic.com/html.md
 [html]: http://en.wikipedia.org/wiki/HTML
 [html.md]: http://neocotic.com/html.md
 [markdown]: http://en.wikipedia.org/wiki/Markdown
+[node.js]: http://nodejs.org
 [npm]: http://npmjs.org

@@ -22,7 +22,7 @@ NOT_FOUND  = 'ENOENT'
 R_HIDDEN   = /^\.|~$/
 # Regular expression used to identify HTML files using common extensions.
 R_HTML_EXT = /\.s?html?$/i
-# 
+# Available options/switches.
 SWITCHES   = [
   ['-d', '--debug',      'print additional debug information']
   ['-e', '--eval',       'pass a string from the command line as input']
@@ -115,7 +115,8 @@ parseHtml = (file, input, base) ->
 # Parse the options provided at runtime.
 parseOptions = ->
   parser = new optparse.OptionParser SWITCHES
-  parser.banner = 'md [options] [ -e html | file.html ] [arguments]'
+  parser.banner = 'Usage: md [options] [ -e html | file.html ] [arguments]'
+  parser.options_title = 'Options:'
   rCamel = /-([a-z])/gi
   toCamelCase = (str) ->
     str.replace rCamel, (match, char) -> char.toUpperCase()
