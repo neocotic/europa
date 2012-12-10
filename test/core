@@ -1,6 +1,116 @@
 #!/usr/bin/env coffee
 
-md = require '../lib/md'
+fs     = require 'fs'
+md     = require '../lib/md'
+path   = require 'path'
 {test} = require 'tap'
 
-# TODO: Complete core tests
+# Helpers
+# -------
+
+loadFixture = (subPaths...) ->
+  fs.readFileSync(path.join 'fixtures', subPaths...).toString()
+
+spaces = (num = 1) ->
+  str  = ''
+  str += ' ' for i in [1..num]
+  str
+
+# Tests
+# -----
+
+test 'scaffolding', (t) ->
+  markdown = md loadFixture 'scaffolding.html'
+  t.equal markdown, """
+    summary
+
+    summary
+    details: visible
+
+    aside
+
+    address
+
+    section
+
+    nav
+
+    header
+
+    footer
+
+    article
+    hgroup
+  """
+  t.end()
+
+test 'text', (t) ->
+  markdown = md loadFixture 'text.html'
+  t.equal markdown, """
+    # h1
+
+    ## h2
+
+    ### h3
+
+    #### h4
+
+    ##### h5
+
+    ###### h6
+    span
+    _dfn_
+
+    "q"
+    _cite_
+    _em_
+    12:00:00
+    _var_
+    `samp`
+    _i_
+    **b**
+    sub
+    sup
+    small
+    **strong**
+    mark
+    ins
+    del
+    bdi
+    bdo
+    s
+    `kbd`
+    wbr
+    `code`
+    #{spaces 2}
+
+    ---
+
+    #{spaces 4}pre
+
+    > blockquote
+
+    **dt**
+
+    > dd
+  """
+  t.end()
+
+test 'visibility', (t) ->
+  markdown = md loadFixture 'visibility.html'
+  t.equal markdown, """
+    display-override: visible
+    visibility-override: visible
+  """
+  t.end()
+
+# TODO: Complete Tests
+# Primarily ensure all functionality is tested, including;
+# * Tabular data
+# * Forms
+# * Figures
+# * Links
+# * Special circumstances (e.g. bold italic links)
+# * Ignored elements (e.g. video, applet, object)
+#
+# Use http://joshduck.com/periodic-table.html as an entity coverage checklist

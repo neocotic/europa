@@ -49,14 +49,19 @@ their children.</p>             </td>             <td class="code">             
 <span class="sr">  | NOFRAMES</span>
 <span class="sr">  | NOSCRIPT</span>
 <span class="sr">  | OBJECT</span>
+<span class="sr">  | OPTGROUP</span>
 <span class="sr">  | OPTION</span>
 <span class="sr">  | PARAM</span>
 <span class="sr">  | PROGRESS</span>
+<span class="sr">  | RP</span>
+<span class="sr">  | RT</span>
+<span class="sr">  | RUBY</span>
 <span class="sr">  | SCRIPT</span>
 <span class="sr">  | SELECT</span>
 <span class="sr">  | SOURCE</span>
 <span class="sr">  | STYLE</span>
 <span class="sr">  | TEXTAREA</span>
+<span class="sr">  | TITLE</span>
 <span class="sr">  | TRACK</span>
 <span class="sr">  | VIDEO</span>
 <span class="sr">) $ ///</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Regular expression to identify elements to be parsed simply as paragraphs.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">R_PARAGRAPH_ONLY  = </span><span class="sr">///</span> <span class="sr">^ (</span>
@@ -64,8 +69,10 @@ their children.</p>             </td>             <td class="code">             
 <span class="sr">  | ARTICLE</span>
 <span class="sr">  | ASIDE</span>
 <span class="sr">  | DIV</span>
+<span class="sr">  | FIELDSET</span>
 <span class="sr">  | FOOTER</span>
 <span class="sr">  | HEADER</span>
+<span class="sr">  | NAV</span>
 <span class="sr">  | P</span>
 <span class="sr">  | SECTION</span>
 <span class="sr">) $ ///</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Create regular expressions for all of the special Markdown characters.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">REGEX             = </span><span class="p">(</span>
@@ -102,7 +109,8 @@ Elements are parsed recursively, meaning their children are also parsed.</p>    
     <span class="vi">@inCode = </span><span class="kc">yes</span>
     <span class="o">=&gt;</span> <span class="vi">@inCode = </span><span class="nx">old</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Replace any special characters that can cause problems within code.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">inCodeProcess: </span><span class="nf">(str) -&gt;</span>
     <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/`/g</span><span class="p">,</span> <span class="s">&#39;\\`&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Determine whether or not <code>ele</code> is visible based on its style.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">isVisible: </span><span class="nf">(ele) -&gt;</span>
-    <span class="nv">properties = </span><span class="nx">ele</span><span class="p">.</span><span class="nx">attributes</span><span class="o">?</span><span class="p">.</span><span class="nx">style</span><span class="o">?</span><span class="p">.</span><span class="nx">value</span><span class="o">?</span><span class="p">.</span><span class="nx">match</span> <span class="nx">R_HIDDEN_STYLES</span>
+    <span class="nv">style      = </span><span class="nx">ele</span><span class="p">.</span><span class="nx">getAttribute</span><span class="o">?</span> <span class="s">&#39;style&#39;</span>
+    <span class="nv">properties = </span><span class="nx">style</span><span class="o">?</span><span class="p">.</span><span class="nx">match</span> <span class="nx">R_HIDDEN_STYLES</span>
     <span class="nv">visible    = </span><span class="kc">yes</span>
     <span class="k">if</span> <span class="nx">properties</span><span class="o">?</span>
       <span class="nv">visible  = </span><span class="o">not</span> <span class="nx">R_HIDDEN_VALUE</span><span class="p">.</span><span class="nx">test</span> <span class="nx">property</span> <span class="k">for</span> <span class="nx">property</span> <span class="k">in</span> <span class="nx">properties</span>
@@ -198,14 +206,14 @@ string.</p>             </td>             <td class="code">               <div c
             <span class="k">when</span> <span class="s">&#39;BODY&#39;</span><span class="p">,</span> <span class="s">&#39;FORM&#39;</span> <span class="k">then</span> <span class="k">break</span>
             <span class="k">when</span> <span class="s">&#39;DETAILS&#39;</span>
               <span class="nx">@p</span><span class="p">()</span>
-              <span class="nx">unless</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s">&#39;open&#39;</span><span class="p">)</span><span class="o">?</span>
+              <span class="nx">unless</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">getAttribute</span> <span class="s">&#39;open&#39;</span>
                 <span class="nv">skipChildren = </span><span class="kc">yes</span>
                 <span class="nv">summary      = </span><span class="nx">ele</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s">&#39;summary&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="nx">@process</span> <span class="nx">summary</span> <span class="k">if</span> <span class="nx">summary</span>
             <span class="k">when</span> <span class="s">&#39;BR&#39;</span> <span class="k">then</span> <span class="nx">@br</span><span class="p">()</span>
             <span class="k">when</span> <span class="s">&#39;HR&#39;</span>
               <span class="nx">@p</span><span class="p">()</span>
-              <span class="nx">@output</span> <span class="s">&#39;--------------------------------&#39;</span>
+              <span class="nx">@output</span> <span class="s">&#39;---&#39;</span>
               <span class="nx">@p</span><span class="p">()</span>
             <span class="k">when</span> <span class="s">&#39;CITE&#39;</span><span class="p">,</span> <span class="s">&#39;DFN&#39;</span><span class="p">,</span> <span class="s">&#39;EM&#39;</span><span class="p">,</span> <span class="s">&#39;I&#39;</span><span class="p">,</span> <span class="s">&#39;U&#39;</span><span class="p">,</span> <span class="s">&#39;VAR&#39;</span>
               <span class="nx">@output</span> <span class="s">&#39;_&#39;</span>

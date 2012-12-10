@@ -65,14 +65,19 @@ R_IGNORE_CHILDREN = /// ^ (
   | NOFRAMES
   | NOSCRIPT
   | OBJECT
+  | OPTGROUP
   | OPTION
   | PARAM
   | PROGRESS
+  | RP
+  | RT
+  | RUBY
   | SCRIPT
   | SELECT
   | SOURCE
   | STYLE
   | TEXTAREA
+  | TITLE
   | TRACK
   | VIDEO
 ) $ ///
@@ -82,8 +87,10 @@ R_PARAGRAPH_ONLY  = /// ^ (
   | ARTICLE
   | ASIDE
   | DIV
+  | FIELDSET
   | FOOTER
   | HEADER
+  | NAV
   | P
   | SECTION
 ) $ ///
@@ -149,7 +156,8 @@ class HtmlParser
 
   # Determine whether or not `ele` is visible based on its style.
   isVisible: (ele) ->
-    properties = ele.attributes?.style?.value?.match R_HIDDEN_STYLES
+    style      = ele.getAttribute? 'style'
+    properties = style?.match R_HIDDEN_STYLES
     visible    = yes
     if properties?
       visible  = not R_HIDDEN_VALUE.test property for property in properties
@@ -269,14 +277,14 @@ class HtmlParser
             when 'BODY', 'FORM' then break
             when 'DETAILS'
               @p()
-              unless ele.getAttribute('open')?
+              unless ele.getAttribute 'open'
                 skipChildren = yes
                 summary      = ele.getElementsByTagName('summary')[0]
                 @process summary if summary
             when 'BR' then @br()
             when 'HR'
               @p()
-              @output '--------------------------------'
+              @output '---'
               @p()
             when 'CITE', 'DFN', 'EM', 'I', 'U', 'VAR'
               @output '_'
