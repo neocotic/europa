@@ -43,9 +43,7 @@ Provide HTML to be converted and print it out into the terminal:
 
 ``` bash
 $ md -ep "I <b>love</b> <a href='https://github.com/neocotic/html.md'>html.md</a>"
-I **love** [html.md][0]
-
-[0]: https://github.com/neocotic/html.md
+I **love** [html.md](https://github.com/neocotic/html.md)
 ```
 
 Convert HTML files and output them into another directory:
