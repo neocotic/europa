@@ -40,16 +40,11 @@ VERSION      = """
 
 existsSync = fs.existsSync or path.existsSync
 
-# TODO: Complete test fixtures execution
-
 cleanOutput = ->
   if existsSync OUTPUT_DIR
     for file in fs.readdirSync OUTPUT_DIR
       do (file) -> fs.unlinkSync path.join OUTPUT_DIR, file
     fs.rmdirSync OUTPUT_DIR
-
-createOutput = ->
-  fs.mkdirSync OUTPUT_DIR unless existsSync OUTPUT_DIR
 
 testFixture = (t, name) ->
   t.test name, (t) ->
@@ -68,11 +63,13 @@ testFixture = (t, name) ->
       t.equal markdown, md html
     exec "#{COMMAND} -p #{htmlPath}", (err, stdout) ->
       t.notOk err
-      t.equal stdout, md html
+      t.equal stdout, """
+        #{md html}
+
+      """
 
 testFixtures = ->
   test 'fixtures', (t) ->
-    createOutput()
     files = fs.readdirSync FIXTURES_DIR
     fixtures = (
       for file in files when HTML_EXT is path.extname file
@@ -80,29 +77,80 @@ testFixtures = ->
     )
     for fixture in fixtures
       do (fixture) -> testFixture t, fixture
-    cleanOutput()
+    t.tearDown cleanOutput
     t.end()
+
+testStdio = (t, expected) ->
+  (err, stdout) ->
+    t.notOk err
+    t.equal stdout, expected
+
+toFileUrl = (relativePath) ->
+  "file://#{toPathName relativePath}"
+
+toPathName = (relativePath) ->
+  pathName = path.resolve __dirname, '../lib', relativePath
+  pathName = pathName.replace ///\\///g, '/'
+  pathName = "/#{pathName}" if pathName[0] isnt '/'
+  pathName
 
 # Tests
 # -----
 
 testFixtures()
 
+test 'absolute', (t) ->
+  t.plan 6 * 2
+  exec "#{COMMAND} -ep \"<a href='mock'>anchor</a>\"", testStdio t, """
+    [anchor][0]
+
+    [0]: mock
+
+  """
+  exec "#{COMMAND} -ep \"<a href='/mock'>anchor</a>\"", testStdio t, """
+    [anchor][0]
+
+    [0]: /mock
+
+  """
+  exec "#{COMMAND} -epa \"<a href='mock'>anchor</a>\"", testStdio t, """
+    [anchor][0]
+
+    [0]: #{toFileUrl 'mock'}
+
+  """
+  exec "#{COMMAND} -epa \"<a href='/mock'>anchor</a>\"", testStdio t, """
+    [anchor][0]
+
+    [0]: #{toFileUrl '/mock'}
+
+  """
+  exec "#{COMMAND} -ep \"<img src='mock'>\"", testStdio t, """
+    ![](mock)
+
+  """
+  exec "#{COMMAND} -epa \"<img src='mock'>\"", testStdio t, """
+    ![](mock)
+
+  """
+
+test 'stdio', (t) ->
+  t.plan 2
+  exec "#{COMMAND} -ep \"<strong>strong</strong>\"", testStdio t, """
+    **strong**
+
+  """
+
 test 'usage', (t) ->
   testUsage = (err, stdout) ->
     t.notOk err
     t.equal stdout, USAGE
-  t.plan 3 * 2
-  exec COMMAND,             testUsage
-  exec "#{COMMAND} -h",     testUsage
-  exec "#{COMMAND} --help", testUsage
+  t.plan 2 * 2
+  exec COMMAND,         testUsage
+  exec "#{COMMAND} -h", testUsage
 
 test 'version', (t) ->
-  testVersion = (err, stdout) ->
+  t.plan 2
+  exec "#{COMMAND} -v", (err, stdout) ->
     t.notOk err
     t.equal stdout, VERSION
-  t.plan 2 * 2
-  exec "#{COMMAND} -v",        testVersion
-  exec "#{COMMAND} --version", testVersion
-
-# TODO: Complete tests

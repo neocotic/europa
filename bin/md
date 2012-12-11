@@ -106,7 +106,7 @@ parsePath = (source, topLevel, base) ->
 # Parse `input` and write it to a Markdown file, where appropriate.
 parseHtml = (file, input, base) ->
   try
-    output = md input, debug: opts.debug
+    output = md input, opts
     if opts.print
       console.log output
     else
