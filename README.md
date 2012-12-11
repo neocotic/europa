@@ -64,7 +64,7 @@ $ md -l .
 `md(html[, options])` is used primarily:
 
 ``` html
-<script src="md.js"></script>
+<script src="dist/md.min.js"></script>
 <script>
   var markdown = md(document.querySelector('.content'))
   console.log(markdown)
