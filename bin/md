@@ -24,6 +24,7 @@ R_HIDDEN   = /^\.|~$/
 R_HTML_EXT = /\.s?html?$/i
 # Available options/switches.
 SWITCHES   = [
+  ['-a', '--absolute',   'always use absolute URLs for links']
   ['-d', '--debug',      'print additional debug information']
   ['-e', '--eval',       'pass a string from the command line as input']
   ['-h', '--help',       'display this help information']
@@ -41,6 +42,7 @@ extension = '.md'
 # Options, including their defaults, possibly changed by flags passed in at
 # runtime.
 opts      =
+  absolute:  no
   arguments: []
   debug:     no
   eval:      no

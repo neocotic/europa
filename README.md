@@ -28,6 +28,7 @@ $ npm install html-md
 Usage: md [options] [ -e html | file.html ] [arguments]
 
 Options:
+  -a, --absolute     always use absolute URLs for links
   -d, --debug        print additional debug information
   -e, --eval         pass a string from the command line as input
   -h, --help         display this help information
@@ -78,6 +79,10 @@ The following options are recognised by this method (all of which are optional);
   <tr>
     <th>Property</th>
     <th>Description</th>
+  </tr>
+  <tr>
+    <td>absolute</td>
+    <td>All links are parsed with absolute URLs</td>
   </tr>
   <tr>
     <td>debug</td>

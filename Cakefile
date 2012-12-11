@@ -100,3 +100,12 @@ task 'docs', 'Create documentation', ->
   exec "docco -o #{DOCS_DIR} #{SRC_PATH}", (err) ->
     throw err if err
     finish 'Documentation created!'
+
+task 'test', 'Run test suite', ->
+  console.log 'Running tests...'
+  exec 'npm test', (err, stdout) ->
+    if stdout
+      console.log stdout
+      finish if err? then 'Tests failed!' else 'Tests completed!'
+    else if err?
+      throw err

@@ -11,7 +11,9 @@
 # -----------------
 
 # Default option values.
-DEFAULT_OPTIONS   = debug: off
+DEFAULT_OPTIONS   =
+  absolute: off
+  debug:    off
 # Save the previous value of the global `md` variable.
 PREVIOUS_MD       = @md
 # Replacement strings for special Markdown characters.
@@ -102,6 +104,9 @@ REGEX             = (
   result
 )
 
+# Environment Support
+# -------------------
+
 # Create a DOM for NodeJS environment.
 win = window ? null
 unless window?
@@ -113,6 +118,9 @@ unless window?
 Node = win.Node ? {}
 Node.ELEMENT_NODE ?= 1
 Node.TEXT_NODE    ?= 3
+
+# HTML Parser
+# -----------
 
 # Parses HTML code/elements into valid Markdown.
 # Elements are parsed recursively, meaning their children are also parsed.
@@ -127,8 +135,7 @@ class HtmlParser
     @last       = null
     @left       = '\n'
     @links      = []
-    @linkCache  = {}
-    @linkTitles = []
+    @linkMap    = {}
     @unhandled  = {}
     @options    = {} if typeof @options isnt 'object'
     for own key, defaultValue of DEFAULT_OPTIONS
@@ -137,7 +144,11 @@ class HtmlParser
   # Append `str` to the buffer string.
   append: (str) ->
     @buffer += @last if @last?
-    @last    = str;
+    @last    = str
+
+  # Access the value of `attribute` either directly or using `getAttribute`.
+  attr: (ele, attribute, direct = yes) ->
+    if direct then ele[attribute] else ele.getAttribute? attribute
 
   # Append a Markdown line break to the buffer string.
   br: ->
@@ -156,7 +167,7 @@ class HtmlParser
 
   # Determine whether or not `ele` is visible based on its style.
   isVisible: (ele) ->
-    style      = ele.getAttribute? 'style'
+    style      = @attr ele, 'style', no
     properties = style?.match R_HIDDEN_STYLES
     visible    = yes
     if properties?
@@ -228,9 +239,7 @@ class HtmlParser
     @process container
     if @links.length
       @append '\n\n'
-      for link, i in @links
-        title = if @linkTitles[i] then " \"#{@linkTitles[i]}\"" else ''
-        @append "[#{i}]: #{link}#{title}\n" if link
+      @append "[#{i}]: #{link}\n" for link, i in @links when link
     if @options.debug
       unhandledTags = (tag for own tag of @unhandled).sort()
       if unhandledTags.length
@@ -277,7 +286,7 @@ class HtmlParser
             when 'BODY', 'FORM' then break
             when 'DETAILS'
               @p()
-              unless ele.getAttribute 'open'
+              unless @attr ele, 'open', no
                 skipChildren = yes
                 summary      = ele.getElementsByTagName('summary')[0]
                 @process summary if summary
@@ -320,21 +329,23 @@ class HtmlParser
                   after2()
             when 'BLOCKQUOTE', 'DD' then after = @pushLeft '> '
             when 'A'
-              break unless ele.href
-              if @linkCache[ele.href]
-                index                = @linkCache[ele.href]
+              href  = @attr ele, 'href', @options.absolute
+              break unless href
+              title = @attr ele, 'title'
+              href += " \"#{title}\"" if title
+              if @linkMap[href]?
+                index          = @linkMap[href]
               else
-                index                = @links.length
-                @links[index]        = ele.href
-                @linkCache[ele.href] = index
-                @linkTitles[index]   = ele.title if ele.title
+                index          = @links.push(href) - 1
+                @linkMap[href] = index
               @output '['
               @atNoWS = yes
               after   = @outputLater "][#{index}]"
             when 'IMG'
               skipChildren = yes
-              break unless ele.src
-              @output "![#{ele.alt}](#{ele.src})"
+              src          = @attr ele, 'src', @options.absolute
+              break unless src
+              @output "![#{@attr ele, 'alt'}](#{src})"
             when 'FRAME', 'IFRAME'
               skipChildren = yes
               try

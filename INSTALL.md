@@ -10,7 +10,7 @@ Follow these steps to build [html.md][];
 4. For the compiled JavaScript `cd` to the repository directory and enter `cake build`
    * Outputs `md.js` to the `lib` directory
    * Outputs `md.min.js` (optimised version) to the `dist` directory
-5. To run the full test suite enter `npm test`
+5. To run the full test suite enter `cake test`
 6. To update the documentation enter `cake docs`
    * Outputs documentation to the `docs` directory
    * Not currently working on Windows as it uses linux shell commands

@@ -5,112 +5,72 @@ md     = require '../lib/md'
 path   = require 'path'
 {test} = require 'tap'
 
+# Constants
+# ---------
+
+ENCODING     = 'utf8'
+FIXTURES_DIR = 'fixtures'
+HTML_EXT     = '.html'
+
 # Helpers
 # -------
 
-loadFixture = (subPaths...) ->
-  fs.readFileSync(path.join 'fixtures', subPaths...).toString()
+testFixture = (t, name) ->
+  html     = fs.readFileSync path.join(FIXTURES_DIR, "#{name}.html"), ENCODING
+  markdown = fs.readFileSync path.join(FIXTURES_DIR, "#{name}.md"),   ENCODING
+  t.test name, (t) ->
+    t.equal md(html), markdown
+    t.end()
 
-spaces = (num = 1) ->
-  str  = ''
-  str += ' ' for i in [1..num]
-  str
+testFixtures = ->
+  test 'fixtures', (t) ->
+    files = fs.readdirSync FIXTURES_DIR
+    fixtures = (
+      for file in files when HTML_EXT is path.extname file
+        path.basename file, HTML_EXT
+    )
+    for fixture in fixtures
+      do (fixture) -> testFixture t, fixture
+    t.end()
+
+toFileUrl = (relativePath) ->
+  "file://#{toPathName relativePath}"
+
+toPathName = (relativePath) ->
+  pathName = path.resolve __dirname, '../lib', relativePath
+  pathName = pathName.replace ///\\///g, '/'
+  pathName = "/#{pathName}" if pathName[0] isnt '/'
+  pathName
 
 # Tests
 # -----
 
-test 'scaffolding', (t) ->
-  markdown = md loadFixture 'scaffolding.html'
-  t.equal markdown, """
-    summary
+testFixtures()
 
-    summary
-    details: visible
+test 'options', (t) ->
+  t.test 'absolute', (t) ->
+    o = absolute: on
+    t.equal md('<a href="mock">anchor</a>'), """
+      [anchor][0]
 
-    aside
+      [0]: mock
+    """
+    t.equal md('<a href="/mock">anchor</a>'), """
+      [anchor][0]
 
-    address
+      [0]: /mock
+    """
+    t.equal md('<a href="mock">anchor</a>', o), """
+      [anchor][0]
 
-    section
+      [0]: #{toFileUrl 'mock'}
+    """
+    t.equal md('<a href="/mock">anchor</a>', o), """
+      [anchor][0]
 
-    nav
-
-    header
-
-    footer
-
-    article
-    hgroup
-  """
+      [0]: #{toFileUrl '/mock'}
+    """
+    t.equal md('<img src="mock">'), '![](mock)'
+    t.equal md('<img src="mock">', o), '![](mock)'
+    t.end()
   t.end()
-
-test 'text', (t) ->
-  markdown = md loadFixture 'text.html'
-  t.equal markdown, """
-    # h1
-
-    ## h2
-
-    ### h3
-
-    #### h4
-
-    ##### h5
-
-    ###### h6
-    span
-    _dfn_
-
-    "q"
-    _cite_
-    _em_
-    12:00:00
-    _var_
-    `samp`
-    _i_
-    **b**
-    sub
-    sup
-    small
-    **strong**
-    mark
-    ins
-    del
-    bdi
-    bdo
-    s
-    `kbd`
-    wbr
-    `code`
-    #{spaces 2}
-
-    ---
-
-    #{spaces 4}pre
-
-    > blockquote
-
-    **dt**
-
-    > dd
-  """
-  t.end()
-
-test 'visibility', (t) ->
-  markdown = md loadFixture 'visibility.html'
-  t.equal markdown, """
-    display-override: visible
-    visibility-override: visible
-  """
-  t.end()
-
-# TODO: Complete Tests
-# Primarily ensure all functionality is tested, including;
-# * Tabular data
-# * Forms
-# * Figures
-# * Links
-# * Special circumstances (e.g. bold italic links)
-# * Ignored elements (e.g. video, applet, object)
-#
-# Use http://joshduck.com/periodic-table.html as an entity coverage checklist
