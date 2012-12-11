@@ -1,0 +1,108 @@
+#!/usr/bin/env coffee
+
+{exec} = require 'child_process'
+fs     = require 'fs'
+md     = require '../lib/md'
+path   = require 'path'
+{test} = require 'tap'
+
+# Constants
+# ---------
+
+COMMAND      = '../bin/md'
+ENCODING     = 'utf8'
+FIXTURES_DIR = 'fixtures'
+HTML_EXT     = '.html'
+MD_EXT       = '.md'
+MD_FULL_EXT  = '.markdown'
+OUTPUT_DIR   = 'output'
+USAGE        = """
+  Usage: md [options] [ -e html | file.html ] [arguments]
+
+  Options:
+    -a, --absolute     always use absolute URLs for links
+    -d, --debug        print additional debug information
+    -e, --eval         pass a string from the command line as input
+    -h, --help         display this help information
+    -l, --long-ext     use long extension for Markdown files
+    -o, --output DIR   set the output directory for converted Markdown
+    -p, --print        print out the converted Markdown
+    -v, --version      display the version number
+
+"""
+VERSION      = """
+  html.md version #{md.VERSION}
+
+"""
+
+# Helpers
+# -------
+
+existsSync = fs.existsSync or path.existsSync
+
+# TODO: Complete test fixtures execution
+
+cleanOutput = ->
+  if existsSync OUTPUT_DIR
+    for file in fs.readdirSync OUTPUT_DIR
+      do (file) -> fs.unlinkSync path.join OUTPUT_DIR, file
+    fs.rmdirSync OUTPUT_DIR
+
+createOutput = ->
+  fs.mkdirSync OUTPUT_DIR unless existsSync OUTPUT_DIR
+
+testFixture = (t, name) ->
+  t.test name, (t) ->
+    htmlPath = path.join FIXTURES_DIR, "#{name}#{HTML_EXT}"
+    html     = fs.readFileSync htmlPath, ENCODING
+    t.plan 3 * 2
+    exec "#{COMMAND} -o #{OUTPUT_DIR} #{htmlPath}", (err) ->
+      t.notOk err
+      markdownPath = path.join OUTPUT_DIR, "#{name}#{MD_EXT}"
+      markdown     = fs.readFileSync markdownPath, ENCODING
+      t.equal markdown, md html
+    exec "#{COMMAND} -lo #{OUTPUT_DIR} #{htmlPath}", (err) ->
+      t.notOk err
+      markdownPath = path.join OUTPUT_DIR, "#{name}#{MD_FULL_EXT}"
+      markdown     = fs.readFileSync markdownPath, ENCODING
+      t.equal markdown, md html
+    exec "#{COMMAND} -p #{htmlPath}", (err, stdout) ->
+      t.notOk err
+      t.equal stdout, md html
+
+testFixtures = ->
+  test 'fixtures', (t) ->
+    createOutput()
+    files = fs.readdirSync FIXTURES_DIR
+    fixtures = (
+      for file in files when HTML_EXT is path.extname file
+        path.basename file, HTML_EXT
+    )
+    for fixture in fixtures
+      do (fixture) -> testFixture t, fixture
+    cleanOutput()
+    t.end()
+
+# Tests
+# -----
+
+testFixtures()
+
+test 'usage', (t) ->
+  testUsage = (err, stdout) ->
+    t.notOk err
+    t.equal stdout, USAGE
+  t.plan 3 * 2
+  exec COMMAND,             testUsage
+  exec "#{COMMAND} -h",     testUsage
+  exec "#{COMMAND} --help", testUsage
+
+test 'version', (t) ->
+  testVersion = (err, stdout) ->
+    t.notOk err
+    t.equal stdout, VERSION
+  t.plan 2 * 2
+  exec "#{COMMAND} -v",        testVersion
+  exec "#{COMMAND} --version", testVersion
+
+# TODO: Complete tests
