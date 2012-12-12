@@ -22,7 +22,7 @@ testFixture = (t, name) ->
   html     = fs.readFileSync path.join(FIXTURES_DIR, "#{name}.html"), ENCODING
   markdown = fs.readFileSync path.join(FIXTURES_DIR, "#{name}.md"),   ENCODING
   t.test name, (t) ->
-    t.equal md(html), markdown
+    t.equal md(html), markdown, "#{name} fixtures should match"
     t.end()
 
 testFixtures = ->
@@ -57,28 +57,30 @@ test 'options', (t) ->
       [anchor][0]
 
       [0]: mock
-    """
+    """, 'link should be relative'
     t.equal md('<a href="/mock">anchor</a>'), """
       [anchor][0]
 
       [0]: /mock
-    """
+    """, 'root link should be relative'
     t.equal md('<a href="mock">anchor</a>', o), """
       [anchor][0]
 
       [0]: #{toFileUrl 'mock'}
-    """
+    """, 'link should be absolute'
     t.equal md('<a href="/mock">anchor</a>', o), """
       [anchor][0]
 
       [0]: #{toFileUrl '/mock'}
+    """, 'root link should be absolute'
+    t.equal md('<img src="mock">'), '![](mock)', 'image should be relative'
+    t.equal md('<img src="mock">', o), '![](mock)', """
+      absolute option should not affect images
     """
-    t.equal md('<img src="mock">'), '![](mock)'
-    t.equal md('<img src="mock">', o), '![](mock)'
     t.end()
   t.end()
 
 test 'version', (t) ->
   pkg = loadPackage()
-  t.equal md.VERSION, pkg.version
+  t.equal md.VERSION, pkg.version, 'version should match descriptor'
   t.end()

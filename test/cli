@@ -52,21 +52,29 @@ testFixture = (t, name) ->
     html     = fs.readFileSync htmlPath, ENCODING
     t.plan 3 * 2
     exec "#{COMMAND} -o #{OUTPUT_DIR} #{htmlPath}", (err) ->
-      t.notOk err
+      t.notOk err, """
+        error should not be thrown using -o flag for #{name} fixture
+      """
       markdownPath = path.join OUTPUT_DIR, "#{name}#{MD_EXT}"
       markdown     = fs.readFileSync markdownPath, ENCODING
-      t.equal markdown, md html
+      t.equal markdown, md(html), "#{name} fixture should match using -o flag"
     exec "#{COMMAND} -lo #{OUTPUT_DIR} #{htmlPath}", (err) ->
-      t.notOk err
+      t.notOk err, """
+        error should not be thrown using -lo flags for #{name} fixture
+      """
       markdownPath = path.join OUTPUT_DIR, "#{name}#{MD_FULL_EXT}"
       markdown     = fs.readFileSync markdownPath, ENCODING
-      t.equal markdown, md html
+      t.equal markdown, md(html), """
+        #{name} fixture should match using -lo flags
+      """
     exec "#{COMMAND} -p #{htmlPath}", (err, stdout) ->
-      t.notOk err
+      t.notOk err, """
+        error should not be thrown using -p flag for #{name} fixture
+      """
       t.equal stdout, """
         #{md html}
 
-      """
+      """, "#{name} fixture should match using -p flag"
 
 testFixtures = ->
   test 'fixtures', (t) ->
@@ -79,11 +87,6 @@ testFixtures = ->
       do (fixture) -> testFixture t, fixture
     t.tearDown cleanOutput
     t.end()
-
-testStdio = (t, expected) ->
-  (err, stdout) ->
-    t.notOk err
-    t.equal stdout, expected
 
 toFileUrl = (relativePath) ->
   "file://#{toPathName relativePath}"
@@ -100,57 +103,64 @@ toPathName = (relativePath) ->
 testFixtures()
 
 test 'absolute', (t) ->
+  testAbsolute = (expected, desc, flags) ->
+    (err, stdout) ->
+      t.notOk err, "error should not be thrown using #{flags} flags"
+      t.equal stdout, expected, "#{desc} using #{flags} flags"
   t.plan 6 * 2
-  exec "#{COMMAND} -ep \"<a href='mock'>anchor</a>\"", testStdio t, """
+  exec "#{COMMAND} -ep \"<a href='mock'>anchor</a>\"", testAbsolute """
     [anchor][0]
 
     [0]: mock
 
-  """
-  exec "#{COMMAND} -ep \"<a href='/mock'>anchor</a>\"", testStdio t, """
+  """, 'link should be relative', '-ep'
+  exec "#{COMMAND} -ep \"<a href='/mock'>anchor</a>\"", testAbsolute """
     [anchor][0]
 
     [0]: /mock
 
-  """
-  exec "#{COMMAND} -epa \"<a href='mock'>anchor</a>\"", testStdio t, """
+  """, 'root link should be relative', '-ep'
+  exec "#{COMMAND} -epa \"<a href='mock'>anchor</a>\"", testAbsolute """
     [anchor][0]
 
     [0]: #{toFileUrl 'mock'}
 
-  """
-  exec "#{COMMAND} -epa \"<a href='/mock'>anchor</a>\"", testStdio t, """
+  """, 'link should be absolute', '-epa'
+  exec "#{COMMAND} -epa \"<a href='/mock'>anchor</a>\"", testAbsolute """
     [anchor][0]
 
     [0]: #{toFileUrl '/mock'}
 
-  """
-  exec "#{COMMAND} -ep \"<img src='mock'>\"", testStdio t, """
+  """, 'root link should be absolute', '-epa'
+  exec "#{COMMAND} -ep \"<img src='mock'>\"", testAbsolute """
     ![](mock)
 
-  """
-  exec "#{COMMAND} -epa \"<img src='mock'>\"", testStdio t, """
+  """, 'image should be relative', '-ep'
+  exec "#{COMMAND} -epa \"<img src='mock'>\"", testAbsolute """
     ![](mock)
 
-  """
+  """, 'absolute option should not affect images', '-epa'
 
 test 'stdio', (t) ->
   t.plan 2
-  exec "#{COMMAND} -ep \"<strong>strong</strong>\"", testStdio t, """
-    **strong**
+  exec "#{COMMAND} -ep \"<strong>strong</strong>\"", (err, stdout) ->
+    t.notOk err, 'error should not be thrown using -ep flags'
+    t.equal stdout, """
+      **strong**
 
-  """
+    """, 'output should match expected markdown using -ep flags'
 
 test 'usage', (t) ->
-  testUsage = (err, stdout) ->
-    t.notOk err
-    t.equal stdout, USAGE
+  testUsage = (desc) ->
+    (err, stdout) ->
+      t.notOk err, "error should not be thrown using #{desc}"
+      t.equal stdout, USAGE, "output should match expected usage using #{desc}"
   t.plan 2 * 2
-  exec COMMAND,         testUsage
-  exec "#{COMMAND} -h", testUsage
+  exec COMMAND,         testUsage 'no flags'
+  exec "#{COMMAND} -h", testUsage '-h flag'
 
 test 'version', (t) ->
   t.plan 2
   exec "#{COMMAND} -v", (err, stdout) ->
-    t.notOk err
-    t.equal stdout, VERSION
+    t.notOk err, 'error should not be thrown using -v flag'
+    t.equal stdout, VERSION, 'output should match known version using -v flag'
