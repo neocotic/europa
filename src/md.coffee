@@ -1,4 +1,4 @@
-# [html.md](http://neocotic.com/html.md) 2.0.0  
+# [html.md](http://neocotic.com/html.md) 2.0.1  
 # (c) 2012 Alasdair Mercer  
 # Freely distributable under the MIT license.  
 # Based on [Make.text](http://homepage.mac.com/tjim/) 1.5  
@@ -418,7 +418,7 @@ else if typeof define is 'function' and define.amd
 # ----------------
 
 # Current version of html.md.
-md.VERSION = '2.0.0'
+md.VERSION = '2.0.1'
 
 # Public functions
 # ----------------

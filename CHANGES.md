@@ -1,5 +1,9 @@
 # Change Log
 
+## 2012.12.12, Version 2.0.1
+
+* [#8](https://github.com/neocotic/html.md/issues/8): Fix incorrect version
+
 ## 2012.12.11, Version 2.0.0
 
 * [#1](https://github.com/neocotic/html.md/issues/1): Check inline style attribute to see if elements are hidden
