@@ -1,6 +1,6 @@
 # Change Log
 
-## 2012.12.11, Version 2.2.0
+## 2012.12.11, Version 2.0.0
 
 * [#1](https://github.com/neocotic/html.md/issues/1): Check inline style attribute to see if elements are hidden
 * [#2](https://github.com/neocotic/html.md/issues/2): Add command line interface

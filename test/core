@@ -15,6 +15,9 @@ HTML_EXT     = '.html'
 # Helpers
 # -------
 
+loadPackage = ->
+  JSON.parse fs.readFileSync path.resolve('../package.json'), ENCODING
+
 testFixture = (t, name) ->
   html     = fs.readFileSync path.join(FIXTURES_DIR, "#{name}.html"), ENCODING
   markdown = fs.readFileSync path.join(FIXTURES_DIR, "#{name}.md"),   ENCODING
@@ -73,4 +76,9 @@ test 'options', (t) ->
     t.equal md('<img src="mock">'), '![](mock)'
     t.equal md('<img src="mock">', o), '![](mock)'
     t.end()
+  t.end()
+
+test 'version', (t) ->
+  pkg = loadPackage()
+  t.equal md.VERSION, pkg.version
   t.end()

@@ -418,7 +418,7 @@ else if typeof define is 'function' and define.amd
 # ----------------
 
 # Current version of html.md.
-md.VERSION = '1.0.0'
+md.VERSION = '2.0.0'
 
 # Public functions
 # ----------------
