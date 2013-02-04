@@ -1,7 +1,7 @@
 {
     "name": "html-md"
   , "description": "JavaScript library for converting HTML in to valid Markdown"
-  , "version": "2.0.1"
+  , "version": "2.0.2"
   , "homepage": "http://neocotic.com/html.md"
   , "bugs": {
       "url": "https://github.com/neocotic/html.md/issues"
