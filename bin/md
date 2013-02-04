@@ -109,7 +109,7 @@ parseHtml = (file, input, base) ->
     output = md input, opts
     if opts.print
       console.log output
-    else
+    else if file
       writeMarkdown file, output, base
   catch err
     exit 1, err instanceof Error and err.stack or "ERROR: #{err}"
