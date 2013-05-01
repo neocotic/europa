@@ -1,4 +1,4 @@
-# [html.md](http://neocotic.com/html.md) 2.0.2  
+# [html.md](http://neocotic.com/html.md)  
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license.  
 # Based on [Make.text](http://homepage.mac.com/tjim/) 1.5  
@@ -98,8 +98,7 @@ R_PARAGRAPH_ONLY  = /// ^ (
 # Create regular expressions for all of the special Markdown characters.
 REGEX             = (
   result = {}
-  for own key, value of REPLACEMENTS
-    result[key] = new RegExp key, 'g'
+  result[key] = new RegExp key, 'g' for own key, value of REPLACEMENTS
   result
 )
 
@@ -108,7 +107,7 @@ REGEX             = (
 
 # Create a DOM for NodeJS environment.
 win = window ? null
-unless window?
+unless win?
   jsdom = require 'jsdom'
   doc   = jsdom.jsdom null, null, features: FetchExternalResources: no
   win   = doc.createWindow()
@@ -121,7 +120,7 @@ Node.TEXT_NODE    ?= 3
 # HTML Parser
 # -----------
 
-# Parses HTML code/elements into valid Markdown.
+# Parses HTML code/elements into valid Markdown.  
 # Elements are parsed recursively, meaning their children are also parsed.
 class HtmlParser
 
@@ -137,6 +136,7 @@ class HtmlParser
     @linkMap    = {}
     @unhandled  = {}
     @options    = {} if typeof @options isnt 'object'
+
     for own key, defaultValue of DEFAULT_OPTIONS
       @options[key] = defaultValue unless @options.hasOwnProperty key
 
@@ -147,7 +147,8 @@ class HtmlParser
 
   # Access the value of `attribute` either directly or using `getAttribute`.
   attr: (ele, attribute, direct = yes) ->
-    if direct then ele[attribute] else ele.getAttribute? attribute
+    value = if direct then ele[attribute] else ele.getAttribute? attribute
+    value ? ''
 
   # Append a Markdown line break to the buffer string.
   br: ->
@@ -160,6 +161,10 @@ class HtmlParser
     @inCode = yes
     => @inCode = old
 
+  # Determine whether the `attribute` exists.
+  has: (ele, attribute) ->
+    !!ele.hasAttribute? attribute
+
   # Replace any special characters that can cause problems within code.
   inCodeProcess: (str) ->
     str.replace /`/g, '\\`'
@@ -169,17 +174,21 @@ class HtmlParser
     style      = @attr ele, 'style', no
     properties = style?.match R_HIDDEN_STYLES
     visible    = yes
+
     if properties?
       visible  = not R_HIDDEN_VALUE.test property for property in properties
+
     if visible and win.getComputedStyle?
       try
         style  = win.getComputedStyle ele, null
+
         if typeof style?.getPropertyValue is 'function'
           display     = style.getPropertyValue 'display'
           visibility  = style.getPropertyValue 'visibility'
           visible     = display isnt 'none' and visibility isnt 'hidden'
       catch err
         @thrown err, 'getComputedStyle'
+
     visible
 
   # Replace any special characters that can cause problems in normal Markdown.
@@ -199,30 +208,35 @@ class HtmlParser
   # Append `str` to the buffer string while keeping the parser in context.
   output: (str) ->
     return unless str
+
     unless @inPre
-      if @atNoWS
-        str = str.replace /^[ \t\n]+/, ''
+      str = if @atNoWS
+        str.replace /^[ \t\n]+/, ''
       else if /^[ \t]*\n/.test str
-        str = str.replace /^[ \t\n]+/, '\n'
+        str.replace /^[ \t\n]+/, '\n'
       else
-        str = str.replace /^[ \t]+/, ' '
+        str.replace /^[ \t]+/, ' '
+
     return if str is ''
+
     @atP    = /\n\n$/.test str
     @atLeft = /\n$/.test str
     @atNoWS = /[ \t\n]$/.test str
     @append str.replace /\n/g, @left
 
-  # Create a function that can be called later to append `str` to the buffer
-  # string while keeping the parser in context.
+  # Create a function that can be called later to append `str` to the buffer string while keeping
+  # the parser in context.
   outputLater: (str) ->
     => @output str
 
   # Append a Markdown paragraph to the buffer string.
   p: ->
     return if @atP
+
     unless @atLeft
       @append @left
       @atLeft = yes
+
     @append @left
     @atNoWS = @atP = yes
 
@@ -230,15 +244,19 @@ class HtmlParser
   parse: ->
     return '' unless @html
     return @buffer if @parsed
+
     container = win.document.createElement 'div'
     if typeof @html is 'string'
       container.innerHTML = @html
     else
       container.appendChild @html
+
     @process container
+
     if @links.length
       @append '\n\n'
       @append "[#{i}]: #{link}\n" for link, i in @links when link
+
     if @options.debug
       unhandledTags = (tag for own tag of @unhandled).sort()
       if unhandledTags.length
@@ -255,6 +273,7 @@ class HtmlParser
         """
       else
         console.log 'No exceptions were thrown'
+
     @append ''
     @parsed = yes
     @buffer = @buffer.trim()
@@ -269,37 +288,39 @@ class HtmlParser
   # string.
   process: (ele) ->
     return unless @isVisible ele
+
     if ele.nodeType is Node.ELEMENT_NODE
       skipChildren = no
+
       try
         if R_IGNORE_CHILDREN.test ele.tagName
           skipChildren = yes
         else if /^H[1-6]$/.test ele.tagName
           level = parseInt ele.tagName.match(/([1-6])$/)[1]
-          @p()
+          do @p
           @output "#{('#' for i in [1..level]).join ''} "
         else if R_PARAGRAPH_ONLY.test ele.tagName
-          @p()
+          do @p
         else
           switch ele.tagName
             when 'BODY', 'FORM' then break
             when 'DETAILS'
-              @p()
-              unless @attr ele, 'open', no
+              do @p
+              unless @has ele, 'open'
                 skipChildren = yes
                 summary      = ele.getElementsByTagName('summary')[0]
                 @process summary if summary
-            when 'BR' then @br()
+            when 'BR' then do @br
             when 'HR'
-              @p()
+              do @p
               @output '---'
-              @p()
+              do @p
             when 'CITE', 'DFN', 'EM', 'I', 'U', 'VAR'
               @output '_'
               @atNoWS = yes
               after   = @outputLater '_'
             when 'DT', 'B', 'STRONG'
-              @p() if ele.tagName is 'DT'
+              do @p if ele.tagName is 'DT'
               @output '**'
               @atNoWS = yes
               after   = @outputLater '**'
@@ -310,22 +331,22 @@ class HtmlParser
             when 'OL', 'PRE', 'UL'
               after1 = @pushLeft '    '
               after2 = switch ele.tagName
-                when 'OL'  then @ol()
-                when 'PRE' then @pre()
-                when 'UL'  then @ul()
+                when 'OL'  then do @ol
+                when 'PRE' then do @pre
+                when 'UL'  then do @ul
               after  = ->
-                after1()
-                after2()
+                do after1
+                do after2
             when 'LI'
               @replaceLeft if @inOrderedList then '1.  ' else '*   '
             when 'CODE', 'KBD', 'SAMP'
               unless @inPre
                 @output '`'
-                after1 = @code()
+                after1 = do @code
                 after2 = @outputLater '`'
                 after  = ->
-                  after1()
-                  after2()
+                  do after1
+                  do after2
             when 'BLOCKQUOTE', 'DD' then after = @pushLeft '> '
             when 'A'
               href  = @attr ele, 'href', @options.absolute
@@ -362,25 +383,25 @@ class HtmlParser
         @process childNode for childNode in ele.childNodes
       after?.call this
     else if ele.nodeType is Node.TEXT_NODE
-      if @inPre
-        @output ele.nodeValue
+      @output if @inPre
+        ele.nodeValue
       else if @inCode
-        @output @inCodeProcess ele.nodeValue
+        @inCodeProcess ele.nodeValue
       else
-        @output @nonPreProcess ele.nodeValue
+        @nonPreProcess ele.nodeValue
 
   # Attach `str` to the start of the current line.
   pushLeft: (str) ->
     old    = @left
     @left += str
-    if @atP
-      @append str
-    else
-      @p()
+
+    if @atP then @append str
+    else do @p
+
     =>
       @left   = old
       @atLeft = @atP = no
-      @p()
+      do @p
 
   # Replace the left indent with `str`.
   replaceLeft: (str) ->
@@ -422,8 +443,7 @@ md.VERSION = '2.0.2'
 # Public functions
 # ----------------
 
-# Run html.md in *noConflict* mode, returning the `md` variable to its
-# previous owner.  
+# Run html.md in *noConflict* mode, returning the `md` variable to its previous owner.  
 # Returns a reference to `md`.
 md.noConflict = =>
   @md = PREVIOUS_MD

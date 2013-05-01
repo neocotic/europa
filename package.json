@@ -27,8 +27,10 @@
     "url": "git://github.com/neocotic/html.md.git"
   },
   "dependencies": {
-    "jsdom": "0.2.x",
-    "optparse": "1.0.x"
+    "fs-extra": "~0.6.0",
+    "glob": "~3.2.1",
+    "jsdom": "~0.6.0",
+    "optparse": "~1.0.4"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
