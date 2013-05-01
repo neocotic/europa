@@ -1,0 +1,5 @@
+{
+    "name": "html-md"
+  , "version": "2.0.2"
+  , "main": "dist/md.min.js"
+}
