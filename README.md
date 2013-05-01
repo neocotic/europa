@@ -15,10 +15,13 @@ also provides a command line interface.
 
 ## Install
 
-Install from [npm][]:
+Install using the package manager for your desired environment(s):
 
 ``` bash
+# for node.js:
 $ npm install html-md
+# OR; for the browser:
+$ bower install html-md
 ```
 
 ## Usage
@@ -119,4 +122,3 @@ http://neocotic.com/html.md
 [html.md]: http://neocotic.com/html.md
 [markdown]: http://en.wikipedia.org/wiki/Markdown
 [node.js]: http://nodejs.org
-[npm]: http://npmjs.org
