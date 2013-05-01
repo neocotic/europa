@@ -6,20 +6,22 @@
        \ \_\ \_\ \__\ \_\ \_\ \_\\____\\_\ \_\ \_\ \_\ \___,_\
         \/_/\/_/\/__/\/_/\/_/\/_//____//_/\/_/\/_/\/_/\/__,_ /
 
-[html.md][] is a pure JavaScript library for converting [HTML][] in to valid
-[Markdown][].
+[html.md][] is a pure JavaScript library for converting [HTML][] in to valid [Markdown][].
 
 [![Build Status](https://secure.travis-ci.org/neocotic/html.md.png)](http://travis-ci.org/neocotic/html.md)
 
-[html.md][] can be used normally in any browser as well as in the [node.js][]
-environment where it also provides a command line interface.
+[html.md][] can be used normally in any browser as well as in the [node.js][] environment where it
+also provides a command line interface.
 
 ## Install
 
-Install from [npm][]:
+Install using the package manager for your desired environment(s):
 
 ``` bash
+# for node.js:
 $ npm install html-md
+# OR; for the browser:
+$ bower install html-md
 ```
 
 ## Usage
@@ -92,27 +94,26 @@ The following options are recognised by this method (all of which are optional);
 
 ### Miscellaneous
 
-`md.noConflict()` returns `md` in a no-conflict state, reallocating the `md`
-global variable name to its previous owner, where possible.
+`md.noConflict()` returns `md` in a no-conflict state, reallocating the `md` global variable name
+to its previous owner, where possible.
 
 `md.VERSION` returns the current version.
 
 ## Bugs
 
-If you have any problems with this library or would like to see the changes
-currently in development you can do so here;
+If you have any problems with this library or would like to see the changes currently in
+development you can do so here;
 
 https://github.com/neocotic/html.md/issues
 
 ## Questions?
 
-Take a look at `docs/md.html` to get a better understanding of what the code is
-doing.
+Take a look at `docs/md.html` to get a better understanding of what the code is doing.
 
 If that doesn't help, feel free to follow me on Twitter, [@neocotic][].
 
-However, if you want more information or examples of using this library please
-visit the project's homepage;
+However, if you want more information or examples of using this library please visit the project's
+homepage;
 
 http://neocotic.com/html.md
 
@@ -121,4 +122,3 @@ http://neocotic.com/html.md
 [html.md]: http://neocotic.com/html.md
 [markdown]: http://en.wikipedia.org/wiki/Markdown
 [node.js]: http://nodejs.org
-[npm]: http://npmjs.org

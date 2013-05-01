@@ -3,7 +3,6 @@
 # Freely distributable under the MIT license.  
 # Based on [Make.text](http://homepage.mac.com/tjim/) 1.5  
 # (c) 2007 Trevor Jim  
-# Licensed under the GPL Version 2 license.  
 # For all details and documentation:  
 # <http://neocotic.com/html.md>
 

@@ -1,8 +1,6 @@
 node_modules/
 npm-debug.log
 
-test/output/
-
 .DS_Store?
 ehthumbs.db
 Icon?
