@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "fs-extra": "~0.6.0",
-    "glob": "~3.2.1",
     "jsdom": "~0.6.0",
     "optparse": "~1.0.4"
   },

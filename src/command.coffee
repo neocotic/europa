@@ -11,18 +11,17 @@
 
 fs             = require 'fs-extra'
 md             = require './md'
-glob           = require('glob').sync
 path           = require 'path'
 {OptionParser} = require 'optparse'
 
 # Private constants
 # -----------------
 
-# Error code used when a file/directory could not be found.
+# Error code used by node when a file/directory could not be found.
 NOT_FOUND  = 'ENOENT'
 # Regular expression used to identify HTML files using common extensions.
 R_HTML_EXT = /\.s?html?$/i
-# Available options/switches.
+# Available command options/switches.
 SWITCHES   = [
   ['-a', '--absolute',   'always use absolute URLs for links']
   ['-d', '--debug',      'print additional debug information']
@@ -37,9 +36,9 @@ SWITCHES   = [
 # Private variables
 # -----------------
 
-# File extension to be applied to any Markdown files created.
+# File extension to be applied to any Markdown files that are created.
 extension = '.md'
-# Options, including their defaults, possibly changed by flags passed in at runtime.
+# Options, including their defaults, that are possibly changed by switches passed in at runtime.
 opts      =
   absolute: no
   debug:    no
@@ -145,7 +144,7 @@ parseOptions = ->
 
   args = parser.parse(process.argv)[2..]
   if args.length
-    sources = if args.length is 1 then glob args[0], nosort: on else args
+    sources = args
   else
     exit parser.toString()
 
