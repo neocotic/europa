@@ -486,12 +486,12 @@ class HtmlParser
     old    = @left
     @left += str
 
-    if @atP then @append str
-    else do @p
+    if @atP then @append str else do @p
 
     =>
       @left   = old
       @atLeft = @atP = no
+
       do @p
 
   # Replace the left indent with `str`.
@@ -512,6 +512,7 @@ class HtmlParser
   ul: ->
     old            = @inOrderedList
     @inOrderedList = no
+
     => @inOrderedList = old
 
 # html.md setup
