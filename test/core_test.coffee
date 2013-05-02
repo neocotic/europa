@@ -77,9 +77,8 @@ exports.options =
 
     test.equal md('<img src="mock">'), '![](mock)', 'Image should be relative'
 
-    test.equal md('<img src="mock">', options), '![](mock)', """
-      Absolute option should not affect images
-    """
+    test.equal md('<img src="mock">', options), "![](#{toFileUrl 'mock'})",
+      'Image should be absolute'
 
     test.done()
 
