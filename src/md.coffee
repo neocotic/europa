@@ -121,6 +121,13 @@ Node.TEXT_NODE    ?= 3
 # Helper functions
 # ----------------
 
+# Left pad `str` with the given padding string for the specified number of `times`.
+padLeft = (str = '', times = 0, padStr = ' ') ->
+  return str unless padStr
+
+  str = padStr + str for i in [0...times]
+  str
+
 # Remove whitespace from both ends of `str`.  
 # This tries to use the native `String.prototype.trim` function where possible.
 trim = (str = '') ->
@@ -135,10 +142,12 @@ class HtmlParser
 
   # Creates a new `HtmlParser` for the arguments provided.
   constructor: (@html = '', @options = {}) ->
-    @atLeft     = @atNoWS = @atP = yes
+    @atLeft     = @atNoWS = @atP           = yes
     @buffer     = ''
     @exceptions = []
-    @inCode     = @inPre = @inOrderedList = no
+    @order      = 1
+    @listDepth  = 0
+    @inCode     = @inPre  = @inOrderedList = no
     @last       = null
     @left       = '\n'
     @links      = []
@@ -222,10 +231,18 @@ class HtmlParser
 
   # Prepare the parser for an `ol` element.
   ol: ->
-    old            = @inOrderedList
-    @inOrderedList = yes
+    do @p if @listDepth is 0
 
-    => @inOrderedList = old
+    inOrderedList  = @inOrderedList
+    order          = @order
+    @inOrderedList = yes
+    @order         = 1
+    @listDepth++
+
+    =>
+      @inOrderedList = inOrderedList
+      @order         = order
+      @listDepth--
 
   # Append `str` to the buffer string.
   output: (str) ->
@@ -381,21 +398,24 @@ class HtmlParser
               @output '"'
               @atNoWS = yes
               after   = @outputLater '"'
-            # An element whose contents are to be indented.
-            when 'OL', 'PRE', 'UL'
+            # Lists need their items to be displayed correctly depending on their type while also
+            # ensuring nested lists are indented properly.
+            when 'OL', 'UL'
+              after = if ele.tagName is 'OL' then do @ol else do @ul
+            # List items are displayed differently depending on what kind of list they're parent
+            # is (i.e. ordered or unordered).
+            when 'LI'
+              prefix = if @inOrderedList then "#{@order++}. " else '* '
+
+              @output padLeft prefix, @listDepth * 2
+            # A pre-formatted element just needs to have its contents properly indented.
+            when 'PRE'
               after1 = @pushLeft '    '
-              after2 = switch ele.tagName
-                when 'OL'  then do @ol
-                when 'PRE' then do @pre
-                when 'UL'  then do @ul
+              after2 = do @pre
 
               after  = ->
                 do after1
                 do after2
-            # List items are displayed differently depending on what kind of list they're parent
-            # is (i.e. ordered or unordered).
-            when 'LI'
-              @replaceLeft if @inOrderedList then '1.  ' else '*   '
             # Inline code elements translate pretty easily but we need to make sure we don't do
             # anything dumb inside a `pre` element.
             when 'CODE', 'KBD', 'SAMP'
@@ -497,11 +517,11 @@ class HtmlParser
   # Replace the left indent with `str`.
   replaceLeft: (str) ->
     unless @atLeft
-      @append @left.replace /[ ]{4}$/, str
+      @append @left.replace /[ ]{2,4}$/, str
 
       @atLeft = @atNoWS = @atP = yes
     else if @last
-      @last   = @last.replace /[ ]{4}$/, str
+      @last   = @last.replace /[ ]{2,4}$/, str
 
   # Ensure that the `exception` and the corresponding `message` is logged if the `debug` option is
   # enabled.
@@ -510,10 +530,18 @@ class HtmlParser
 
   # Prepare the parser for a `ul` element.
   ul: ->
-    old            = @inOrderedList
-    @inOrderedList = no
+    do @p if @listDepth is 0
 
-    => @inOrderedList = old
+    inOrderedList  = @inOrderedList
+    order          = @order
+    @inOrderedList = no
+    @order         = 1
+    @listDepth++
+
+    =>
+      @inOrderedList = inOrderedList
+      @order         = order
+      @listDepth--
 
 # html.md setup
 # -------------
