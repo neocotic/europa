@@ -221,6 +221,13 @@ class HtmlParser
 
     visible
 
+  # Append a Markdown list item based on the context of the current list.
+  li: ->
+    str = if @inOrderedList then "#{@order++}. " else '* '
+    str = padLeft str, (@listDepth - 1) * 2
+
+    @append str
+
   # Replace any special characters that can cause problems in normal Markdown blocks.
   nonPreProcess: (str) ->
     str = str.replace /\n([ \t]*\n)+/g, '\n'
@@ -404,10 +411,7 @@ class HtmlParser
               after = if ele.tagName is 'OL' then do @ol else do @ul
             # List items are displayed differently depending on what kind of list they're parent
             # is (i.e. ordered or unordered).
-            when 'LI'
-              prefix = if @inOrderedList then "#{@order++}. " else '* '
-
-              @output padLeft prefix, @listDepth * 2
+            when 'LI' then do @li
             # A pre-formatted element just needs to have its contents properly indented.
             when 'PRE'
               after1 = @pushLeft '    '
