@@ -143,9 +143,9 @@ parseOptions = ->
 
   extension = '.markdown' if opts.longExt
 
-  pattern = parser.parse(process.argv)[2..].join ' '
-  if pattern
-    sources = glob pattern, nosort: on
+  args = parser.parse(process.argv)[2..]
+  if args.length
+    sources = if args.length is 1 then glob args[0], nosort: on else args
   else
     exit parser.toString()
 
