@@ -9,7 +9,7 @@ path   = require 'path'
 # Constants
 # ---------
 
-COMMAND      = '../bin/md'
+COMMAND      = './bin/md'
 ENCODING     = 'utf8'
 FIXTURES_DIR = path.join __dirname, 'fixtures'
 HTML_EXT     = '.html'
@@ -31,23 +31,22 @@ USAGE        = """
 
 """
 VERSION      = """
-  html.md version #{md.VERSION}
+  html.md version #{md.version}
 
 """
 
 # Configuration
 # -------------
 
-module.exports =
-  tearDown: (callback) ->
-    return do callback unless fs.existsSync OUTPUT_DIR
+exports.tearDown = (callback) ->
+  return do callback unless fs.existsSync OUTPUT_DIR
 
-    fs.readdirSync(OUTPUT_DIR).forEach (file) ->
-      fs.unlinkSync path.join OUTPUT_DIR, file
+  fs.readdirSync(OUTPUT_DIR).forEach (file) ->
+    fs.unlinkSync path.join OUTPUT_DIR, file
 
-    fs.rmdirSync OUTPUT_DIR
+  fs.rmdirSync OUTPUT_DIR
 
-    do callback
+  do callback
 
 # Helpers
 # -------
@@ -64,32 +63,42 @@ toPathName = (relativePath) ->
 
 exports.fixtures = (
   testFixture = (name) ->
-    (test) ->
-      htmlPath = path.join FIXTURES_DIR, "#{name}#{HTML_EXT}"
-      html     = fs.readFileSync htmlPath, ENCODING
+    htmlPath = path.join FIXTURES_DIR, "#{name}#{HTML_EXT}"
+    expected = md fs.readFileSync htmlPath, ENCODING
 
-      test.expect 3 * 2
+    standard: (test) ->
+      test.expect 2
 
       exec "#{COMMAND} -o #{OUTPUT_DIR} #{htmlPath}", (err) ->
         test.ifError err, "Error should not be thrown using -o flag for #{name} fixture"
         markdownPath = path.join OUTPUT_DIR, "#{name}#{MD_EXT}"
         markdown     = fs.readFileSync markdownPath, ENCODING
-        test.equal markdown, md(html), "#{name} fixture should match using -o flag"
+        test.equal markdown, expected, "#{name} fixture should match using -o flag"
+
+        test.done()
+
+    long: (test) ->
+      test.expect 2
 
       exec "#{COMMAND} -lo #{OUTPUT_DIR} #{htmlPath}", (err) ->
         test.ifError err, "Error should not be thrown using -lo flags for #{name} fixture"
         markdownPath = path.join OUTPUT_DIR, "#{name}#{MD_FULL_EXT}"
         markdown     = fs.readFileSync markdownPath, ENCODING
-        test.equal markdown, md(html), "#{name} fixture should match using -lo flags"
+        test.equal markdown, expected, "#{name} fixture should match using -lo flags"
+
+        test.done()
+
+    print: (test) ->
+      test.expect 2
 
       exec "#{COMMAND} -p #{htmlPath}", (err, stdout) ->
         test.ifError err, "Error should not be thrown using -p flag for #{name} fixture"
         test.equal stdout, """
-          #{md html}
+          #{expected}
 
         """, "#{name} fixture should match using -p flag"
 
-      test.done()
+        test.done()
 
   fixtures = (
     for file in fs.readdirSync FIXTURES_DIR when HTML_EXT is path.extname file
@@ -101,53 +110,54 @@ exports.fixtures = (
   tests
 )
 
-exports.absolute = (test) ->
-  testAbsolute = (expected, desc, flags) ->
-    (err, stdout) ->
-      test.ifError err, "Error should not be thrown using '#{flags}' flags"
-      test.equal stdout, expected, "#{desc} using #{flags} flags"
+exports.absolute = do ->
+  testAbsolute = (command, expected, desc, flags) ->
+    (test) ->
+      test.expect 2
 
-  test.expect 6 * 2
+      exec command, (err, stdout) ->
+        test.ifError err, "Error should not be thrown using '#{flags}' flags"
+        test.equal stdout, expected, "#{desc} using #{flags} flags"
 
-  exec "#{COMMAND} -ep \"<a href='mock'>anchor</a>\"", testAbsolute """
+        test.done()
+
+  relativeLink: testAbsolute "#{COMMAND} -ep \"<a href='mock'>anchor</a>\"", """
     [anchor][0]
 
     [0]: mock
 
   """, 'Link should be relative', '-ep'
 
-  exec "#{COMMAND} -ep \"<a href='/mock'>anchor</a>\"", testAbsolute """
+  relativeRootLink: testAbsolute "#{COMMAND} -ep \"<a href='/mock'>anchor</a>\"", """
     [anchor][0]
 
     [0]: /mock
 
   """, 'Root link should be relative', '-ep'
 
-  exec "#{COMMAND} -epa \"<a href='mock'>anchor</a>\"", testAbsolute """
+  absoluteLink: testAbsolute "#{COMMAND} -epa \"<a href='mock'>anchor</a>\"", """
     [anchor][0]
 
     [0]: #{toFileUrl 'mock'}
 
   """, 'Link should be absolute', '-epa'
 
-  exec "#{COMMAND} -epa \"<a href='/mock'>anchor</a>\"", testAbsolute """
+  absoluteRootLink: testAbsolute "#{COMMAND} -epa \"<a href='/mock'>anchor</a>\"", """
     [anchor][0]
 
     [0]: #{toFileUrl '/mock'}
 
   """, 'Root link should be absolute', '-epa'
 
-  exec "#{COMMAND} -ep \"<img src='mock'>\"", testAbsolute """
+  relativeImage: testAbsolute "#{COMMAND} -ep \"<img src='mock'>\"", """
     ![](mock)
 
   """, 'Image should be relative', '-ep'
 
-  exec "#{COMMAND} -epa \"<img src='mock'>\"", testAbsolute """
+  absoluteImage: testAbsolute "#{COMMAND} -epa \"<img src='mock'>\"", """
     ![](mock)
 
   """, 'Absolute option should not affect images', '-epa'
-
-  test.done()
 
 exports.stdio = (test) ->
   test.expect 2
@@ -159,20 +169,26 @@ exports.stdio = (test) ->
 
     """, 'Output should match expected markdown using -ep flags'
 
-  test.done()
+    test.done()
 
-exports.usage = (test) ->
-  testUsage = (desc) ->
-    (err, stdout) ->
-      test.ifError err, "Error should not be thrown using #{desc}"
-      test.equal stdout, USAGE, "Output should match expected usage using #{desc}"
+exports.usage =
+  help: (test) ->
+    test.expect 2
 
-  test.expect 2 * 2
+    exec "#{COMMAND} -h", (err, stdout) ->
+      test.ifError err, "Error should not be thrown using the -h flag"
+      test.equal stdout, USAGE, "Output should match expected usage using the -h flag"
 
-  exec COMMAND,         testUsage 'no flags'
-  exec "#{COMMAND} -h", testUsage '-h flag'
+      test.done()
 
-  test.done()
+  noArgs: (test) ->
+    test.expect 2
+
+    exec COMMAND, (err, stdout) ->
+      test.ifError err, "Error should not be thrown using no flags"
+      test.equal stdout, USAGE, "Output should match expected usage using no flags"
+
+      test.done()
 
 exports.version = (test) ->
   test.expect 2
@@ -181,4 +197,4 @@ exports.version = (test) ->
     test.ifError err, 'Error should not be thrown using -v flag'
     test.equal stdout, VERSION, 'Output should match known version using -v flag'
 
-  test.done()
+    test.done()

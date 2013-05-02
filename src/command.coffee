@@ -157,7 +157,7 @@ parseOptions = ->
 
   # Exit while printing out the current version of this command.
   parser.on 'version', ->
-    exit "html.md version #{md.VERSION}"
+    exit "html.md version #{md.version}"
 
   # Ensure that the longer Markdown file extension is used if/when the associated option is
   # enabled.

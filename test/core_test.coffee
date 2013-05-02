@@ -83,5 +83,5 @@ exports.options =
     test.done()
 
 exports.version = (test) ->
-  test.equal md.VERSION, getPackage().version, 'Version should match descriptor'
+  test.equal md.version, getPackage().version, 'Version should match descriptor'
   test.done()

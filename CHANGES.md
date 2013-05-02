@@ -1,15 +1,13 @@
-# Change Log
-
-## 2013.02.04, Version 2.0.2
+2013.02.04, Version 2.0.2
 
 * [#13](https://github.com/neocotic/html.md/issues/13): Add new man page
 * [#14](https://github.com/neocotic/html.md/issues/14): Fix bug with `eval` option
 
-## 2012.12.12, Version 2.0.1
+2012.12.12, Version 2.0.1
 
 * [#8](https://github.com/neocotic/html.md/issues/8): Fix incorrect version
 
-## 2012.12.11, Version 2.0.0
+2012.12.11, Version 2.0.0
 
 * [#1](https://github.com/neocotic/html.md/issues/1): Check inline style attribute to see if elements are hidden
 * [#2](https://github.com/neocotic/html.md/issues/2): Add command line interface
