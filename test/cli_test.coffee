@@ -27,6 +27,7 @@ USAGE        = """
     -a, --absolute      always use absolute URLs for links
     -d, --debug         print additional debug information
     -e, --eval          pass a string from the command line as input
+    -i, --inline        generate inline style links
     -l, --long-ext      use long extension for Markdown files
     -o, --output <dir>  set the output directory for converted Markdown
     -p, --print         print out the converted Markdown
@@ -157,6 +158,43 @@ exports.absolute = do ->
     ![](#{toFileUrl 'mock'})
 
   """, 'Image should be absolute', '-epa')
+
+exports.inline = do ->
+  testInline = (command, expected, desc, flags) ->
+    (test) ->
+      test.expect 2
+
+      exec command, (err, stdout) ->
+        test.ifError err, "Error should not be thrown using '#{flags}' flags"
+        test.equal stdout, expected, "#{desc} using #{flags} flags"
+
+        test.done()
+
+  referenceLink: testInline("#{COMMAND} -ep \"<a href='mock'>anchor</a>\"", """
+    [anchor][0]
+
+    [0]: mock
+
+  """, 'Link should be in reference style', '-ep')
+
+  referenceLinkWithTitle: testInline("#{COMMAND} -ep \"<a href='mock' title='mocker'>anchor</a>\"",
+    """
+      [anchor][0]
+
+      [0]: mock "mocker"
+
+    """, 'Link should be in reference style with title', '-ep')
+
+  inlineLink: testInline("#{COMMAND} -epi \"<a href='mock'>anchor</a>\"", """
+    [anchor](mock)
+
+  """, 'Link should be in inline style', '-epi')
+
+  inlineLinkWithTitle: testInline("#{COMMAND} -epi \"<a href='mock' title='mocker'>anchor</a>\"",
+    """
+      [anchor](mock "mocker")
+
+    """, 'Link should be in inline style with title', '-epi')
 
 exports.stdio = (test) ->
   test.expect 2

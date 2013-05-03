@@ -53,7 +53,7 @@ In the browser:
     <h1>Hello, World!</h1>
     <p>My tasks for today:</p>
     <ul>
-      <li>Learn all about <a href="http://neocotic.com/html-md">html.md</a></li>
+      <li>Learn all about <a href="http://neocotic.com/html.md">html.md</a></li>
       <li>Tell everyone how <strong>awesome</strong> it is!</li>
     </ul>
   </body>
@@ -76,8 +76,8 @@ In the terminal:
 
 ``` bash
 # provide HTML to be converted and print it back out to stdout:
-$ md -ep "I <i>love</i> <b>html.md</b>"
-I _love_ **html.md**
+$ md -epi "I <b>love</b> <a href='http://neocotic.com/html.md'>html.md</a>"
+I **love** [html.md](http://neocotic.com/html.md)
 # convert HTML files and output them into another directory:
 $ md -o ./markdown ./html/*.html
 # convert all HTML files in the current directory into Markdown files:
@@ -95,6 +95,7 @@ $ md -l .
       -a, --absolute      always use absolute URLs for links
       -d, --debug         print additional debug information
       -e, --eval          pass a string from the command line as input
+      -i, --inline        generate inline style links
       -l, --long-ext      use long extension for Markdown files
       -o, --output <dir>  set the output directory for converted Markdown
       -p, --print         print out the converted Markdown
@@ -126,6 +127,10 @@ The following options are recognised by this method (all of which are optional);
   <tr>
     <td>debug</td>
     <td>Prepends additional debug information to the Markdown output</td>
+  </tr>
+  <tr>
+    <td>inline</td>
+    <td>All links are generated using the inline style</td>
   </tr>
 </table>
 
