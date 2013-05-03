@@ -96,7 +96,7 @@ exports.fixtures = do ->
   )
 
   tests =
-    tearDown:(callback) ->
+    tearDown: (callback) ->
       return do callback unless fs.existsSync OUTPUT_DIR
 
       fs.readdirSync(OUTPUT_DIR).forEach (file) ->
@@ -120,43 +120,43 @@ exports.absolute = do ->
 
         test.done()
 
-  relativeLink: testAbsolute "#{COMMAND} -ep \"<a href='mock'>anchor</a>\"", """
+  relativeLink: testAbsolute("#{COMMAND} -ep \"<a href='mock'>anchor</a>\"", """
     [anchor][0]
 
     [0]: mock
 
-  """, 'Link should be relative', '-ep'
+  """, 'Link should be relative', '-ep')
 
-  relativeRootLink: testAbsolute "#{COMMAND} -ep \"<a href='/mock'>anchor</a>\"", """
+  relativeRootLink: testAbsolute("#{COMMAND} -ep \"<a href='/mock'>anchor</a>\"", """
     [anchor][0]
 
     [0]: /mock
 
-  """, 'Root link should be relative', '-ep'
+  """, 'Root link should be relative', '-ep')
 
-  absoluteLink: testAbsolute "#{COMMAND} -epa \"<a href='mock'>anchor</a>\"", """
+  absoluteLink: testAbsolute("#{COMMAND} -epa \"<a href='mock'>anchor</a>\"", """
     [anchor][0]
 
     [0]: #{toFileUrl 'mock'}
 
-  """, 'Link should be absolute', '-epa'
+  """, 'Link should be absolute', '-epa')
 
-  absoluteRootLink: testAbsolute "#{COMMAND} -epa \"<a href='/mock'>anchor</a>\"", """
+  absoluteRootLink: testAbsolute("#{COMMAND} -epa \"<a href='/mock'>anchor</a>\"", """
     [anchor][0]
 
     [0]: #{toFileUrl '/mock'}
 
-  """, 'Root link should be absolute', '-epa'
+  """, 'Root link should be absolute', '-epa')
 
-  relativeImage: testAbsolute "#{COMMAND} -ep \"<img src='mock'>\"", """
+  relativeImage: testAbsolute("#{COMMAND} -ep \"<img src='mock'>\"", """
     ![](mock)
 
-  """, 'Image should be relative', '-ep'
+  """, 'Image should be relative', '-ep')
 
-  absoluteImage: testAbsolute "#{COMMAND} -epa \"<img src='mock'>\"", """
+  absoluteImage: testAbsolute("#{COMMAND} -epa \"<img src='mock'>\"", """
     ![](#{toFileUrl 'mock'})
 
-  """, 'Image should be absolute', '-epa'
+  """, 'Image should be absolute', '-epa')
 
 exports.stdio = (test) ->
   test.expect 2
