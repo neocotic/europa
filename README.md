@@ -86,19 +86,18 @@ In the terminal:
 
 ## Usage
 
-```
-Usage: md [options] [ -e html | file.html ] [arguments]
+    Usage: md Usage: md [options] [ -e html | <file ...> ]
 
-Options:
-  -a, --absolute     always use absolute URLs for links
-  -d, --debug        print additional debug information
-  -e, --eval         pass a string from the command line as input
-  -h, --help         display this help information
-  -l, --long-ext     use long extension for Markdown files
-  -o, --output DIR   set the output directory for converted Markdown
-  -p, --print        print out the converted Markdown
-  -v, --version      display the version number
-```
+    Options:
+
+      -h, --help          output usage information
+      -V, --version       output the version number
+      -a, --absolute      always use absolute URLs for links
+      -d, --debug         print additional debug information
+      -e, --eval          pass a string from the command line as input
+      -l, --long-ext      use long extension for Markdown files
+      -o, --output <dir>  set the output directory for converted Markdown
+      -p, --print         print out the converted Markdown
 
 ## API
 
