@@ -74,15 +74,15 @@ about support for this platform).
 
 In the terminal:
 
-    # provide HTML to be converted and print it back out to stdout:
-    $ md -ep "I <b>love</b> <a href='https://github.com/neocotic/html.md'>html.md</a>"
-    I **love** [html.md][0]
-
-    [0]: https://github.com/neocotic/html.md
-    # convert HTML files and output them into another directory:
-    $ md -o ./markdown ./html/*.html
-    # convert all HTML files in the current directory into Markdown files:
-    $ md -l .
+``` bash
+# provide HTML to be converted and print it back out to stdout:
+$ md -ep "I <i>love</i> <b>html.md</b>"
+I _love_ **html.md**
+# convert HTML files and output them into another directory:
+$ md -o ./markdown ./html/*.html
+# convert all HTML files in the current directory into Markdown files:
+$ md -l .
+```
 
 ## Usage
 
