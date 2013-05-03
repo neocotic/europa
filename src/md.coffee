@@ -11,8 +11,9 @@
 
 # Default option values.
 DEFAULT_OPTIONS   =
-  absolute: off
-  debug:    off
+  absolute: no
+  debug:    no
+  inline:   no
 # Save the previous value of the global `md` variable for *noConflict* mode.
 PREVIOUS_MD       = @md
 # Map of replacement strings for *special* Markdown characters.
@@ -157,7 +158,7 @@ class HtmlParser
 
     # Copy all default option values across to `options` only where they were not specified.
     for own key, defaultValue of DEFAULT_OPTIONS
-      @options[key] = defaultValue unless @options.hasOwnProperty key
+      @options[key] = defaultValue if typeof @options[key] is 'undefined'
 
   # Append `str` to the buffer string.
   append: (str) ->
@@ -441,25 +442,33 @@ class HtmlParser
               # Links with no URLs are treated just like text-containing elements (e.g. `span`).  
               # `a.href` always returns an absolute URL while `a.getAttribute('href')` always
               # returns the exact value of the `href` attribute. For this reason we need to be sure
-              # that we extract the URL correctly based on the state of `absolute` option.
+              # that we extract the URL correctly based on the state of the `absolute` option.
               href = @attr ele, 'href', @options.absolute
               break unless href
 
               # Be sure to include the title after each link reference that will be displayed at
               # the end of the Markdown output, where possible.
-              title = @attr ele, 'title'
-              href += " \"#{title}\"" if title
+              title  = @attr ele, 'title'
+              href  += " \"#{title}\"" if title
 
-              # Try to avoid any duplicate link references.
-              if @linkMap[href]?
-                index          = @linkMap[href]
+              # Determine what style the link should be generated in (i.e. *inline* or
+              # *reference*) depending on the state of the `inline` option.
+              suffix = if @options.inline
+                # *Inline* style means all links have their URLs (and possible titles) included
+                # immediately after their contents (e.g.
+                # `[my link](/path/to/page.html "My title")`).
+                "(#{href})"
               else
-                index          = @links.push(href) - 1
-                @linkMap[href] = index
+                # *Reference* style means all links have an index included immediately after their
+                # contents that directly maps to their URL (and possible title) which are displayed
+                # at the end of the buffer string (e.g. `[my link][0]` and then later
+                # `[0]: /path/to/page.html "My title"`).  
+                # Duplicate link/title combination references are avoided for a cleaner result.
+                "[#{@linkMap[href] ?= @links.push(href) - 1}]"
 
               @output '['
               @atNoWS = yes
-              after   = @outputLater "][#{index}]"
+              after   = @outputLater "]#{suffix}"
             # Images are very similar to links, just without the added complexity of references.
             when 'IMG'
               # Extract the image URL from `ele`.  
@@ -467,7 +476,7 @@ class HtmlParser
               # an `img` element are always ignored since they can never contain anything valid.  
               # `img.src` always returns an absolute URL while `img.getAttribute('src')` always
               # returns the exact value of the `src` attribute. For this reason we need to be sure
-              # that we extract the URL correctly based on the state of `absolute` option.
+              # that we extract the URL correctly based on the state of the `absolute` option.
               skipChildren = yes
               src          = @attr ele, 'src', @options.absolute
               break unless src

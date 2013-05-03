@@ -82,6 +82,29 @@ exports.options =
 
     test.done()
 
+  inline: (test) ->
+    options = inline: on
+
+    test.equal md('<a href="mock">anchor</a>'), """
+      [anchor][0]
+
+      [0]: mock
+    """, 'Link should be in reference style'
+
+    test.equal md('<a href="mock" title="mocker">anchor</a>'), """
+      [anchor][0]
+
+      [0]: mock "mocker"
+    """, 'Link should be in reference style with title'
+
+    test.equal md('<a href="mock">anchor</a>', options), '[anchor](mock)',
+      'Link should be in inline style'
+
+    test.equal md('<a href="mock" title="mocker">anchor</a>', options), '[anchor](mock "mocker")',
+      'Link should be in inline style with title'
+
+    test.done()
+
 exports.version = (test) ->
   test.equal md.version, getPackage().version, 'Version should match descriptor'
   test.done()
