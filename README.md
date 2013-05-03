@@ -86,7 +86,7 @@ $ md -l .
 
 ## Usage
 
-    Usage: md Usage: md [options] [ -e html | <file ...> ]
+    Usage: md [options] [ -e html | <file ...> ]
 
     Options:
 

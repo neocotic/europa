@@ -3,7 +3,7 @@
 * [#18](https://github.com/neocotic/html.md/issues/18): Add support for [bower][] installations
 * [#20](https://github.com/neocotic/html.md/issues/20): Replace `Cakefile` with new [grunt][] build process
 * [#20](https://github.com/neocotic/html.md/issues/20): Replace [tap][] test framework with [nodeunit][]
-* [#21](https://github.com/neocotic/html.md/issues/21): Removed [CoffeeScript][] as a runtime dependency
+* [#21](https://github.com/neocotic/html.md/issues/21): Remove [CoffeeScript][] as a runtime dependency
 * [#21](https://github.com/neocotic/html.md/issues/21): Update [jsdom][] to v0.6.0 to fix known bugs
 * [#21](https://github.com/neocotic/html.md/issues/21): Improve compatibility with the Windows platform
 * [#21](https://github.com/neocotic/html.md/issues/21): Improve code and documentation quality and standards
