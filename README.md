@@ -105,7 +105,7 @@ In the terminal:
 Parses the HTML into a valid [Markdown][] string. The `html` can either be an HTML string or DOM
 element.
 
-``` html
+``` javascript
 console.log(md('I <strong>love</strong> html.md!')); // "I **love** html.md!"
 console.log(md(document.querySelector('p')));        // "Lorem ipsum, *baby*!"
 ```
