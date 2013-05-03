@@ -38,19 +38,6 @@ VERSION      = """
 
 """
 
-# Configuration
-# -------------
-
-exports.tearDown = (callback) ->
-  return do callback unless fs.existsSync OUTPUT_DIR
-
-  fs.readdirSync(OUTPUT_DIR).forEach (file) ->
-    fs.unlinkSync path.join OUTPUT_DIR, file
-
-  fs.rmdirSync OUTPUT_DIR
-
-  do callback
-
 # Helpers
 # -------
 
@@ -108,7 +95,17 @@ exports.fixtures = do ->
       path.basename file, HTML_EXT
   )
 
-  tests = {}
+  tests =
+    tearDown:(callback) ->
+      return do callback unless fs.existsSync OUTPUT_DIR
+
+      fs.readdirSync(OUTPUT_DIR).forEach (file) ->
+        fs.unlinkSync path.join OUTPUT_DIR, file
+
+      fs.rmdirSync OUTPUT_DIR
+
+      do callback
+
   tests[fixture] = testFixture fixture for fixture in fixtures
   tests
 
