@@ -63,7 +63,7 @@ In the browser:
 In [node.js][]:
 
 ``` javascript
-var md = require('md');
+var md = require('html-md');
 
 console.log(md('I <em>love</em> html.md!'));
 ```
