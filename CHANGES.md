@@ -11,6 +11,7 @@
 * [#21](https://github.com/neocotic/html.md/issues/21): Improve compatibility with older browsers
 * [#22](https://github.com/neocotic/html.md/issues/22): Improve handling of ordered and unodered lists
 * [#22](https://github.com/neocotic/html.md/issues/22): Support nested lists
+* [#23](https://github.com/neocotic/html.md/issues/23): Add option to support inline link style
 * Replace [optparse][] with [commander][]
 * Lots of bug fixes and optimizations
 
