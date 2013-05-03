@@ -160,7 +160,17 @@ console.log(md.version); // "2.1.0"
 
 ## Windows
 
-TODO
+*This section is only relevant for [node.js][] users and does not affect browsers.*
+
+A lot of care has been put in to ensure [html.md][] runs well on Windows. Unfortunately, one of the
+dependencies of the [jsdom][] library, which we depend on to emulate a DOM within the [node.js][]
+environment, does not build well on Windows systems since it's built using "native modules" that
+are compiled during installation. [Contextify][], the inherited dependency in question, is used to
+run `<script>` contents safely in a sandbox environment and is required to properly parse DOM
+objects into valid [Markdown][].
+
+Fortunately, the author has documented some techniques to get it building on your Windows system in
+a [Windows installation guide][].
 
 ## Bugs
 
@@ -181,8 +191,10 @@ homepage;
 http://neocotic.com/html.md
 
 [@neocotic]: https://twitter.com/neocotic
+[contextify]: https://github.com/brianmcd/contextify
 [html]: http://en.wikipedia.org/wiki/HTML
 [html.md]: http://neocotic.com/html.md
 [jsdom]: https://github.com/tmpvar/jsdom
 [markdown]: http://en.wikipedia.org/wiki/Markdown
 [node.js]: http://nodejs.org
+[windows installation guide]: https://github.com/brianmcd/contextify/wiki/Windows-Installation-Guide
