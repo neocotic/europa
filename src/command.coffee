@@ -9,10 +9,10 @@
 # Module dependencies
 # -------------------
 
-fs             = require 'fs-extra'
-md             = require './md'
-path           = require 'path'
-{OptionParser} = require 'optparse'
+fs      = require 'fs-extra'
+md      = require './md'
+path    = require 'path'
+program = require 'commander'
 
 # Private constants
 # -----------------
@@ -21,31 +21,12 @@ path           = require 'path'
 NOT_FOUND  = 'ENOENT'
 # Regular expression used to identify HTML files using common extensions.
 R_HTML_EXT = /\.s?html?$/i
-# Available command options/switches.
-SWITCHES   = [
-  ['-a', '--absolute',   'always use absolute URLs for links']
-  ['-d', '--debug',      'print additional debug information']
-  ['-e', '--eval',       'pass a string from the command line as input']
-  ['-h', '--help',       'display this help information']
-  ['-l', '--long-ext',   'use long extension for Markdown files']
-  ['-o', '--output DIR', 'set the output directory for converted Markdown']
-  ['-p', '--print',      'print out the converted Markdown']
-  ['-v', '--version',    'display the version number']
-]
 
 # Private variables
 # -----------------
 
 # File extension to be applied to any Markdown files that are created.
 extension = '.md'
-# Options, including their defaults, that are possibly changed by switches passed in at runtime.
-opts      =
-  absolute: no
-  debug:    no
-  eval:     no
-  longExt:  no
-  output:   null
-  print:    no
 # List of HTML sources passed in at runtime.  
 # These can either be paths or a single HTML input (if `eval` option was enabled).
 sources   = []
@@ -68,8 +49,8 @@ exit = (code, message) ->
 outputPath = (source, base) ->
   fileName = path.basename(source, path.extname(source)) + extension
   srcDir   = path.dirname source
-  dir      = if opts.output
-    path.join opts.output, if base is '.' then srcDir else srcDir[base.length..]
+  dir      = if program.output
+    path.join program.output, if base is '.' then srcDir else srcDir[base.length..]
   else
     srcDir
 
@@ -123,12 +104,12 @@ parsePath = (source, topLevel, base) ->
 parseHtml = (file, input, base) ->
   try
     # Let `md` work its magic on the HTML `input`.
-    output = md input, opts
+    output = md input, program
 
     # Either write the output to `stdout` or to a corresponding Markdown file depending on whether
     # the `print` option was enabled.
-    if opts.print then console.log output
-    else if file  then writeMarkdown file, output, base
+    if program.print then console.log output
+    else if file     then writeMarkdown file, output, base
   catch err
     # An error occured while parsing `input`, so stop processing all sources and exit, while also
     # letting the user know why.
@@ -136,39 +117,28 @@ parseHtml = (file, input, base) ->
 
 # Parse the options that could have been provided at runtime.
 parseOptions = ->
-  # Create the parser based on the predefined options/switches/flags/whatever.
-  parser = new OptionParser SWITCHES
-  parser.banner        = 'Usage: md [options] [ -e html | file.html ] [arguments]'
-  parser.options_title = 'Options:'
-
-  # Handle all general options that are specified.
-  parser.on '*', (opt, val) ->
-    # Transform long option names into camel case (e.g. `long-ext` becomes `longExt`).
-    opt = opt.replace /-([a-z])/gi, (match, char) ->
-      char.toUpperCase()
-
-    # Map `opt` to its corresponding option while ensure `boolean` options are handled correctly.
-    if typeof opts[opt] is 'boolean' then opts[opt] = not opts[opt]
-    else if val?                     then opts[opt] = val
-
-  # Exit while printing out the usage for this command.
-  parser.on 'help', ->
-    exit parser.toString()
-
-  # Exit while printing out the current version of this command.
-  parser.on 'version', ->
-    exit "html.md version #{md.version}"
+  # Parse the specified options/switches/flags/whatever.
+  program
+    .version(md.version)
+    .usage('Usage: md [options] [ -e html | <file ...> ]')
+    .option('-a, --absolute',     'always use absolute URLs for links')
+    .option('-d, --debug',        'print additional debug information')
+    .option('-e, --eval',         'pass a string from the command line as input')
+    .option('-l, --long-ext',     'use long extension for Markdown files')
+    .option('-o, --output <dir>', 'set the output directory for converted Markdown')
+    .option('-p, --print',        'print out the converted Markdown')
+    .parse process.argv
 
   # Ensure that the longer Markdown file extension is used if/when the associated option is
   # enabled.
-  extension = '.markdown' if opts.longExt
+  extension = '.markdown' if program.longExt
   # All left-over arguments are considered potential HTML source files/input and will be handled as
   # such.
-  sources   = parser.parse(process.argv)[2..]
+  sources   = program.args[..]
 
   # No additional arguments were specified? Then simply print out the usage as the user might not
   # know how to use this command.
-  exit parser.toString() unless sources.length
+  program.help() unless sources.length
 
 # Write the `markdown` converted from `source` to its relative output file.
 writeMarkdown = (source, markdown, base) ->
@@ -204,9 +174,9 @@ exports.run = ->
     # Parse the arguments passed in at runtime as options/switches.
     do parseOptions
 
-    if opts.eval
+    if program.eval
       # Parse the arguments as direct HTML input and print the output to `stdout`.
-      parseHtml null, sources[0], opts 
+      parseHtml null, sources[0], process.cwd()
     else
       # Read each of the relevant targeted source files and parse them into HTML, sending each
       # output either to `stdout` or a corresponding Markdown file, depending on what options are

@@ -17,21 +17,24 @@ MD_EXT       = '.md'
 MD_FULL_EXT  = '.markdown'
 OUTPUT_DIR   = path.join __dirname, 'output'
 USAGE        = """
-  Usage: md [options] [ -e html | file.html ] [arguments]
+
+  Usage: md Usage: md [options] [ -e html | <file ...> ]
 
   Options:
-    -a, --absolute     always use absolute URLs for links
-    -d, --debug        print additional debug information
-    -e, --eval         pass a string from the command line as input
-    -h, --help         display this help information
-    -l, --long-ext     use long extension for Markdown files
-    -o, --output DIR   set the output directory for converted Markdown
-    -p, --print        print out the converted Markdown
-    -v, --version      display the version number
 
-"""
+    -h, --help          output usage information
+    -V, --version       output the version number
+    -a, --absolute      always use absolute URLs for links
+    -d, --debug         print additional debug information
+    -e, --eval          pass a string from the command line as input
+    -l, --long-ext      use long extension for Markdown files
+    -o, --output <dir>  set the output directory for converted Markdown
+    -p, --print         print out the converted Markdown
+
+
+""".replace /\n(?!\n)(?=.+)/g, '\n  '
 VERSION      = """
-  html.md version #{md.version}
+  #{md.version}
 
 """
 
@@ -61,7 +64,7 @@ toPathName = (relativePath) ->
 # Tests
 # -----
 
-exports.fixtures = (
+exports.fixtures = do ->
   testFixture = (name) ->
     htmlPath = path.join FIXTURES_DIR, "#{name}#{HTML_EXT}"
     expected = md fs.readFileSync htmlPath, ENCODING
@@ -108,7 +111,6 @@ exports.fixtures = (
   tests = {}
   tests[fixture] = testFixture fixture for fixture in fixtures
   tests
-)
 
 exports.absolute = do ->
   testAbsolute = (command, expected, desc, flags) ->
@@ -155,9 +157,9 @@ exports.absolute = do ->
   """, 'Image should be relative', '-ep'
 
   absoluteImage: testAbsolute "#{COMMAND} -epa \"<img src='mock'>\"", """
-    ![](mock)
+    ![](#{toFileUrl 'mock'})
 
-  """, 'Absolute option should not affect images', '-epa'
+  """, 'Image should be absolute', '-epa'
 
 exports.stdio = (test) ->
   test.expect 2
@@ -193,7 +195,7 @@ exports.usage =
 exports.version = (test) ->
   test.expect 2
 
-  exec "#{COMMAND} -v", (err, stdout) ->
+  exec "#{COMMAND} -V", (err, stdout) ->
     test.ifError err, 'Error should not be thrown using -v flag'
     test.equal stdout, VERSION, 'Output should match known version using -v flag'
 
