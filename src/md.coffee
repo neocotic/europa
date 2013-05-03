@@ -12,6 +12,7 @@
 # Default option values.
 DEFAULT_OPTIONS   =
   absolute: no
+  base:     @document?.baseURI
   debug:    no
   inline:   no
 # Save the previous value of the global `md` variable for *noConflict* mode.
@@ -112,6 +113,8 @@ unless win?
   jsdom = require 'jsdom'
   doc   = jsdom.jsdom null, null, features: FetchExternalResources: no
   win   = doc.createWindow()
+  # Update the default value of the `base` option to make more sense node.js.
+  DEFAULT_OPTIONS.base = "file://#{process.cwd()}"
 
 # Try to ensure `Node` is available with the required constants. Probably not required; more of a
 # sanity check.
@@ -159,6 +162,10 @@ class HtmlParser
     # Copy all default option values across to `options` only where they were not specified.
     for own key, defaultValue of DEFAULT_OPTIONS
       @options[key] = defaultValue if typeof @options[key] is 'undefined'
+
+    # Change the base URL when in the node.js environment to allow relative URLs to be resolved
+    # with more control.
+    win.document.baseURI = @options.base unless window?
 
   # Append `str` to the buffer string.
   append: (str) ->

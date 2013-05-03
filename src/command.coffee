@@ -104,9 +104,9 @@ parsePath = (source, topLevel, base) ->
 parseHtml = (file, input, base) ->
   try
     # Extract only relevant options from `program`.
-    {absolute, debug, inline} = program
+    {absolute, base,  debug, inline} = program
     # Let `md` work its magic on the HTML `input`.
-    output                    = md input, {absolute, debug, inline}
+    output                           = md input, {absolute, base, debug, inline}
 
     # Either write the output to `stdout` or to a corresponding Markdown file depending on whether
     # the `print` option was enabled.
@@ -124,6 +124,7 @@ parseOptions = ->
     .version(md.version)
     .usage('Usage: md [options] [ -e html | <file ...> ]')
     .option('-a, --absolute',     'always use absolute URLs for links')
+    .option('-b, --base <url>',   'set base URL to resolve relative URLs from')
     .option('-d, --debug',        'print additional debug information')
     .option('-e, --eval',         'pass a string from the command line as input')
     .option('-i, --inline',       'generate inline style links')

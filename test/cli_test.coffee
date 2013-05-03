@@ -25,6 +25,7 @@ USAGE        = """
     -h, --help          output usage information
     -V, --version       output the version number
     -a, --absolute      always use absolute URLs for links
+    -b, --base <url>    set base URL to resolve relative URLs from
     -d, --debug         print additional debug information
     -e, --eval          pass a string from the command line as input
     -i, --inline        generate inline style links
@@ -158,6 +159,61 @@ exports.absolute = do ->
     ![](#{toFileUrl 'mock'})
 
   """, 'Image should be absolute', '-epa')
+
+exports.base = do ->
+  testBase = (command, expected, desc, flags) ->
+    (test) ->
+      test.expect 2
+
+      exec command, (err, stdout) ->
+        test.ifError err, "Error should not be thrown using '#{flags}' flags"
+        test.equal stdout, expected, "#{desc} using #{flags} flags"
+
+        test.done()
+
+  defaultLink: testBase("#{COMMAND} -epa \"<a href='mock'>anchor</a>\"", """
+    [anchor][0]
+
+    [0]: #{toFileUrl 'mock'}
+
+  """, 'Link should be relative to the current working directory', '-epa')
+
+  defaultRootLink: testBase("#{COMMAND} -epa \"<a href='/mock'>anchor</a>\"", """
+    [anchor][0]
+
+    [0]: #{toFileUrl '/mock'}
+
+  """, 'Root link should be relative to the current working directory', '-epa')
+
+  defaultImage: testBase("#{COMMAND} -epa \"<img src='mock'>\"", """
+    ![](#{toFileUrl 'mock'})
+
+  """, 'Image should be relative to the current working directory', '-epa')
+
+  baseLink: testBase("""
+    #{COMMAND} -epab "http://example.com/path/to/page/" "<a href='mock'>anchor</a>"
+  """, """
+    [anchor][0]
+
+    [0]: http://example.com/path/to/page/mock
+
+  """, 'Link should be relative to custom URL', '-epab')
+
+  baseRootLink: testBase("""
+      #{COMMAND} -epab "http://example.com/path/to/page/" "<a href='/mock'>anchor</a>"
+  """, """
+    [anchor][0]
+
+    [0]: http://example.com/mock
+
+  """, 'Link should be relative to custom URL', '-epab')
+
+  baseImage: testBase("""
+    #{COMMAND} -epab "http://example.com/path/to/page/" "<img src='mock'>"
+  """, """
+    ![](http://example.com/path/to/page/mock)
+
+  """, 'Image should be relative to custom URL', '-epab')
 
 exports.inline = do ->
   testInline = (command, expected, desc, flags) ->

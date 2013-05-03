@@ -82,6 +82,42 @@ exports.options =
 
     test.done()
 
+  base: (test) ->
+    absolute = on
+    base     = 'http://example.com/path/to/page/'
+
+    test.equal md('<a href="mock">anchor</a>', {absolute}), """
+      [anchor][0]
+
+      [0]: #{toFileUrl 'mock'}
+    """, 'Link should be relative to the current working directory'
+
+    test.equal md('<a href="/mock">anchor</a>', {absolute}), """
+      [anchor][0]
+
+      [0]: #{toFileUrl '/mock'}
+    """, 'Root link should be relative to the current working directory'
+
+    test.equal md('<img src="mock">', {absolute}), "![](#{toFileUrl 'mock'})",
+      'Image should be relative to the current working directory'
+
+    test.equal md('<a href="mock">anchor</a>', {absolute, base}), """
+      [anchor][0]
+
+      [0]: #{base}mock
+    """, 'Link should be relative to custom URL'
+
+    test.equal md('<a href="/mock">anchor</a>', {absolute, base}), """
+      [anchor][0]
+
+      [0]: http://example.com/mock
+    """, 'Root link should be relative to custom URL'
+
+    test.equal md('<img src="mock">', {absolute, base}), "![](#{base}mock)",
+      'Image should be relative to custom URL'
+
+    test.done()
+
   inline: (test) ->
     options = inline: on
 
