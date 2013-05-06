@@ -46,11 +46,11 @@ exit = (code, message) ->
   process.exit code
 
 # Resolve the output path for `source`.
-outputPath = (source, base) ->
+outputPath = (source, root) ->
   fileName = path.basename(source, path.extname(source)) + extension
   srcDir   = path.dirname source
   dir      = if program.output
-    path.join program.output, if base is '.' then srcDir else srcDir[base.length..]
+    path.join program.output, if root is '.' then srcDir else srcDir[root.length..]
   else
     srcDir
 
@@ -58,7 +58,7 @@ outputPath = (source, base) ->
 
 # Attempt to either parse the contents of the `source` path or, if it's a directory, the contents
 # of its children HTML files.
-parsePath = (source, topLevel, base) ->
+parsePath = (source, topLevel, root) ->
   fs.stat source, (err, stats) ->
     if err
       # We only care about `ENOENT` errors so everything else is thrown.
@@ -67,7 +67,7 @@ parsePath = (source, topLevel, base) ->
       # searchability and trying again.
       if topLevel and not R_HTML_EXT.test source
         source = sources[sources.indexOf(source)] = "#{source}.html"
-        parsePath source, topLevel, base
+        parsePath source, topLevel, root
       else if topLevel
         exit 1, "File not found: #{source}"
       return
@@ -87,31 +87,31 @@ parsePath = (source, topLevel, base) ->
         sources[index..index] = files
 
         # Now finally try to parse all of the directory `files`.
-        parsePath file, no, base for file in files
+        parsePath file, no, root for file in files
     else if topLevel or R_HTML_EXT.test source
       # Possible source file found so read its contents.
       fs.readFile source, (err, html) ->
         throw err if err
 
         # Treat the files contents as HTML and try to parse it using `md`.
-        parseHtml source, html.toString(), base
+        parseHtml source, html.toString(), root
     else
       # Doesn't appear to have a recognizable HTML file extension so just ignore the file and
       # remove it from the list of `sources`.
       sources.splice sources.indexOf(source), 1
 
 # Parse the HTML `input` and write it out accordingly.
-parseHtml = (file, input, base) ->
+parseHtml = (file, input, root) ->
   try
     # Extract only relevant options from `program`.
-    {absolute, debug, inline} = program
+    {absolute, base,  debug, inline} = program
     # Let `md` work its magic on the HTML `input`.
-    output                    = md input, {absolute, debug, inline}
+    output                           = md input, {absolute, base, debug, inline}
 
     # Either write the output to `stdout` or to a corresponding Markdown file depending on whether
     # the `print` option was enabled.
     if program.print then console.log output
-    else if file     then writeMarkdown file, output, base
+    else if file     then writeMarkdown file, output, root
   catch err
     # An error occured while parsing `input`, so stop processing all sources and exit, while also
     # letting the user know why.
@@ -123,7 +123,8 @@ parseOptions = ->
   program
     .version(md.version)
     .usage('Usage: md [options] [ -e html | <file ...> ]')
-    .option('-a, --absolute',     'always use absolute URLs for links')
+    .option('-a, --absolute',     'always use absolute URLs for links and images')
+    .option('-b, --base <url>',   'set base URL to resolve relative URLs from')
     .option('-d, --debug',        'print additional debug information')
     .option('-e, --eval',         'pass a string from the command line as input')
     .option('-i, --inline',       'generate inline style links')
@@ -144,9 +145,9 @@ parseOptions = ->
   program.help() unless sources.length
 
 # Write the `markdown` converted from `source` to its relative output file.
-writeMarkdown = (source, markdown, base) ->
+writeMarkdown = (source, markdown, root) ->
   # Derive the best output file path based on the name of the `source` file.
-  mdPath = outputPath source, base
+  mdPath = outputPath source, root
   mdDir  = path.dirname mdPath
 
   # Write `markdown` to its corresponding output file.

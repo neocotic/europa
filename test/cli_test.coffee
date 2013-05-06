@@ -11,11 +11,12 @@ path   = require 'path'
 
 COMMAND      = './bin/md'
 ENCODING     = 'utf8'
+EXPECTED_DIR = path.join __dirname, 'expected'
 FIXTURES_DIR = path.join __dirname, 'fixtures'
 HTML_EXT     = '.html'
 MD_EXT       = '.md'
 MD_FULL_EXT  = '.markdown'
-OUTPUT_DIR   = path.join __dirname, 'output'
+OUTPUT_DIR   = 'tmp'
 USAGE        = """
 
   Usage: md Usage: md [options] [ -e html | <file ...> ]
@@ -24,7 +25,8 @@ USAGE        = """
 
     -h, --help          output usage information
     -V, --version       output the version number
-    -a, --absolute      always use absolute URLs for links
+    -a, --absolute      always use absolute URLs for links and images
+    -b, --base <url>    set base URL to resolve relative URLs from
     -d, --debug         print additional debug information
     -e, --eval          pass a string from the command line as input
     -i, --inline        generate inline style links
@@ -46,7 +48,7 @@ toFileUrl = (relativePath) ->
   "file://#{toPathName relativePath}"
 
 toPathName = (relativePath) ->
-  pathName = path.resolve('lib', relativePath).replace ///\\///g, '/'
+  pathName = path.resolve(process.cwd(), '..', relativePath).replace ///\\///g, '/'
   if pathName[0] isnt '/' then "/#{pathName}" else pathName
 
 # Tests
@@ -55,7 +57,7 @@ toPathName = (relativePath) ->
 exports.fixtures = do ->
   testFixture = (name) ->
     htmlPath = path.join FIXTURES_DIR, "#{name}#{HTML_EXT}"
-    expected = md fs.readFileSync htmlPath, ENCODING
+    expected = fs.readFileSync path.join(EXPECTED_DIR, "#{name}#{MD_EXT}"), ENCODING
 
     standard: (test) ->
       test.expect 2
@@ -97,15 +99,9 @@ exports.fixtures = do ->
   )
 
   tests =
-    tearDown: (callback) ->
-      return do callback unless fs.existsSync OUTPUT_DIR
-
-      fs.readdirSync(OUTPUT_DIR).forEach (file) ->
-        fs.unlinkSync path.join OUTPUT_DIR, file
-
-      fs.rmdirSync OUTPUT_DIR
-
-      do callback
+    setUp: (callback) ->
+      fs.exists OUTPUT_DIR, (exists) ->
+        if exists then do callback else fs.mkdir OUTPUT_DIR, callback
 
   tests[fixture] = testFixture fixture for fixture in fixtures
   tests
@@ -158,6 +154,61 @@ exports.absolute = do ->
     ![](#{toFileUrl 'mock'})
 
   """, 'Image should be absolute', '-epa')
+
+exports.base = do ->
+  testBase = (command, expected, desc, flags) ->
+    (test) ->
+      test.expect 2
+
+      exec command, (err, stdout) ->
+        test.ifError err, "Error should not be thrown using '#{flags}' flags"
+        test.equal stdout, expected, "#{desc} using #{flags} flags"
+
+        test.done()
+
+  defaultLink: testBase("#{COMMAND} -epa \"<a href='mock'>anchor</a>\"", """
+    [anchor][0]
+
+    [0]: #{toFileUrl 'mock'}
+
+  """, 'Link should be relative to the current working directory', '-epa')
+
+  defaultRootLink: testBase("#{COMMAND} -epa \"<a href='/mock'>anchor</a>\"", """
+    [anchor][0]
+
+    [0]: #{toFileUrl '/mock'}
+
+  """, 'Root link should be relative to the current working directory', '-epa')
+
+  defaultImage: testBase("#{COMMAND} -epa \"<img src='mock'>\"", """
+    ![](#{toFileUrl 'mock'})
+
+  """, 'Image should be relative to the current working directory', '-epa')
+
+  baseLink: testBase("""
+    #{COMMAND} -epab "http://example.com/path/to/page/" "<a href='mock'>anchor</a>"
+  """, """
+    [anchor][0]
+
+    [0]: http://example.com/path/to/page/mock
+
+  """, 'Link should be relative to custom URL', '-epab')
+
+  baseRootLink: testBase("""
+      #{COMMAND} -epab "http://example.com/path/to/page/" "<a href='/mock'>anchor</a>"
+  """, """
+    [anchor][0]
+
+    [0]: http://example.com/mock
+
+  """, 'Link should be relative to custom URL', '-epab')
+
+  baseImage: testBase("""
+    #{COMMAND} -epab "http://example.com/path/to/page/" "<img src='mock'>"
+  """, """
+    ![](http://example.com/path/to/page/mock)
+
+  """, 'Image should be relative to custom URL', '-epab')
 
 exports.inline = do ->
   testInline = (command, expected, desc, flags) ->
