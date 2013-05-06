@@ -48,7 +48,7 @@ toFileUrl = (relativePath) ->
   "file://#{toPathName relativePath}"
 
 toPathName = (relativePath) ->
-  pathName = path.resolve('lib', relativePath).replace ///\\///g, '/'
+  pathName = path.resolve(process.cwd(), '..', relativePath).replace ///\\///g, '/'
   if pathName[0] isnt '/' then "/#{pathName}" else pathName
 
 # Tests

@@ -12,7 +12,7 @@
 # Default option values.
 DEFAULT_OPTIONS   =
   absolute: no
-  base:     null
+  base:     if window? then window.document.baseURI else "file://#{process.cwd()}"
   debug:    no
   inline:   no
 # Save the previous value of the global `md` variable for *noConflict* mode.
