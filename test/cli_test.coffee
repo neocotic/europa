@@ -15,7 +15,7 @@ FIXTURES_DIR = path.join __dirname, 'fixtures'
 HTML_EXT     = '.html'
 MD_EXT       = '.md'
 MD_FULL_EXT  = '.markdown'
-OUTPUT_DIR   = path.join __dirname, 'output'
+OUTPUT_DIR   = 'tmp'
 USAGE        = """
 
   Usage: md Usage: md [options] [ -e html | <file ...> ]
@@ -98,15 +98,9 @@ exports.fixtures = do ->
   )
 
   tests =
-    tearDown: (callback) ->
-      return do callback unless fs.existsSync OUTPUT_DIR
-
-      fs.readdirSync(OUTPUT_DIR).forEach (file) ->
-        fs.unlinkSync path.join OUTPUT_DIR, file
-
-      fs.rmdirSync OUTPUT_DIR
-
-      do callback
+    setUp: (callback) ->
+      fs.exists OUTPUT_DIR, (exists) ->
+        if exists then do callback else fs.mkdir OUTPUT_DIR, callback
 
   tests[fixture] = testFixture fixture for fixture in fixtures
   tests

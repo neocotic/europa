@@ -1,7 +1,7 @@
 module.exports = (grunt) ->
 
-  # Configure
-  # ---------
+  # Configuration
+  # -------------
 
   grunt.initConfig
 
@@ -11,6 +11,7 @@ module.exports = (grunt) ->
       docs: ['docs/*']
       lib:  ['lib/*']
       dist: ['dist/*']
+      test: ['tmp']
 
     coffee:
       all:
@@ -46,4 +47,4 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'build',   ['clean', 'coffee', 'docco', 'uglify']
   grunt.registerTask 'default', ['build', 'test']
-  grunt.registerTask 'test',    ['nodeunit']
+  grunt.registerTask 'test',    ['clean:test', 'nodeunit']
