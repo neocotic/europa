@@ -127,7 +127,7 @@ The following options are recognised by this method (all of which are optional);
   </tr>
   <tr>
     <td>base</td>
-    <td>All relative links and images are resolved from this URL</td>g
+    <td>All relative links and images are resolved from this URL</td>
   </tr>
   <tr>
     <td>debug</td>
