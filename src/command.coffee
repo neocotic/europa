@@ -123,7 +123,7 @@ parseOptions = ->
   program
     .version(md.version)
     .usage('Usage: md [options] [ -e html | <file ...> ]')
-    .option('-a, --absolute',     'always use absolute URLs for links')
+    .option('-a, --absolute',     'always use absolute URLs for links and images')
     .option('-b, --base <url>',   'set base URL to resolve relative URLs from')
     .option('-d, --debug',        'print additional debug information')
     .option('-e, --eval',         'pass a string from the command line as input')

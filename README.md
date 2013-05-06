@@ -92,7 +92,7 @@ $ md -l .
 
       -h, --help          output usage information
       -V, --version       output the version number
-      -a, --absolute      always use absolute URLs for links
+      -a, --absolute      always use absolute URLs for links and images
       -b, --base <url>    set base URL to resolve relative URLs from
       -d, --debug         print additional debug information
       -e, --eval          pass a string from the command line as input
