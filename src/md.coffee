@@ -12,6 +12,7 @@
 # Default option values.
 DEFAULT_OPTIONS   =
   absolute: no
+  base:     if window? then window.document.baseURI else "file://#{process.cwd()}"
   debug:    no
   inline:   no
 # Save the previous value of the global `md` variable for *noConflict* mode.
@@ -103,22 +104,6 @@ REGEX             = (
   result
 )
 
-# Environment Support
-# -------------------
-
-# Create a DOM if `window` doesn't exist (i.e. when running in node).
-win = window ? null
-unless win?
-  jsdom = require 'jsdom'
-  doc   = jsdom.jsdom null, null, features: FetchExternalResources: no
-  win   = doc.createWindow()
-
-# Try to ensure `Node` is available with the required constants. Probably not required; more of a
-# sanity check.
-Node = win.Node ? {}
-Node.ELEMENT_NODE ?= 1
-Node.TEXT_NODE    ?= 3
-
 # Helper functions
 # ----------------
 
@@ -159,6 +144,14 @@ class HtmlParser
     # Copy all default option values across to `options` only where they were not specified.
     for own key, defaultValue of DEFAULT_OPTIONS
       @options[key] = defaultValue if typeof @options[key] is 'undefined'
+
+    # Create a DOM if `window` doesn't exist (i.e. when running in node).
+    @win = window ? null
+    unless @win?
+      doc  = require('jsdom').jsdom null, null,
+        features: FetchExternalResources: no
+        url:      @options.base
+      @win = doc.createWindow()
 
   # Append `str` to the buffer string.
   append: (str) ->
@@ -209,9 +202,9 @@ class HtmlParser
       visible = not R_HIDDEN_VALUE.test property for property in properties
 
     # Attempt to derive elements visibility based on its computed CSS style where appropriate.
-    if visible and typeof win.getComputedStyle is 'function'
+    if visible and typeof @win.getComputedStyle is 'function'
       try
-        style = win.getComputedStyle ele, null
+        style = @win.getComputedStyle ele, null
 
         if typeof style?.getPropertyValue is 'function'
           display    = style.getPropertyValue 'display'
@@ -297,7 +290,7 @@ class HtmlParser
     return @buffer unless @html
 
     # Create a wrapper element to insert the configured HTML into.
-    container = win.document.createElement 'div'
+    container = @win.document.createElement 'div'
     if typeof @html is 'string'
       container.innerHTML = @html
     else
@@ -349,7 +342,7 @@ class HtmlParser
     # Only *visible* elements are processed. Doing our best to identify those that are hidden.
     return unless @isVisible ele
 
-    if ele.nodeType is Node.ELEMENT_NODE
+    if ele.nodeType is @win.Node.ELEMENT_NODE
       # Handle typical node elements (e.g. `<span>foo bar</span>`).
       skipChildren = no
 
@@ -505,7 +498,7 @@ class HtmlParser
 
       # Ensure any callback are invoked being proceeding **if** they are specified.
       after?.call this
-    else if ele.nodeType is Node.TEXT_NODE
+    else if ele.nodeType is @win.Node.TEXT_NODE
       # Handle simple text nodes (e.g. `"foo bar"`) according to the current context.
       @output if @inPre
         ele.nodeValue

@@ -92,7 +92,8 @@ $ md -l .
 
       -h, --help          output usage information
       -V, --version       output the version number
-      -a, --absolute      always use absolute URLs for links
+      -a, --absolute      always use absolute URLs for links and images
+      -b, --base <url>    set base URL to resolve relative URLs from
       -d, --debug         print additional debug information
       -e, --eval          pass a string from the command line as input
       -i, --inline        generate inline style links
@@ -122,7 +123,11 @@ The following options are recognised by this method (all of which are optional);
   </tr>
   <tr>
     <td>absolute</td>
-    <td>All links are parsed with absolute URLs</td>
+    <td>All links and images are parsed with absolute URLs</td>
+  </tr>
+  <tr>
+    <td>base</td>
+    <td>All relative links and images are resolved from this URL</td>g
   </tr>
   <tr>
     <td>debug</td>
@@ -133,6 +138,8 @@ The following options are recognised by this method (all of which are optional);
     <td>All links are generated using the inline style</td>
   </tr>
 </table>
+
+**Note:** The `base` option *only* works in the [node.js][] environment.
 
 ### Miscellaneous
 
