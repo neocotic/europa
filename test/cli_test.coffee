@@ -11,6 +11,7 @@ path   = require 'path'
 
 COMMAND      = './bin/md'
 ENCODING     = 'utf8'
+EXPECTED_DIR = path.join __dirname, 'expected'
 FIXTURES_DIR = path.join __dirname, 'fixtures'
 HTML_EXT     = '.html'
 MD_EXT       = '.md'
@@ -56,7 +57,7 @@ toPathName = (relativePath) ->
 exports.fixtures = do ->
   testFixture = (name) ->
     htmlPath = path.join FIXTURES_DIR, "#{name}#{HTML_EXT}"
-    expected = md fs.readFileSync htmlPath, ENCODING
+    expected = fs.readFileSync path.join(EXPECTED_DIR, "#{name}#{MD_EXT}"), ENCODING
 
     standard: (test) ->
       test.expect 2
