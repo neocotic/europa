@@ -1,3 +1,7 @@
+2013.05.06, Version 2.1.1
+
+* [#24](https://github.com/neocotic/html.md/issues/24): Add `base` option to specify the base URL used to resolve relative URLs
+
 2013.05.03, Version 2.1.0
 
 * [#18](https://github.com/neocotic/html.md/issues/18): Add support for [bower][] installations
