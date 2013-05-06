@@ -9,6 +9,7 @@ path = require 'path'
 # ---------
 
 ENCODING     = 'utf8'
+EXPECTED_DIR = path.join __dirname, 'expected'
 FIXTURES_DIR = path.join __dirname, 'fixtures'
 HTML_EXT     = '.html'
 
@@ -22,7 +23,7 @@ toFileUrl = (relativePath) ->
   "file://#{toPathName relativePath}"
 
 toPathName = (relativePath) ->
-  pathName = path.resolve('lib', relativePath).replace ///\\///g, '/'
+  pathName = path.resolve(process.cwd(), '..', relativePath).replace ///\\///g, '/'
   if pathName[0] isnt '/' then "/#{pathName}" else pathName
 
 # Tests
@@ -32,7 +33,7 @@ exports.fixtures = (
   testFixture = (name) ->
     (test) ->
       html     = fs.readFileSync path.join(FIXTURES_DIR, "#{name}.html"), ENCODING
-      markdown = fs.readFileSync path.join(FIXTURES_DIR, "#{name}.md"),   ENCODING
+      markdown = fs.readFileSync path.join(EXPECTED_DIR, "#{name}.md"),   ENCODING
 
       test.equal md(html), markdown, "#{name} fixtures should match"
       test.done()
@@ -79,6 +80,42 @@ exports.options =
 
     test.equal md('<img src="mock">', options), "![](#{toFileUrl 'mock'})",
       'Image should be absolute'
+
+    test.done()
+
+  base: (test) ->
+    absolute = on
+    base     = 'http://example.com/path/to/page/'
+
+    test.equal md('<a href="mock">anchor</a>', {absolute}), """
+      [anchor][0]
+
+      [0]: #{toFileUrl 'mock'}
+    """, 'Link should be relative to the current working directory'
+
+    test.equal md('<a href="/mock">anchor</a>', {absolute}), """
+      [anchor][0]
+
+      [0]: #{toFileUrl '/mock'}
+    """, 'Root link should be relative to the current working directory'
+
+    test.equal md('<img src="mock">', {absolute}), "![](#{toFileUrl 'mock'})",
+      'Image should be relative to the current working directory'
+
+    test.equal md('<a href="mock">anchor</a>', {absolute, base}), """
+      [anchor][0]
+
+      [0]: #{base}mock
+    """, 'Link should be relative to custom URL'
+
+    test.equal md('<a href="/mock">anchor</a>', {absolute, base}), """
+      [anchor][0]
+
+      [0]: http://example.com/mock
+    """, 'Root link should be relative to custom URL'
+
+    test.equal md('<img src="mock">', {absolute, base}), "![](#{base}mock)",
+      'Image should be relative to custom URL'
 
     test.done()
 
