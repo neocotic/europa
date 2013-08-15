@@ -401,7 +401,9 @@ class HtmlParser
               after = if ele.tagName is 'OL' then do @ol else do @ul
             # List items are displayed differently depending on what kind of list they're parent
             # is (i.e. ordered or unordered).
-            when 'LI' then do @li
+            when 'LI'
+              @replaceLeft '\n'
+              do @li
             # A pre-formatted element just needs to have its contents properly indented.
             when 'PRE'
               after1 = @pushLeft '    '
