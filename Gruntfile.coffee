@@ -8,9 +8,8 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON 'package.json'
 
     clean:
-      docs: ['docs/*']
       lib:  ['lib/*']
-      dist: ['dist/*']
+      dist: ['dist/*', 'docs/*']
       test: ['tmp']
 
     coffee:
@@ -45,6 +44,7 @@ module.exports = (grunt) ->
   for dependency of grunt.config.data.pkg.devDependencies when ~dependency.indexOf 'grunt-'
     grunt.loadNpmTasks dependency
 
-  grunt.registerTask 'build',   ['clean', 'coffee', 'docco', 'uglify']
+  grunt.registerTask 'build',   ['clean:lib', 'coffee']
   grunt.registerTask 'default', ['build', 'test']
+  grunt.registerTask 'dist',    ['default', 'clean:dist', 'docco', 'uglify']
   grunt.registerTask 'test',    ['clean:test', 'nodeunit']

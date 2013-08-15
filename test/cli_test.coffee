@@ -9,7 +9,7 @@ path   = require 'path'
 # Constants
 # ---------
 
-COMMAND      = './bin/md'
+COMMAND      = './bin/html-md'
 ENCODING     = 'utf8'
 EXPECTED_DIR = path.join __dirname, 'expected'
 FIXTURES_DIR = path.join __dirname, 'fixtures'
@@ -19,7 +19,7 @@ MD_FULL_EXT  = '.markdown'
 OUTPUT_DIR   = 'tmp'
 USAGE        = """
 
-  Usage: md Usage: md [options] [ -e html | <file ...> ]
+  Usage: html-md [options] [ -e html | <file ...> ]
 
   Options:
 

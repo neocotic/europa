@@ -55,12 +55,10 @@ R_IGNORE_CHILDREN = /// ^ (
   | AUDIO
   | BUTTON
   | CANVAS
-  | COMMAND
   | DATALIST
   | EMBED
   | HEAD
   | INPUT
-  | KEYGEN
   | MAP
   | MENU
   | METER
@@ -76,11 +74,9 @@ R_IGNORE_CHILDREN = /// ^ (
   | RUBY
   | SCRIPT
   | SELECT
-  | SOURCE
   | STYLE
   | TEXTAREA
   | TITLE
-  | TRACK
   | VIDEO
 ) $ ///
 # Regular expression to identify elements to be parsed as simple paragraphs.
@@ -566,7 +562,7 @@ else if typeof define is 'function' and define.amd
 # ----------------
 
 # Current version of html.md.
-md.version = md.VERSION = '2.1.1'
+md.version = md.VERSION = '3.0.0'
 
 # Public functions
 # ----------------
