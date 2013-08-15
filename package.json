@@ -42,9 +42,9 @@
   "scripts": {
     "test": "grunt test"
   },
-  "man": "man/md.1",
+  "man": "man/html-md.1",
   "bin": {
-    "md": "bin/md"
+    "html-md": "bin/html-md"
   },
   "main": "lib/md"
 }
