@@ -55,12 +55,10 @@ R_IGNORE_CHILDREN = /// ^ (
   | AUDIO
   | BUTTON
   | CANVAS
-  | COMMAND
   | DATALIST
   | EMBED
   | HEAD
   | INPUT
-  | KEYGEN
   | MAP
   | MENU
   | METER
@@ -76,11 +74,9 @@ R_IGNORE_CHILDREN = /// ^ (
   | RUBY
   | SCRIPT
   | SELECT
-  | SOURCE
   | STYLE
   | TEXTAREA
   | TITLE
-  | TRACK
   | VIDEO
 ) $ ///
 # Regular expression to identify elements to be parsed as simple paragraphs.
