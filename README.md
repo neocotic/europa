@@ -76,17 +76,17 @@ In the terminal:
 
 ``` bash
 # provide HTML to be converted and print it back out to stdout:
-$ md -epi "I <b>love</b> <a href='http://neocotic.com/html.md'>html.md</a>"
+$ html-md -epi "I <b>love</b> <a href='http://neocotic.com/html.md'>html.md</a>"
 I **love** [html.md](http://neocotic.com/html.md)
 # convert HTML files and output them into another directory:
-$ md -o ./markdown ./html/*.html
+$ html-md -o ./markdown ./html/*.html
 # convert all HTML files in the current directory into Markdown files:
-$ md -l .
+$ html-md -l .
 ```
 
 ## Usage
 
-    Usage: md [options] [ -e html | <file ...> ]
+    Usage: html-md [options] [ -e html | <file ...> ]
 
     Options:
 
@@ -164,7 +164,7 @@ This is really just intended for use within a browser.
 The current version of `md`.
 
 ``` javascript
-console.log(md.version); // "2.1.1"
+console.log(md.version); // "3.0.0"
 ```
 
 ## Windows
