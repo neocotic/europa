@@ -1,8 +1,14 @@
-2013.05.06, Version 2.1.1
+## Version 3.0.0, 2013.08.15
+
+* [#30](https://github.com/neocotic/html.md/issues/30): Rename command from `md` to `html-md`
+* [#31](https://github.com/neocotic/html.md/issues/31): Correct expectations of void elements
+* Update versions of dependencies
+
+## Version 2.1.1, 2013.05.06
 
 * [#24](https://github.com/neocotic/html.md/issues/24): Add `base` option to specify the base URL used to resolve relative URLs
 
-2013.05.03, Version 2.1.0
+## Version 2.1.0, 2013.05.03
 
 * [#18](https://github.com/neocotic/html.md/issues/18): Add support for [bower][] installations
 * [#20](https://github.com/neocotic/html.md/issues/20): Replace `Cakefile` with new [grunt][] build process
@@ -19,16 +25,16 @@
 * Replace [optparse][] with [commander][]
 * Lots of bug fixes and optimizations
 
-2013.02.04, Version 2.0.2
+## Version 2.0.2, 2013.02.04
 
 * [#13](https://github.com/neocotic/html.md/issues/13): Add new man page
 * [#14](https://github.com/neocotic/html.md/issues/14): Fix bug with `eval` option
 
-2012.12.12, Version 2.0.1
+## Version 2.0.1, 2012.12.12
 
 * [#8](https://github.com/neocotic/html.md/issues/8): Fix incorrect version
 
-2012.12.11, Version 2.0.0
+## Version 2.0.0, 2012.12.11
 
 * [#1](https://github.com/neocotic/html.md/issues/1): Check inline style attribute to see if elements are hidden
 * [#2](https://github.com/neocotic/html.md/issues/2): Add command line interface
