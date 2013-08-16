@@ -1,3 +1,7 @@
+## Version 3.0.1, 2013.08.16
+
+* [#33](https://github.com/neocotic/html.md/issues/33): Fix handling of unformatted HTML lists
+
 ## Version 3.0.0, 2013.08.15
 
 * [#30](https://github.com/neocotic/html.md/issues/30): Rename command from `md` to `html-md`
