@@ -28,15 +28,15 @@
   },
   "dependencies": {
     "commander": "~2.0.0",
-    "fs-extra": "~0.6.3",
-    "jsdom": "~0.8.3"
+    "fs-extra": "~0.7.0",
+    "jsdom": "~0.8.6"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-coffee": "~0.7.0",
-    "grunt-contrib-nodeunit": "~0.2.0",
-    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-nodeunit": "~0.2.1",
+    "grunt-contrib-uglify": "~0.2.4",
     "grunt-docco": "~0.2.0"
   },
   "scripts": {
