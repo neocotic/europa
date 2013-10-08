@@ -152,8 +152,8 @@ class HtmlParser
     # Create the Node constants if Node doesn't exist (i.e. when running in IE < 9).
     unless @win.Node?
       @win.Node =
-        ELEMENT_NODE:                 1
-        TEXT_NODE:                    3
+        ELEMENT_NODE: 1
+        TEXT_NODE:    3
 
   # Append `str` to the buffer string.
   append: (str) ->
@@ -196,7 +196,7 @@ class HtmlParser
   # Determine whether or not the specified element is visible based on its CSS style.
   isVisible: (ele) ->
     style      = @attr ele, 'style', no
-    properties = style?.match?(R_HIDDEN_STYLES)
+    properties = style?.match? R_HIDDEN_STYLES
     visible    = yes
 
     # Test all relevant CSS properties for possible hiding behaviours.
