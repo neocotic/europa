@@ -76,17 +76,17 @@ In the terminal:
 
 ``` bash
 # provide HTML to be converted and print it back out to stdout:
-$ html-md -epi "I <b>love</b> <a href='http://neocotic.com/html.md'>html.md</a>"
+$ htmlmd -epi "I <b>love</b> <a href='http://neocotic.com/html.md'>html.md</a>"
 I **love** [html.md](http://neocotic.com/html.md)
 # convert HTML files and output them into another directory:
-$ html-md -o ./markdown ./html/*.html
+$ htmlmd -o ./markdown ./html/*.html
 # convert all HTML files in the current directory into Markdown files:
-$ html-md -l .
+$ htmlmd -l .
 ```
 
 ## Usage
 
-    Usage: html-md [options] [ -e html | <file ...> ]
+    Usage: htmlmd [options] [ -e html | <file ...> ]
 
     Options:
 
