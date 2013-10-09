@@ -8,9 +8,9 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON 'package.json'
 
     clean:
-      lib:  ['lib/*']
-      dist: ['dist/*', 'docs/*']
-      test: ['tmp']
+      lib:  [ 'lib/*' ]
+      dist: [ 'dist/*', 'docs/*' ]
+      test: [ 'tmp' ]
 
     coffee:
       all:
@@ -23,14 +23,14 @@ module.exports = (grunt) ->
     docco:
       all:
         options: output: 'docs'
-        src:     ['src/**/*.coffee']
+        src:     [ 'src/**/*.coffee' ]
 
     nodeunit:
-      all: ['test/**/*_test.coffee']
+      all: [ 'test/**/*_test.coffee' ]
 
     uglify:
       all:
-        files: 'dist/md.min.js': ['lib/md.js']
+        files: 'dist/md.min.js': [ 'lib/md.js' ]
         options:
             banner: """
               /*! <%= pkg.name %> v<%= pkg.version %> | (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> | <%= pkg.licenses[0].type %> License
@@ -44,7 +44,7 @@ module.exports = (grunt) ->
   for dependency of grunt.config.data.pkg.devDependencies when ~dependency.indexOf 'grunt-'
     grunt.loadNpmTasks dependency
 
-  grunt.registerTask 'build',   ['clean:lib', 'coffee']
-  grunt.registerTask 'default', ['build', 'test']
-  grunt.registerTask 'dist',    ['default', 'clean:dist', 'docco', 'uglify']
-  grunt.registerTask 'test',    ['clean:test', 'nodeunit']
+  grunt.registerTask 'build',   [ 'clean:lib', 'coffee' ]
+  grunt.registerTask 'default', [ 'build', 'test' ]
+  grunt.registerTask 'dist',    [ 'default', 'clean:dist', 'docco', 'uglify' ]
+  grunt.registerTask 'test',    [ 'clean:test', 'nodeunit' ]

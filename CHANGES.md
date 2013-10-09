@@ -1,3 +1,10 @@
+## Version 3.0.2, 2013.10.09
+
+* [#36](https://github.com/neocotic/html.md/issues/36): Fix errors in Internet Explorer 8 and older
+* [#37](https://github.com/neocotic/html.md/issues/37): Fix problem with running command line
+* Update versions on dependencies
+* Minor changes and tweaks
+
 ## Version 3.0.1, 2013.08.16
 
 * [#33](https://github.com/neocotic/html.md/issues/33): Fix handling of unformatted HTML lists
