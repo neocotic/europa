@@ -1,7 +1,7 @@
 {
   "name": "html-md",
   "description": "JavaScript library for converting HTML in to valid Markdown",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "homepage": "http://neocotic.com/html.md",
   "bugs": {
     "url": "https://github.com/neocotic/html.md/issues"
@@ -28,23 +28,23 @@
   },
   "dependencies": {
     "commander": "~2.0.0",
-    "fs-extra": "~0.6.3",
-    "jsdom": "~0.8.3"
+    "fs-extra": "~0.7.0",
+    "jsdom": "~0.8.6"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-coffee": "~0.7.0",
-    "grunt-contrib-nodeunit": "~0.2.0",
-    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-nodeunit": "~0.2.1",
+    "grunt-contrib-uglify": "~0.2.4",
     "grunt-docco": "~0.2.0"
   },
   "scripts": {
     "test": "grunt test"
   },
-  "man": "man/html-md.1",
+  "man": "./man/doc.1",
   "bin": {
-    "html-md": "bin/html-md"
+    "htmlmd": "./bin/htmlmd"
   },
-  "main": "lib/md"
+  "main": "./lib/md"
 }
