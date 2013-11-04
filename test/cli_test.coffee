@@ -66,7 +66,7 @@ exports.fixtures = do ->
         test.ifError err, "Error should not be thrown using -o flag for #{name} fixture"
         markdownPath = path.join OUTPUT_DIR, "#{name}#{MD_EXT}"
         markdown     = fs.readFileSync markdownPath, ENCODING
-        test.equal markdown, expected, "#{name} fixture should match using -o flag"
+        test.equal markdown, expected.trim(), "#{name} fixture should match using -o flag"
 
         test.done()
 
@@ -77,7 +77,7 @@ exports.fixtures = do ->
         test.ifError err, "Error should not be thrown using -lo flags for #{name} fixture"
         markdownPath = path.join OUTPUT_DIR, "#{name}#{MD_FULL_EXT}"
         markdown     = fs.readFileSync markdownPath, ENCODING
-        test.equal markdown, expected, "#{name} fixture should match using -lo flags"
+        test.equal markdown, expected.trim(), "#{name} fixture should match using -lo flags"
 
         test.done()
 
@@ -87,7 +87,7 @@ exports.fixtures = do ->
       exec "#{COMMAND} -p #{htmlPath}", (err, stdout) ->
         test.ifError err, "Error should not be thrown using -p flag for #{name} fixture"
         test.equal stdout, """
-          #{expected}
+          #{expected.trim()}
 
         """, "#{name} fixture should match using -p flag"
 

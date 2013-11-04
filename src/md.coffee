@@ -135,6 +135,8 @@ class HtmlParser
     @links      = []
     @linkMap    = {}
     @unhandled  = {}
+    @tableColumns = []
+    @tableDepth = 0
     @options    = {} if typeof @options isnt 'object'
 
     # Copy all default option values across to `options` only where they were not specified.
@@ -173,6 +175,23 @@ class HtmlParser
   br: ->
     @append "  #{@left}"
     @atLeft = @atNoWS = yes
+
+  tr: ->
+    @output "|"
+    @tableColumns[++@tableDepth] = []
+
+    => 
+      tableColumns = @tableColumns[@tableDepth];
+      if tableColumns.length
+        @output "\n|"
+        for column in tableColumns
+          switch column
+            when "right" then @output "----:"
+            when "center" then @output ":----:"
+            else @output ":----"
+          @output "|"
+        delete @tableColumns[@tableDepth--]
+      @output "\n"
 
   # Prepare the parser for a `code` element.
   code: ->
@@ -347,6 +366,7 @@ class HtmlParser
     if ele.nodeType is @win.Node.ELEMENT_NODE
       # Handle typical node elements (e.g. `<span>foo bar</span>`).
       skipChildren = no
+      ignoreEmptyChild = no
 
       # Determine the best way (if any) to handle `ele`.
       try
@@ -488,8 +508,17 @@ class HtmlParser
                   @process ele.contentDocument.documentElement
               catch err
                 @thrown err, 'contentDocument'
-            # Table rows should just be separated, that's all.
-            when 'TR' then after = @p
+            when 'TR' 
+              ignoreEmptyChild = yes
+              after = @tr()
+            when 'THEAD', 'TFOOT', 'TBODY', 'TABLE'
+              ignoreEmptyChild = yes
+            when 'TH'
+              alignment = if ele.style then ele.style.textAlign else "left"
+              @tableColumns[@tableDepth].push(alignment)
+              after = @outputLater "|"
+            when 'TD'
+              after = @outputLater "|"
             # Couldn't find a suitable match for `ele` so let's ignore it, but we'll still process
             # any children it has.
             else
@@ -498,7 +527,7 @@ class HtmlParser
         @thrown err, ele.tagName
 
       # Process all child elements of `ele` if it has any and we've not been told to ignore them.
-      @process childNode for childNode in ele.childNodes unless skipChildren
+      @process childNode for childNode in ele.childNodes when ignoreEmptyChild is no or no is /\s+/.test childNode.nodeValue unless skipChildren
 
       # Ensure any callback are invoked being proceeding **if** they are specified.
       after?.call this
