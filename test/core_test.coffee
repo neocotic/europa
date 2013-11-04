@@ -35,7 +35,7 @@ exports.fixtures = (
       html     = fs.readFileSync path.join(FIXTURES_DIR, "#{name}.html"), ENCODING
       markdown = fs.readFileSync path.join(EXPECTED_DIR, "#{name}.md"),   ENCODING
 
-      test.equal md(html), markdown, "#{name} fixtures should match"
+      test.equal md(html), markdown.trim(), "#{name} fixtures should match"
       test.done()
 
   fixtures = (
