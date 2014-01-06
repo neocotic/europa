@@ -141,8 +141,9 @@ class HtmlParser
     for own key, defaultValue of DEFAULT_OPTIONS
       @options[key] = defaultValue if typeof @options[key] is 'undefined'
 
-    # Create a DOM if `window` doesn't exist (i.e. when running in node).
-    @win = window ? null
+    # Use the options.window if one is passed, issue #42
+    # If not, create a DOM if `window` doesn't exist (i.e. when running in node).
+    @win = @options.window or if window? then window else null
     unless @win?
       doc  = require('jsdom').jsdom null, null,
         features: FetchExternalResources: no
