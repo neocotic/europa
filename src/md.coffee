@@ -15,6 +15,8 @@ DEFAULT_OPTIONS   =
   base:     if window? then window.document.baseURI else "file://#{process.cwd()}"
   debug:    no
   inline:   no
+# require jsdom if there is no window object
+JS_DOM = unless window? then require('jsdom') else null
 # Save the previous value of the global `md` variable for *noConflict* mode.
 PREVIOUS_MD       = @md
 # Map of replacement strings for *special* Markdown characters.
@@ -144,8 +146,7 @@ class HtmlParser
     # Use the `window` option when specified or create a DOM if `window` doesn't exist (i.e. when running in node).
     @win = @options.window or (window ? null)
     unless @win?
-      jsdom = jsdom or require('jsdom')
-      doc  = jsdom.jsdom null, null,
+      doc  = JS_DOM.jsdom null, null,
         features: FetchExternalResources: no
         url:      @options.base
       @win = doc.createWindow()
