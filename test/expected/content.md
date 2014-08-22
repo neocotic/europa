@@ -19,6 +19,7 @@ _em_
 _var_
 `samp`
 _i_
+text _with trailing_ space
 **b**
 sub
 sup
