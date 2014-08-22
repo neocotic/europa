@@ -272,7 +272,13 @@ class HtmlParser
   # the parser in context.  
   # This function is just a lazy shorthand.
   outputLater: (str) ->
-    => @output str
+    =>
+      # Check if end-of-element text contains trailing space
+      endWS = @last.match /[\s]+$/
+      if endWS
+        @last = @last.replace /[\s]+$/, ''
+        str += ' '
+      @output str
 
   # Append a Markdown paragraph section to the buffer string.
   p: ->
