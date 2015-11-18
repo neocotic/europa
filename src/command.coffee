@@ -1,9 +1,9 @@
-# [html.md](http://neocotic.com/html.md)  
-# (c) 2013 Alasdair Mercer  
-# Freely distributable under the MIT license.  
-# Based on [Make.text](http://homepage.mac.com/tjim/) 1.5  
-# (c) 2007 Trevor Jim  
-# For all details and documentation:  
+# [html.md](http://neocotic.com/html.md)
+# (c) 2013 Alasdair Mercer
+# Freely distributable under the MIT license.
+# Based on [Make.text](http://homepage.mac.com/tjim/) 1.5
+# (c) 2007 Trevor Jim
+# For all details and documentation:
 # <http://neocotic.com/html.md>
 
 # Module dependencies
@@ -27,7 +27,7 @@ R_HTML_EXT = /\.s?html?$/i
 
 # File extension to be applied to any Markdown files that are created.
 extension = '.md'
-# List of HTML sources passed in at runtime.  
+# List of HTML sources passed in at runtime.
 # These can either be paths or a single HTML input (if `eval` option was enabled).
 sources   = []
 

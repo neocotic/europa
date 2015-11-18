@@ -1,9 +1,9 @@
-# [html.md](http://neocotic.com/html.md)  
-# (c) 2013 Alasdair Mercer  
-# Freely distributable under the MIT license.  
-# Based on [Make.text](http://homepage.mac.com/tjim/) 1.5  
-# (c) 2007 Trevor Jim  
-# For all details and documentation:  
+# [html.md](http://neocotic.com/html.md)
+# (c) 2013 Alasdair Mercer
+# Freely distributable under the MIT license.
+# Based on [Make.text](http://homepage.mac.com/tjim/) 1.5
+# (c) 2007 Trevor Jim
+# For all details and documentation:
 # <http://neocotic.com/html.md>
 
 # Private constants
@@ -110,7 +110,7 @@ padLeft = (str = '', times = 0, padStr = ' ') ->
   str = padStr + str for i in [0...times]
   str
 
-# Remove whitespace from both ends of `str`.  
+# Remove whitespace from both ends of `str`.
 # This tries to use the native `String.prototype.trim` function where possible.
 trim = (str = '') ->
   if str.trim then str.trim() else str.replace /^\s+|\s+$/g, ''
@@ -118,7 +118,7 @@ trim = (str = '') ->
 # HTML Parser
 # -----------
 
-# Parses HTML code and/or elements into valid Markdown.  
+# Parses HTML code and/or elements into valid Markdown.
 # Elements are parsed recursively, meaning their children are also parsed.
 class HtmlParser
 
@@ -269,7 +269,7 @@ class HtmlParser
     @append str.replace /\n/g, @left
 
   # Create a function that can be called later to append `str` to the buffer string while keeping
-  # the parser in context.  
+  # the parser in context.
   # This function is just a lazy shorthand.
   outputLater: (str) ->
     => @output str
@@ -435,8 +435,8 @@ class HtmlParser
             when 'BLOCKQUOTE', 'DD' then after = @pushLeft '> '
             # Links on the other hand are probably the trickiest.
             when 'A'
-              # Extract the link URL from `ele`.  
-              # Links with no URLs are treated just like text-containing elements (e.g. `span`).  
+              # Extract the link URL from `ele`.
+              # Links with no URLs are treated just like text-containing elements (e.g. `span`).
               # `a.href` always returns an absolute URL while `a.getAttribute('href')` always
               # returns the exact value of the `href` attribute. For this reason we need to be sure
               # that we extract the URL correctly based on the state of the `absolute` option.
@@ -459,7 +459,7 @@ class HtmlParser
                 # *Reference* style means all links have an index included immediately after their
                 # contents that directly maps to their URL (and possible title) which are displayed
                 # at the end of the buffer string (e.g. `[my link][0]` and then later
-                # `[0]: /path/to/page.html "My title"`).  
+                # `[0]: /path/to/page.html "My title"`).
                 # Duplicate link/title combination references are avoided for a cleaner result.
                 "[#{@linkMap[href] ?= @links.push(href) - 1}]"
 
@@ -468,9 +468,9 @@ class HtmlParser
               after   = @outputLater "]#{suffix}"
             # Images are very similar to links, just without the added complexity of references.
             when 'IMG'
-              # Extract the image URL from `ele`.  
+              # Extract the image URL from `ele`.
               # Unlike links, any image without a URL is just ignored. Obviously, any contents of
-              # an `img` element are always ignored since they can never contain anything valid.  
+              # an `img` element are always ignored since they can never contain anything valid.
               # `img.src` always returns an absolute URL while `img.getAttribute('src')` always
               # returns the exact value of the `src` attribute. For this reason we need to be sure
               # that we extract the URL correctly based on the state of the `absolute` option.
@@ -575,7 +575,7 @@ md.version = md.VERSION = '3.0.2'
 # Public functions
 # ----------------
 
-# Run html.md in *noConflict* mode, returning the `md` variable to its previous owner.  
+# Run html.md in *noConflict* mode, returning the `md` variable to its previous owner.
 # Returns a reference to our `md`.
 md.noConflict = =>
   @md = PREVIOUS_MD
