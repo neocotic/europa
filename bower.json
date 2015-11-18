@@ -1,0 +1,47 @@
+{
+  "name": "html-md",
+  "description": "JavaScript library for converting HTML in to valid Markdown",
+  "version": "3.0.2",
+  "homepage": "http://neocotic.com/html-md",
+  "bugs": {
+    "url": "https://github.com/neocotic/html.md/issues"
+  },
+  "authors": [
+    {
+      "name": "Alasdair Mercer",
+      "email": "mercer.alasdair@gmail.com",
+      "homepage": "http://neocotic.com"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "html",
+    "markdown",
+    "convert"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neocotic/html.md.git"
+  },
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "main": "dist/md.min.js",
+  "ignore": [
+    "**/.*",
+    "bin",
+    "docs",
+    "lib",
+    "man",
+    "test",
+    "AUTHORS.md",
+    "CHANGES.md",
+    "CONTRIBUTING.md",
+    "Gruntfile.coffee",
+    "INSTALL.md",
+    "package.json",
+    "README.md"
+  ]
+}
