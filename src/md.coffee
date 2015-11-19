@@ -144,10 +144,10 @@ class HtmlParser
     # Create a DOM if `window` doesn't exist (i.e. when running in node).
     @win = window ? null
     unless @win?
-      doc  = require('jsdom').jsdom null, null,
+      doc  = require('jsdom').jsdom undefined,
         features: FetchExternalResources: no
         url:      @options.base
-      @win = doc.createWindow()
+      @win = doc.defaultView
 
     # Create the Node constants if Node doesn't exist (i.e. when running in IE < 9).
     unless @win.Node?

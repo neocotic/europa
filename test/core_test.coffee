@@ -4,6 +4,7 @@
 fs   = require 'fs'
 md   = require '../lib/md'
 path = require 'path'
+pkg  = require '../package.json'
 
 # Constants
 # ---------
@@ -16,14 +17,11 @@ HTML_EXT     = '.html'
 # Helpers
 # -------
 
-getPackage = ->
-  JSON.parse fs.readFileSync path.resolve('package.json'), ENCODING
-
 toFileUrl = (relativePath) ->
   "file://#{toPathName relativePath}"
 
 toPathName = (relativePath) ->
-  pathName = path.resolve(process.cwd(), '..', relativePath).replace ///\\///g, '/'
+  pathName = path.resolve(process.cwd(), '..', relativePath).replace(/\\/g, '/')
   if pathName[0] isnt '/' then "/#{pathName}" else pathName
 
 # Tests
@@ -143,5 +141,5 @@ exports.options =
     test.done()
 
 exports.version = (test) ->
-  test.equal md.version, getPackage().version, 'Version should match descriptor'
+  test.equal md.version, pkg.version, 'Version should match descriptor'
   test.done()
