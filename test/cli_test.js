@@ -21,7 +21,7 @@ const path = require('path')
 
 const md = require('../src/md')
 
-const command = './bin/htmlmd'
+const command = `node ${path.resolve('./bin/htmlmd')}`
 const encoding = 'utf8'
 const expectedDirectory = path.join(__dirname, 'expected')
 const fixturesDirectory = path.join(__dirname, 'fixtures')
@@ -29,29 +29,29 @@ const htmlExtension = '.html'
 const markdownExtension = '.md'
 const markdownFullExtension = '.markdown'
 const outputDirectory = 'tmp'
-const usage = `
-
-  Usage: htmlmd [options] [ -e html | <file ...> ]
-
-  Options:
-
-    -h, --help          output usage information
-    -V, --version       output the version number
-    -a, --absolute      always use absolute URLs for links and images
-    -b, --base <url>    set base URL to resolve relative URLs from
-    -d, --debug         print additional debug information
-    -e, --eval          pass a string from the command line as input
-    -i, --inline        generate inline style links
-    -l, --long-ext      use long extension for Markdown files
-    -o, --output <dir>  set the output directory for converted Markdown
-    -p, --print         print out the converted Markdown
-
-
-`.replace(/\n(?!\n)(?=.+)/g, '\n  ')
-const version = `
-  ${md.version}
-
-`
+const usage = [
+  '',
+  '  Usage: htmlmd [options] [ -e html | <file ...> ]',
+  '',
+  '  Options:',
+  '',
+  '    -h, --help          output usage information',
+  '    -V, --version       output the version number',
+  '    -a, --absolute      always use absolute URLs for links and images',
+  '    -b, --base <url>    set base URL to resolve relative URLs from',
+  '    -d, --debug         print additional debug information',
+  '    -e, --eval          pass a string from the command line as input',
+  '    -i, --inline        generate inline style links',
+  '    -l, --long-ext      use long extension for Markdown files',
+  '    -o, --output <dir>  set the output directory for converted Markdown',
+  '    -p, --print         print out the converted Markdown',
+  '',
+  ''
+].join('\n')
+const version = [
+  md.version,
+  ''
+].join('\n')
 
 function toFileUrl(relativePath) {
   return `file://${toPathName(relativePath)}`
@@ -75,13 +75,13 @@ exports.fixtures = (() => {
       standard(test) {
         test.expect(2)
 
-        exec(`${command} -o #{outputDirectory} #{htmlPath}`, (error) => {
+        exec(`${command} -o ${outputDirectory} ${htmlPath}`, (error) => {
           test.ifError(error, `Error should not be thrown using -o flag for ${name} fixture`)
 
           let markdownPath = path.join(outputDirectory, `${name}${markdownExtension}`)
-          let markdown = fs.readFileSync(markdownPath, encoding)
+          let actual = fs.readFileSync(markdownPath, encoding)
 
-          test.equal(markdown, expected, `${name} fixture should match using -o flag`)
+          test.equal(actual, expected, `${name} fixture should match using -o flag`)
 
           test.done()
         })
@@ -94,9 +94,9 @@ exports.fixtures = (() => {
           test.ifError(error, `Error should not be thrown using -lo flags for ${name} fixture`)
 
           let markdownPath = path.join(outputDirectory, `${name}${markdownFullExtension}`)
-          let markdown = fs.readFileSync(markdownPath, encoding)
+          let actual = fs.readFileSync(markdownPath, encoding)
 
-          test.equal(markdown, expected, `${name} fixture should match using -lo flags`)
+          test.equal(actual, expected, `${name} fixture should match using -lo flags`)
 
           test.done()
         })
@@ -107,10 +107,10 @@ exports.fixtures = (() => {
 
         exec(`${command} -p ${htmlPath}`, (error, stdout) => {
           test.ifError(error, `Error should not be thrown using -p flag for ${name} fixture`)
-          test.equal(stdout, `
-            ${expected}
-
-          `, `${name} fixture should match using -p flag`)
+          test.equal(stdout, [
+            expected,
+            ''
+          ].join('\n'), `${name} fixture should match using -p flag`)
 
           test.done()
         })
@@ -156,43 +156,43 @@ exports.absolute = (() => {
   }
 
   return {
-    relativeLink: testAbsolute(`${command} -ep "<a href='mock'>anchor</a>"`, `
-      [anchor][0]
+    relativeLink: testAbsolute(`${command} -ep "<a href='mock'>anchor</a>"`, [
+      '[anchor][0]',
+      '',
+      '[0]: mock',
+      ''
+    ].join('\n'), 'Link should be relative', '-ep'),
 
-      [0]: mock
+    relativeRootLink: testAbsolute(`${command} -ep "<a href='/mock'>anchor</a>"`, [
+      '[anchor][0]',
+      '',
+      '[0]: /mock',
+      ''
+    ].join('\n'), 'Root link should be relative', '-ep'),
 
-    `, 'Link should be relative', '-ep'),
+    absoluteLink: testAbsolute(`${command} -epa "<a href='mock'>anchor</a>"`, [
+      '[anchor][0]',
+      '',
+      `[0]: ${toFileUrl('mock')}`,
+      ''
+    ].join('\n'), 'Link should be absolute', '-epa'),
 
-    relativeRootLink: testAbsolute(`${command} -ep "<a href='/mock'>anchor</a>"`, `
-      [anchor][0]
+    absoluteRootLink: testAbsolute(`${command} -epa "<a href='/mock'>anchor</a>"`, [
+      '[anchor][0]',
+      '',
+      `[0]: ${toFileUrl('/mock')}`,
+      ''
+    ].join('\n'), 'Root link should be absolute', '-epa'),
 
-      [0]: /mock
+    relativeImage: testAbsolute(`${command} -ep "<img src='mock'>"`, [
+      '![](mock)',
+      ''
+    ].join('\n'), 'Image should be relative', '-ep'),
 
-    `, 'Root link should be relative', '-ep'),
-
-    absoluteLink: testAbsolute(`${command} -epa "<a href='mock'>anchor</a>"`, `
-      [anchor][0]
-
-      [0]: ${toFileUrl('mock')}
-
-    `, 'Link should be absolute', '-epa'),
-
-    absoluteRootLink: testAbsolute(`${command} -epa "<a href='/mock'>anchor</a>"`, `
-      [anchor][0]
-
-      [0]: ${toFileUrl('/mock')}
-
-    `, 'Root link should be absolute', '-epa'),
-
-    relativeImage: testAbsolute(`${command} -ep "<img src='mock'>"`, `
-      ![](mock)
-
-    `, 'Image should be relative', '-ep'),
-
-    absoluteImage: testAbsolute(`${command} -epa "<img src='mock'>"`, `
-      ![](${toFileUrl('mock')})
-
-    `, 'Image should be absolute', '-epa')
+    absoluteImage: testAbsolute(`${command} -epa "<img src='mock'>"`, [
+      `![](${toFileUrl('mock')})`,
+      ''
+    ].join('\n'), 'Image should be absolute', '-epa')
   }
 })()
 
@@ -211,43 +211,43 @@ exports.base = (() => {
   }
 
   return {
-    defaultLink: testBase(`${command} -epa "<a href='mock'>anchor</a>"`, `
-      [anchor][0]
+    defaultLink: testBase(`${command} -epa "<a href='mock'>anchor</a>"`, [
+      '[anchor][0]',
+      '',
+      `[0]: ${toFileUrl('mock')}`,
+      ''
+    ].join('\n'), 'Link should be relative to the current working directory', '-epa'),
 
-      [0]: ${toFileUrl('mock')}
+    defaultRootLink: testBase(`${command} -epa "<a href='/mock'>anchor</a>"`, [
+      '[anchor][0]',
+      '',
+      `[0]: ${toFileUrl('/mock')}`,
+      ''
+    ].join('\n'), 'Root link should be relative to the current working directory', '-epa'),
 
-    `, 'Link should be relative to the current working directory', '-epa'),
+    defaultImage: testBase(`${command} -epa "<img src='mock'>"`, [
+      `![](${toFileUrl('mock')})`,
+      ''
+    ].join('\n'), 'Image should be relative to the current working directory', '-epa'),
 
-    defaultRootLink: testBase(`${command} -epa "<a href='/mock'>anchor</a>"`, `
-      [anchor][0]
+    baseLink: testBase(`${command} -epab "http://example.com/path/to/page/" "<a href='mock'>anchor</a>"`, [
+      '[anchor][0]',
+      '',
+      '[0]: http://example.com/path/to/page/mock',
+      ''
+    ].join('\n'), 'Link should be relative to custom URL', '-epab'),
 
-      [0]: ${toFileUrl('/mock')}
+    baseRootLink: testBase(`${command} -epab "http://example.com/path/to/page/" "<a href='/mock'>anchor</a>"`, [
+      '[anchor][0]',
+      '',
+      '[0]: http://example.com/mock',
+      ''
+    ].join('\n'), 'Link should be relative to custom URL', '-epab'),
 
-    `, 'Root link should be relative to the current working directory', '-epa'),
-
-    defaultImage: testBase(`${command} -epa "<img src='mock'>"`, `
-      ![](${toFileUrl('mock')})
-
-    `, 'Image should be relative to the current working directory', '-epa'),
-
-    baseLink: testBase(`${command} -epab "http://example.com/path/to/page/" "<a href='mock'>anchor</a>"`, `
-      [anchor][0]
-
-      [0]: http://example.com/path/to/page/mock
-
-    `, 'Link should be relative to custom URL', '-epab'),
-
-    baseRootLink: testBase(`${command} -epab "http://example.com/path/to/page/" "<a href='/mock'>anchor</a>"`, `
-      [anchor][0]
-
-      [0]: http://example.com/mock
-
-    `, 'Link should be relative to custom URL', '-epab'),
-
-    baseImage: testBase(`${command} -epab "http://example.com/path/to/page/" "<img src='mock'>"`, `
-      ![](http://example.com/path/to/page/mock)
-
-    `, 'Image should be relative to custom URL', '-epab')
+    baseImage: testBase(`${command} -epab "http://example.com/path/to/page/" "<img src='mock'>"`, [
+      '![](http://example.com/path/to/page/mock)',
+      ''
+    ].join('\n'), 'Image should be relative to custom URL', '-epab')
   }
 })()
 
@@ -266,29 +266,29 @@ exports.inline = (() => {
   }
 
   return {
-    referenceLink: testInline(`${command} -ep "<a href='mock'>anchor</a>"`, `
-      [anchor][0]
+    referenceLink: testInline(`${command} -ep "<a href='mock'>anchor</a>"`, [
+      '[anchor][0]',
+      '',
+      '[0]: mock',
+      ''
+    ].join('\n'), 'Link should be in reference style', '-ep'),
 
-      [0]: mock
+    referenceLinkWithTitle: testInline(`${command} -ep "<a href='mock' title='mocker'>anchor</a>"`, [
+      '[anchor][0]',
+      '',
+      '[0]: mock "mocker"',
+      ''
+    ].join('\n'), 'Link should be in reference style with title', '-ep'),
 
-    `, 'Link should be in reference style', '-ep'),
+    inlineLink: testInline(`${command} -epi "<a href='mock'>anchor</a>"`, [
+      '[anchor](mock)',
+      ''
+    ].join('\n'), 'Link should be in inline style', '-epi'),
 
-    referenceLinkWithTitle: testInline(`${command} -ep "<a href='mock' title='mocker'>anchor</a>"`, `
-      [anchor][0]
-
-      [0]: mock "mocker"
-
-    `, 'Link should be in reference style with title', '-ep'),
-
-    inlineLink: testInline(`${command} -epi "<a href='mock'>anchor</a>"`, `
-      [anchor](mock)
-
-    `, 'Link should be in inline style', '-epi'),
-
-    inlineLinkWithTitle: testInline(`${command} -epi "<a href='mock' title='mocker'>anchor</a>"`, `
-      [anchor](mock "mocker")
-
-    `, 'Link should be in inline style with title', '-epi')
+    inlineLinkWithTitle: testInline(`${command} -epi "<a href='mock' title='mocker'>anchor</a>"`, [
+      '[anchor](mock "mocker")',
+      ''
+    ].join('\n'), 'Link should be in inline style with title', '-epi')
   }
 })()
 
@@ -297,10 +297,10 @@ exports.stdio = (test) => {
 
   exec(`${command} -ep "<strong>strong</strong>"`, (error, stdout) => {
     test.ifError(error, 'Error should not be thrown using -ep flags')
-    test.equal(stdout, `
-      **strong**
-
-    `, 'Output should match expected markdown using -ep flags')
+    test.equal(stdout, [
+      '**strong**',
+      ''
+    ].join('\n'), 'Output should match expected markdown using -ep flags')
 
     test.done()
   })

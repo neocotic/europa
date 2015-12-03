@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-require('../lib/command').run();
+'use strict'
+
+require('../src/command').run()

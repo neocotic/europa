@@ -18,7 +18,7 @@
 // Default option values.
 const defaultOptions = {
   absolute: false,
-  base: typeof window !== 'undefined' && window != null ? window.document.baseURI : `file://${process.cwd()}`,
+  base: typeof window !== 'undefined' && window != null ? window.document.baseURI : `file:///${process.cwd()}`,
   debug: false,
   inline: false
 }
@@ -122,18 +122,18 @@ class HtmlParser {
 
     // Create a DOM if `window` doesn't exist (i.e. when running in node).
     this.win = typeof window !== 'undefined' ? window : null
-    if (this.win != null) {
+    if (this.win == null) {
       let doc = require('jsdom').jsdom(undefined, {
         features: {
           FetchExternalResources: false
         },
-        url: this.options.base
+        url: this.options.base.replace(/\\/g, '/')
       })
       this.win = doc.defaultView
     }
 
     // Create the Node constants if Node doesn't exist (i.e. when running in IE < 9).
-    if (this.win.Node != null) {
+    if (this.win.Node == null) {
       this.win.Node = {
         ELEMENT_NODE: 1,
         TEXT_NODE: 3
@@ -157,7 +157,7 @@ class HtmlParser {
 
     let value = direct || typeof ele.getAttribute !== 'function' ? ele[attribute] : ele.getAttribute(attribute)
 
-    return value != null ? value : ''
+    return value || ''
   }
 
   // Append a Markdown line break to the buffer string.
@@ -381,6 +381,8 @@ class HtmlParser {
     // End the buffer string cleanly and we're done!
     this.append('')
     this.buffer = trim(this.buffer)
+
+    return this.buffer
   }
 
   // Prepare the parser for a `pre` element.

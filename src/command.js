@@ -191,8 +191,8 @@ function writeMarkdown(source, markdown, root) {
     }
 
     // Ensure something is always written in the file.
-    if (markdown.length <= 0) {
-      markdown = ' '
+    if (!markdown) {
+      markdown = ''
     }
 
     fs.writeFile(markdownPath, markdown, (error) => {

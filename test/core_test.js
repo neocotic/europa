@@ -43,9 +43,10 @@ exports.fixtures = (() => {
   function testFixture(name) {
     return (test) => {
       let html = fs.readFileSync(path.join(fixturesDirectory, `${name}.html`), encoding)
-      let markdown = fs.readFileSync(path.join(expectedDirectory, `${name}.md`), encoding)
+      let expected = fs.readFileSync(path.join(expectedDirectory, `${name}.md`), encoding)
+      let actual = md(html)
 
-      test.equal(md(html), markdown, `${name} fixtures should match`)
+      test.equal(actual, expected, `${name} fixtures should match`)
       test.done()
     }
   }
@@ -67,29 +68,29 @@ exports.options = {
   absolute(test) {
     let options = { absolute: true }
 
-    test.equal(md('<a href="mock">anchor</a>'), `
-      [anchor][0]
+    test.equal(md('<a href="mock">anchor</a>'), [
+      '[anchor][0]',
+      '',
+      '[0]: mock'
+    ].join('\n'), 'Link should be relative')
 
-      [0]: mock
-    `, 'Link should be relative')
+    test.equal(md('<a href="/mock">anchor</a>'), [
+      '[anchor][0]',
+      '',
+      '[0]: /mock'
+    ].join('\n'), 'Root link should be relative')
 
-    test.equal(md('<a href="/mock">anchor</a>'), `
-      [anchor][0]
+    test.equal(md('<a href="mock">anchor</a>', options), [
+      '[anchor][0]',
+      '',
+      `[0]: ${toFileUrl('mock')}`
+    ].join('\n'), 'Link should be absolute')
 
-      [0]: /mock
-    `, 'Root link should be relative')
-
-    test.equal(md('<a href="mock">anchor</a>', options), `
-      [anchor][0]
-
-      [0]: ${toFileUrl('mock')}
-    `, 'Link should be absolute')
-
-    test.equal(md('<a href="/mock">anchor</a>', options), `
-      [anchor][0]
-
-      [0]: ${toFileUrl('/mock')}
-    `, 'Root link should be absolute')
+    test.equal(md('<a href="/mock">anchor</a>', options), [
+      '[anchor][0]',
+      '',
+      `[0]: ${toFileUrl('/mock')}`
+    ].join('\n'), 'Root link should be absolute')
 
     test.equal(md('<img src="mock">'), '![](mock)', 'Image should be relative')
 
@@ -102,33 +103,33 @@ exports.options = {
     let base = 'http://example.com/path/to/page/'
     let options = { absolute: true }
 
-    test.equal(md('<a href="mock">anchor</a>', options), `
-      [anchor][0]
+    test.equal(md('<a href="mock">anchor</a>', options), [
+      '[anchor][0]',
+      '',
+      `[0]: ${toFileUrl('mock')}`
+    ].join('\n'), 'Link should be relative to the current working directory')
 
-      [0]: ${toFileUrl('mock')}
-    `, 'Link should be relative to the current working directory')
-
-    test.equal(md('<a href="/mock">anchor</a>', options), `
-      [anchor][0]
-
-      [0]: ${toFileUrl('/mock')}
-    `, 'Root link should be relative to the current working directory')
+    test.equal(md('<a href="/mock">anchor</a>', options), [
+      '[anchor][0]',
+      '',
+      `[0]: ${toFileUrl('/mock')}`
+    ].join('\n'), 'Root link should be relative to the current working directory')
 
     test.equal(md('<img src="mock">', options), `![](${toFileUrl('mock')})`, 'Image should be relative to the current working directory')
 
     options.base = base
 
-    test.equal(md('<a href="mock">anchor</a>', options), `
-      [anchor][0]
+    test.equal(md('<a href="mock">anchor</a>', options), [
+      '[anchor][0]',
+      '',
+      `[0]: ${base}mock`
+    ].join('\n'), 'Link should be relative to custom URL')
 
-      [0]: ${base}mock
-    `, 'Link should be relative to custom URL')
-
-    test.equal(md('<a href="/mock">anchor</a>', options), `
-      [anchor][0]
-
-      [0]: http://example.com/mock
-    `, 'Root link should be relative to custom URL')
+    test.equal(md('<a href="/mock">anchor</a>', options), [
+      '[anchor][0]',
+      '',
+      '[0]: http://example.com/mock'
+    ].join('\n'), 'Root link should be relative to custom URL')
 
     test.equal(md('<img src="mock">', options), `![](${base}mock)`, 'Image should be relative to custom URL')
 
@@ -138,17 +139,17 @@ exports.options = {
   inline(test) {
     let options = { inline: true }
 
-    test.equal(md('<a href="mock">anchor</a>'), `
-      [anchor][0]
+    test.equal(md('<a href="mock">anchor</a>'), [
+      '[anchor][0]',
+      '',
+      '[0]: mock'
+    ].join('\n'), 'Link should be in reference style')
 
-      [0]: mock
-    `, 'Link should be in reference style')
-
-    test.equal(md('<a href="mock" title="mocker">anchor</a>'), `
-      [anchor][0]
-
-      [0]: mock "mocker"
-    `, 'Link should be in reference style with title')
+    test.equal(md('<a href="mock" title="mocker">anchor</a>'), [
+      '[anchor][0]',
+      '',
+      '[0]: mock "mocker"'
+    ].join('\n'), 'Link should be in reference style with title')
 
     test.equal(md('<a href="mock">anchor</a>', options), '[anchor](mock)', 'Link should be in inline style')
 
