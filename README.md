@@ -10,6 +10,8 @@
 
 [Europa](https://github.com/Skelp/europa) is a library for transforming HTML to Markdown.
 
+> **IMPORTANT:** Europa is still under development!
+
 [![Build Status](https://img.shields.io/travis/Skelp/europa/develop.svg?style=flat-square)](https://travis-ci.org/Skelp/europa)
 [![Dependency Status](https://img.shields.io/david/Skelp/europa.svg?style=flat-square)](https://david-dm.org/Skelp/europa)
 [![Dev Dependency Status](https://img.shields.io/david/dev/Skelp/europa.svg?style=flat-square)](https://david-dm.org/Skelp/europa#info=devDependencies)
