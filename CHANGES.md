@@ -1,3 +1,8 @@
+## Version 3.1.0, 2016.09.02
+
+* [#39](https://github.com/neocotic/html.md/issues/39): Fix support for AMD
+* [#66](https://github.com/neocotic/html.md/issues/66): Correct license to GPL-2.0
+
 ## Version 3.0.2, 2013.10.09
 
 * [#36](https://github.com/neocotic/html.md/issues/36): Fix errors in Internet Explorer 8 and older

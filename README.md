@@ -164,7 +164,7 @@ This is really just intended for use within a browser.
 The current version of `md`.
 
 ``` javascript
-console.log(md.version); // "3.0.2"
+console.log(md.version); // "3.1.0"
 ```
 
 ## Windows
