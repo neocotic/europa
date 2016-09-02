@@ -564,7 +564,7 @@ class HtmlParser
 if module?.exports
   module.exports = md
 else if typeof define is 'function' and define.amd
-  define 'md', -> md
+  define -> md
 
 # Public constants
 # ----------------
