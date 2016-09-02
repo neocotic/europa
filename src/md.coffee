@@ -1,6 +1,6 @@
 # [html.md](http://neocotic.com/html.md)  
-# (c) 2013 Alasdair Mercer  
-# Freely distributable under the MIT license.  
+# (c) 2016 Alasdair Mercer
+# Freely distributable under the GPL-2.0 license.
 # Based on [Make.text](http://homepage.mac.com/tjim/) 1.5  
 # (c) 2007 Trevor Jim  
 # For all details and documentation:  

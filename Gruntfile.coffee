@@ -33,8 +33,8 @@ module.exports = (grunt) ->
         files: 'dist/md.min.js': [ 'lib/md.js' ]
         options:
             banner: """
-              /*! <%= pkg.name %> v<%= pkg.version %> | (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> | <%= pkg.licenses[0].type %> License
-                  Make.text v1.5 | (c) 2007 Trevor Jim
+              /*! <%= pkg.name %> v<%= pkg.version %> | (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> | <%= pkg.license %> License
+                  Make.text v1.5 | (c) 2007 Trevor Jim | GPL-2.0 License
               */ 
             """
 
