@@ -1,0 +1,41 @@
+{
+  "name": "europa",
+  "version": "4.0.0-alpha1",
+  "description": "Library for transforming HTML to Markdown",
+  "homepage": "https://github.com/Skelp/europa",
+  "authors": [
+    {
+      "name": "Alasdair Mercer",
+      "email": "mercer.alasdair@gmail.com",
+      "homepage": "https://neocotic.com"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "html",
+    "markdown",
+    "transform",
+    "convert"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Skelp/europa.git"
+  },
+  "main": "dist/umd/europa.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "src/",
+    "test/",
+    ".*",
+    "AUTHORS.md",
+    "CHANGES.md",
+    "CONTRIBUTING.md",
+    "Gruntfile.js",
+    "package.json",
+    "README.md"
+  ]
+}

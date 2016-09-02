@@ -1,0 +1,8 @@
+test/
+.*
+AUTHORS.md
+bower.json
+CHANGES.md
+CONTRIBUTING.md
+Gruntfile.js
+README.md

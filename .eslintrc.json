@@ -1,0 +1,10 @@
+{
+  "extends": "skelp/v2/es6",
+  "env": {
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "europa",
+  "version": "4.0.0-alpha1",
+  "description": "Library for transforming HTML to Markdown",
+  "homepage": "https://github.com/Skelp/europa",
+  "bugs": {
+    "url": "https://github.com/Skelp/europa/issues"
+  },
+  "author": {
+    "name": "Alasdair Mercer",
+    "email": "mercer.alasdair@gmail.com",
+    "url": "https://neocotic.com"
+  },
+  "license": "MIT",
+  "keywords": [
+    "html",
+    "markdown",
+    "transform",
+    "convert"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Skelp/europa.git"
+  },
+  "devDependencies": {
+    "babel-eslint": "^6.1.0",
+    "babel-preset-es2015": "^6.14.0",
+    "eslint-config-skelp": "^0.1.4",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^18.1.0",
+    "grunt-rollup": "^0.7.1",
+    "load-grunt-tasks": "^3.5.0",
+    "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-node-resolve": "^1.7.1",
+    "rollup-plugin-uglify": "^1.0.1"
+  },
+  "main": "dist/umd/europa.js",
+  "jsnext:main": "src/index.js",
+  "scripts": {
+    "build": "grunt build",
+    "test": "grunt test"
+  }
+}
