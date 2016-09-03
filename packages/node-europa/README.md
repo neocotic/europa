@@ -26,7 +26,6 @@ library for transforming HTML to Markdown.
 
 * [Install](#install)
 * [Usage](#usage)
-* [Migrating from html.md](#migrating-from-html-md)
 * [Bugs](#bugs)
 * [Contributors](#contributors)
 * [License](#license)
