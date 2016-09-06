@@ -110,11 +110,6 @@ padLeft = (str = '', times = 0, padStr = ' ') ->
   str = padStr + str for i in [0...times]
   str
 
-# Remove whitespace from both ends of `str`.  
-# This tries to use the native `String.prototype.trim` function where possible.
-trim = (str = '') ->
-  if str.trim then str.trim() else str.replace /^\s+|\s+$/g, ''
-
 # HTML Parser
 # -----------
 
@@ -328,9 +323,10 @@ class HtmlParser
       else
         'No exceptions were thrown'
 
-    # End the buffer string cleanly and we're done!
+    # clean out empty strings on end of buffer
+    # empty strings before hand could contain proper markup (new lines, indents, etc etc)
     @append ''
-    @buffer = trim @buffer
+    @buffer = @buffer.replace /\s+$/, ''
 
   # Prepare the parser for a `pre` element.
   pre: ->

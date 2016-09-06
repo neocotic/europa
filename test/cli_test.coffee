@@ -51,13 +51,16 @@ toPathName = (relativePath) ->
   pathName = path.resolve(process.cwd(), '..', relativePath).replace ///\\///g, '/'
   if pathName[0] isnt '/' then "/#{pathName}" else pathName
 
+trimEnd = (content) ->
+  content.replace /\s+$/, ''
+
 # Tests
 # -----
 
 exports.fixtures = do ->
   testFixture = (name) ->
     htmlPath = path.join FIXTURES_DIR, "#{name}#{HTML_EXT}"
-    expected = fs.readFileSync path.join(EXPECTED_DIR, "#{name}#{MD_EXT}"), ENCODING
+    expected = trimEnd fs.readFileSync path.join(EXPECTED_DIR, "#{name}#{MD_EXT}"), ENCODING
 
     standard: (test) ->
       test.expect 2
