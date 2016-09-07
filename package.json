@@ -22,6 +22,9 @@
     "type": "git",
     "url": "https://github.com/Skelp/europa.git"
   },
+  "dependencies": {
+    "europa-core": "^4.0.0-alpha2"
+  },
   "devDependencies": {
     "babel-eslint": "^6.1.0",
     "babel-plugin-external-helpers": "^6.8.0",
@@ -43,8 +46,5 @@
   "scripts": {
     "build": "grunt build",
     "test": "grunt test"
-  },
-  "dependencies": {
-    "europa-core": "^4.0.0-alpha2"
   }
 }
