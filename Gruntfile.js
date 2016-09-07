@@ -72,9 +72,7 @@ module.exports = function(grunt) {
           banner: bannerLarge,
           plugins: function() {
             return [
-              babel({
-                exclude: './node_modules/**'
-              }),
+              babel(),
               nodeResolve({
                 main: true,
                 jsnext: true
@@ -96,9 +94,7 @@ module.exports = function(grunt) {
           banner: bannerSmall,
           plugins: function() {
             return [
-              babel({
-                exclude: './node_modules/**'
-              }),
+              babel(),
               nodeResolve({
                 browser: true,
                 jsnext: true

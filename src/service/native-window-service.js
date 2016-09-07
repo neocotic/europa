@@ -20,8 +20,31 @@
  * SOFTWARE.
  */
 
-import Europa from 'europa-core'
+import WindowService from 'europa-core/src/service/window-service'
 
-import NativeWindowService from './service/native-window-service'
+/**
+ * A very simplistic implementation of {@link WindowService} that returns the global <code>Window</code> object to be
+ * used for transforming HTML into Markdown.
+ *
+ * @public
+ * @extends {WindowService}
+ */
+class NativeWindowService extends WindowService {
 
-export default new Europa(new NativeWindowService())
+  /**
+   * @override
+   */
+  getBaseUri(window) {
+    return window.document.baseURI
+  }
+
+  /**
+   * @override
+   */
+  getWindow() {
+    return window
+  }
+
+}
+
+export default NativeWindowService

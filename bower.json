@@ -1,6 +1,6 @@
 {
   "name": "europa",
-  "version": "4.0.0-alpha1",
+  "version": "4.0.0-alpha2",
   "description": "Library for transforming HTML to Markdown",
   "homepage": "https://github.com/Skelp/europa",
   "authors": [
