@@ -81,7 +81,7 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          'dist/umd/europa.js': 'src/index.js'
+          'dist/europa.js': 'src/index.js'
         }
       },
       production: {
@@ -110,7 +110,7 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          'dist/umd/europa.min.js': 'src/index.js'
+          'dist/europa.min.js': 'src/index.js'
         }
       }
     },
