@@ -20,6 +20,28 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs a horizontal rule.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class HorizontalRulePlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    transformation
+      .appendParagraph()
+      .output('---')
+      .appendParagraph()
+  }
+
+}
+
+export default HorizontalRulePlugin

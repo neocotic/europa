@@ -20,6 +20,39 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which simply ensures that all children elements are not transformed.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class EmptyPlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  after(transformation, context) {
+    transformation.skipChildren = context.get('previousSkipChildren')
+  }
+
+  /**
+   * @override
+   */
+  before(transformation, context) {
+    context.set('previousSkipChildren', transformation.skipChildren)
+  }
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    transformation.skipChildren = true
+  }
+
+}
+
+export default EmptyPlugin

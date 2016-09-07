@@ -20,6 +20,51 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs a details section.
+ *
+ * If the details has an <code>open</code> attribute then all of its children are transformed. Otherwise, only the
+ * nested <code>summary</code>, if any, will be transformed.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class DetailsPlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  after(transformation, context) {
+    transformation.skipChildren = context.get('previousSkipChildren')
+  }
+
+  /**
+   * @override
+   */
+  before(transformation, context) {
+    context.set('previousSkipChildren', transformation.skipChildren)
+  }
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    const { element } = transformation
+
+    transformation.appendParagraph()
+
+    if (!element.hasAttribute('open')) {
+      transformation.skipChildren = true
+
+      const summary = element.querySelector('summary')
+      transformation.transformer.transformElement(summary, transformation)
+    }
+  }
+
+}
+
+export default DetailsPlugin

@@ -20,6 +20,34 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs as quoted text.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class QuotePlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  after(transformation, context) {
+    transformation.output('"')
+  }
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    transformation.output('"')
+
+    transformation.atNoWhiteSpace = true
+  }
+
+}
+
+export default QuotePlugin

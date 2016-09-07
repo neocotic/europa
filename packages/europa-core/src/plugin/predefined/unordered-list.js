@@ -20,6 +20,48 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs an unordered list.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class UnorderedListPlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  after(transformation, context) {
+    transformation.inOrderedList = context.get('previousInOrderedList')
+    transformation.listIndex = context.get('previousListIndex')
+    transformation.listDepth--
+  }
+
+  /**
+   * @override
+   */
+  before(transformation, context) {
+    context.set('previousInOrderedList', transformation.inOrderedList)
+    context.set('previousListIndex', transformation.listIndex)
+  }
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    if (transformation.listDepth === 0) {
+      transformation.appendParagraph()
+    }
+
+    transformation.inOrderedList = false
+    transformation.listIndex = 1
+    transformation.listDepth++
+  }
+
+}
+
+export default UnorderedListPlugin

@@ -20,6 +20,34 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs as strong text.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class StrongPlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  after(transformation, context) {
+    transformation.output('**')
+  }
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    transformation.output('**')
+
+    transformation.atNoWhiteSpace = true
+  }
+
+}
+
+export default StrongPlugin

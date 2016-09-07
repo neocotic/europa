@@ -20,6 +20,39 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+import Utilities from '../../utilities'
+
+/**
+ * A {@link Plugin} which outputs a list item. The prefix for the list item will vary depending on what type of list the
+ * item is contained within.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class ListItemPlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    const value = transformation.inOrderedList ? `${transformation.listIndex++}. ` : '* '
+
+    if (!transformation.atLeft) {
+      transformation.append(transformation.left.replace(/[ ]{2,4}$/, '\n'))
+
+      transformation.atLeft = true
+      transformation.atNoWhiteSpace = true
+      transformation.atParagraph = true
+    } else if (transformation.last) {
+      transformation.last = transformation.last.replace(/[ ]{2,4}$/, '\n')
+    }
+
+    transformation.append(Utilities.leftPad(value, (transformation.listDepth - 1) * 2))
+  }
+
+}
+
+export default ListItemPlugin

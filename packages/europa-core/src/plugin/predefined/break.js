@@ -20,6 +20,28 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs an inline line break.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class BreakPlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    transformation.append(`  ${transformation.left}`)
+
+    transformation.atLeft = true
+    transformation.atNoWhiteSpace = true
+  }
+
+}
+
+export default BreakPlugin

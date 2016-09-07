@@ -20,6 +20,47 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+import Plugin from '../plugin'
 
-export default Europa
+/**
+ * A {@link Plugin} which outputs the contents in a code block.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class CodePlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  after(transformation, context) {
+    if (!context.get('skipped')) {
+      transformation.inCodeBlock = context.get('previousInCodeBlock')
+
+      transformation.output('`')
+    }
+  }
+
+  /**
+   * @override
+   */
+  before(transformation, context) {
+    context.set('previousInCodeBlock', transformation.inCodeBlock)
+  }
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    if (transformation.inPreformattedBlock) {
+      context.set('skipped', true)
+    } else {
+      transformation.output('`')
+
+      transformation.inCodeBlock = true
+    }
+  }
+
+}
+
+export default CodePlugin

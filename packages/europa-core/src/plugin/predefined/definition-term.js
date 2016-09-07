@@ -20,6 +20,25 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+import StrongPlugin from './strong'
 
-export default Europa
+/**
+ * A {@link Plugin} which outputs a definition term as strong text.
+ *
+ * @public
+ * @extends {StrongPlugin}
+ */
+class DefinitionTermPlugin extends StrongPlugin {
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    transformation.appendParagraph()
+
+    super.transform(transformation, context)
+  }
+
+}
+
+export default DefinitionTermPlugin

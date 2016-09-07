@@ -20,6 +20,49 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs the contents of nested frame.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class FramePlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  after(transformation, context) {
+    transformation.skipChildren = context.get('previousSkipChildren')
+    transformation.window = context.get('previousWindow')
+  }
+
+  /**
+   * @override
+   */
+  before(transformation, context) {
+    context.set('previousSkipChildren', transformation.skipChildren)
+    context.set('previousWindow', transformation.window)
+  }
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    const window = transformation.element.contentWindow
+
+    transformation.skipChildren = true
+
+    if (window) {
+      transformation.window = window
+
+      transformation.transformer.transformElement(window.document.body, transformation)
+    }
+  }
+
+}
+
+export default FramePlugin

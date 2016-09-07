@@ -20,6 +20,25 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs a paragraph.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class ParagraphPlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    transformation.appendParagraph()
+  }
+
+}
+
+export default ParagraphPlugin

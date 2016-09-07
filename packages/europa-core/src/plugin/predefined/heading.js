@@ -20,6 +20,34 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs a heading of various levels.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class HeadingPlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    const level = parseInt(transformation.tagName.match(/([1-6])$/)[1], 10)
+
+    transformation.appendParagraph()
+
+    let heading = ''
+    for (let i = 0; i < level; i++) {
+      heading += '#'
+    }
+
+    transformation.output(`${heading} `)
+  }
+
+}
+
+export default HeadingPlugin

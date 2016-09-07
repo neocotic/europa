@@ -20,6 +20,51 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs the contents in a block quote.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class BlockQuotePlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  after(transformation, context) {
+    transformation.atLeft = false
+    transformation.atParagraph = false
+    transformation.left = context.get('previousLeft')
+
+    transformation.appendParagraph()
+  }
+
+  /**
+   * @override
+   */
+  before(transformation, context) {
+    context.set('previousLeft', transformation.left)
+  }
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    const value = '> '
+
+    transformation.left += value
+
+    if (transformation.atParagraph) {
+      transformation.append(value)
+    } else {
+      transformation.appendParagraph()
+    }
+  }
+
+}
+
+export default BlockQuotePlugin

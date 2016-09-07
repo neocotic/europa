@@ -20,6 +20,34 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+/* eslint no-unused-vars: "off" */
 
-export default Europa
+import Plugin from '../plugin'
+
+/**
+ * A {@link Plugin} which outputs as emphasised text.
+ *
+ * @public
+ * @extends {Plugin}
+ */
+class EmphasisPlugin extends Plugin {
+
+  /**
+   * @override
+   */
+  after(transformation, context) {
+    transformation.output('_')
+  }
+
+  /**
+   * @override
+   */
+  transform(transformation, context) {
+    transformation.output('_')
+
+    transformation.atNoWhiteSpace = true
+  }
+
+}
+
+export default EmphasisPlugin
