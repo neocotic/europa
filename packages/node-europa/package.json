@@ -1,6 +1,6 @@
 {
   "name": "node-europa",
-  "version": "4.0.0-alpha2",
+  "version": "4.0.0-alpha3",
   "description": "Node.js version of Europa for transforming HTML to Markdown",
   "homepage": "https://github.com/Skelp/node-europa",
   "bugs": {
@@ -26,8 +26,10 @@
   },
   "dependencies": {
     "commander": "^2.9.0",
-    "europa-core": "^4.0.0-alpha2",
-    "jsdom": "^9.5.0"
+    "europa-core": "^4.0.0-alpha3",
+    "glob": "^7.0.6",
+    "jsdom": "^9.5.0",
+    "mkdirp": "^0.5.1"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.0",
@@ -41,6 +43,9 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^18.1.0",
     "load-grunt-tasks": "^3.5.0"
+  },
+  "bin": {
+    "europa": "bin/europa"
   },
   "main": "index.js",
   "jsnext:main": "src/index.js",
