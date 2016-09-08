@@ -20,45 +20,4 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
-import { jsdom } from 'jsdom'
-
-import WindowService from 'europa-core/lib/service/window-service'
-
-/**
- * A Node-based implementation of {@link WindowService} uses the jsdom library to create a virtual <code>Window</code>
- * object to be used for transforming HTML into Markdown.
- *
- * @public
- * @extends {WindowService}
- */
-class NodeWindowService extends WindowService {
-
-  /**
-   * @override
-   */
-  getBaseUri(window) {
-    return `file:///${process.cwd().replace(/\\/g, '/')}`
-  }
-
-  /**
-   * @override
-   */
-  getWindow() {
-    return jsdom(null, {
-      features: { FetchExternalResources: false },
-      url: this.getBaseUri(null)
-    }).defaultView
-  }
-
-  /**
-   * @override
-   */
-  isCloseable(window) {
-    return true
-  }
-
-}
-
-export default NodeWindowService
+// TODO: Complete unit tests (incl. fixtures)

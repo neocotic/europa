@@ -45,12 +45,26 @@ module.exports = function(grunt) {
     },
 
     eslint: {
-      target: [ 'src/**/*.js' ]
+      target: [ 'src/**/*.js', 'test/**/*.js' ]
+    },
+
+    mochaTest: {
+      test: {
+        options: {
+          clearRequireCache: true,
+          require: 'babel-register',
+          reporter: 'spec'
+        },
+        src: [ 'test/**/*.spec.js' ]
+      }
     },
 
     watch: {
       all: {
-        files: [ 'src/**/*.js' ],
+        options: {
+          spawn: false
+        },
+        files: [ 'src/**/*.js', 'test/**/*.js' ],
         tasks: [ 'build' ]
       }
     }
@@ -59,6 +73,6 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt)
 
   grunt.registerTask('default', [ 'build' ])
-  grunt.registerTask('build', [ 'eslint', 'clean', 'babel' ])
-  grunt.registerTask('test', [ 'eslint' ])
+  grunt.registerTask('build', [ 'eslint', 'clean', 'babel', 'mochaTest' ])
+  grunt.registerTask('test', [ 'eslint', 'mochaTest' ])
 }
