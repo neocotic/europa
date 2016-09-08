@@ -95,7 +95,7 @@ class CLI {
      */
     this._program = program
       .version(version)
-      .usage('europa [options] [ -e html | <files> ]')
+      .usage('europa [options] [file ...]')
       .option('-a, --absolute', 'use absolute URLs for anchors/images')
       .option('-b, --base-uri <uri>', 'base URI for anchors/images')
       .option('-e, --eval <html>', 'evaluate HTML string')
