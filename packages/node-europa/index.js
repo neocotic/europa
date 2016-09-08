@@ -20,8 +20,4 @@
  * SOFTWARE.
  */
 
-import Europa from 'europa-core/lib/europa'
-
-import NodeWindowService from './service/node-window-service'
-
-export default new Europa(new NodeWindowService())
+module.exports = require('./lib').default

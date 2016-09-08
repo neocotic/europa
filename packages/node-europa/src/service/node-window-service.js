@@ -20,8 +20,45 @@
  * SOFTWARE.
  */
 
-import Europa from 'europa-core/lib/europa'
+/* eslint no-unused-vars: "off" */
 
-import NodeWindowService from './service/node-window-service'
+import { jsdom } from 'jsdom'
 
-export default new Europa(new NodeWindowService())
+import WindowService from 'europa-core/lib/service/window-service'
+
+/**
+ * A Node-based implementation of {@link WindowService} uses the jsdom library to create a virtual <code>Window</code>
+ * object to be used for transforming HTML into Markdown.
+ *
+ * @public
+ * @extends {WindowService}
+ */
+class NodeWindowService extends WindowService {
+
+  /**
+   * @override
+   */
+  getBaseUri(window) {
+    return `file://${process.cwd()}`
+  }
+
+  /**
+   * @override
+   */
+  getWindow() {
+    return jsdom(null, {
+      features: { FetchExternalResources: false },
+      url: this.getBaseUri(null)
+    }).defaultView
+  }
+
+  /**
+   * @override
+   */
+  isCloseable(window) {
+    return true
+  }
+
+}
+
+export default NodeWindowService
