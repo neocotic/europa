@@ -98,7 +98,9 @@ class Europa {
       tags = tags.trim().split(/\s+/)
     }
 
-    tags.forEach((tag) => this._plugins.set(tag.toLowerCase(), plugin))
+    for (const tag of tags) {
+      this._plugins.set(tag.toLowerCase(), plugin)
+    }
 
     return this
   }
@@ -133,7 +135,7 @@ class Europa {
     const { window } = this
     const transformer = new Transformer(window, this._plugins)
 
-    options = this._createTransformerOptions(options)
+    options = this._createTransformationOptions(options)
 
     return transformer.transform(html, options)
   }
@@ -146,7 +148,7 @@ class Europa {
    * @return {Transformation~Options} The complete options.
    * @private
    */
-  _createTransformerOptions(options) {
+  _createTransformationOptions(options) {
     return Object.assign({
       absolute: false,
       baseUri: this._windowService.getBaseUri(this.window),

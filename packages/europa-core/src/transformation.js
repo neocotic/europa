@@ -426,8 +426,8 @@ export default Transformation
  * The options for {@link Transformation}.
  *
  * @typedef {Object} Transformation~Options
- * @property {boolean} [absolute=false] - <code>true</code> if absolute URLs should be used; otherwise
- * <code>false</code>.
+ * @property {boolean} [absolute=false] - <code>true</code> if absolute URLs should be used for anchors/images;
+ * otherwise <code>false</code>.
  * @property {string} [baseUri] - the base URI for the window
  * @property {boolean} [inline=false] - <code>true</code> if anchor/image URLs are to be inserted inline; otherwise
  * <code>false</code>.

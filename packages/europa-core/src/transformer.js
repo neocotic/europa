@@ -88,11 +88,15 @@ class Transformer {
 
     const transformation = new Transformation(this, options)
 
-    this._plugins.values().forEach((plugin) => plugin.beforeAll(transformation))
+    for (const plugin of this._plugins.values()) {
+      plugin.beforeAll(transformation)
+    }
 
     this.transformElement(root, transformation)
 
-    this._plugins.values().forEach((plugin) => plugin.afterAll(transformation))
+    for (const plugin of this._plugins.values()) {
+      plugin.afterAll(transformation)
+    }
 
     return transformation.append('').buffer.trim()
   }
