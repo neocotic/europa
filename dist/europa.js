@@ -636,8 +636,8 @@
    * The options for {@link Transformation}.
    *
    * @typedef {Object} Transformation~Options
-   * @property {boolean} [absolute=false] - <code>true</code> if absolute URLs should be used; otherwise
-   * <code>false</code>.
+   * @property {boolean} [absolute=false] - <code>true</code> if absolute URLs should be used for anchors/images;
+   * otherwise <code>false</code>.
    * @property {string} [baseUri] - the base URI for the window
    * @property {boolean} [inline=false] - <code>true</code> if anchor/image URLs are to be inserted inline; otherwise
    * <code>false</code>.
@@ -738,15 +738,57 @@
 
         var transformation = new Transformation(this, options);
 
-        this._plugins.values().forEach(function (plugin) {
-          return plugin.beforeAll(transformation);
-        });
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = this._plugins.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var plugin = _step.value;
+
+            plugin.beforeAll(transformation);
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
 
         this.transformElement(root, transformation);
 
-        this._plugins.values().forEach(function (plugin) {
-          return plugin.afterAll(transformation);
-        });
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = this._plugins.values()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var _plugin = _step2.value;
+
+            _plugin.afterAll(transformation);
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
 
         return transformation.append('').buffer.trim();
       }
@@ -783,27 +825,27 @@
           }
 
           if (!transformation.skipChildren) {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
             try {
-              for (var _iterator = Array.from(element.childNodes)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var child = _step.value;
+              for (var _iterator3 = Array.from(element.childNodes)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var child = _step3.value;
 
                 this.transformElement(child, transformation);
               }
             } catch (err) {
-              _didIteratorError = true;
-              _iteratorError = err;
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                  _iterator.return();
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
                 }
               } finally {
-                if (_didIteratorError) {
-                  throw _iteratorError;
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
                 }
               }
             }
@@ -2707,15 +2749,34 @@
     }, {
       key: 'register',
       value: function register(tags, plugin) {
-        var _this = this;
-
         if (typeof tags === 'string') {
           tags = tags.trim().split(/\s+/);
         }
 
-        tags.forEach(function (tag) {
-          return _this._plugins.set(tag.toLowerCase(), plugin);
-        });
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = tags[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var tag = _step.value;
+
+            this._plugins.set(tag.toLowerCase(), plugin);
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
 
         return this;
       }
@@ -2731,30 +2792,30 @@
     }, {
       key: 'registerPreset',
       value: function registerPreset(preset) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
         try {
-          for (var _iterator = preset.plugins[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _step$value = slicedToArray(_step.value, 2);
+          for (var _iterator2 = preset.plugins[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var _step2$value = slicedToArray(_step2.value, 2);
 
-            var tags = _step$value[0];
-            var plugin = _step$value[1];
+            var tags = _step2$value[0];
+            var plugin = _step2$value[1];
 
             this.register(tags, plugin);
           }
         } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
             }
           } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
+            if (_didIteratorError2) {
+              throw _iteratorError2;
             }
           }
         }
@@ -2781,7 +2842,7 @@
 
         var transformer = new Transformer(window, this._plugins);
 
-        options = this._createTransformerOptions(options);
+        options = this._createTransformationOptions(options);
 
         return transformer.transform(html, options);
       }
@@ -2796,8 +2857,8 @@
        */
 
     }, {
-      key: '_createTransformerOptions',
-      value: function _createTransformerOptions(options) {
+      key: '_createTransformationOptions',
+      value: function _createTransformationOptions(options) {
         return Object.assign({
           absolute: false,
           baseUri: this._windowService.getBaseUri(this.window),

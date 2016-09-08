@@ -1,6 +1,6 @@
 {
   "name": "europa",
-  "version": "4.0.0-alpha2",
+  "version": "4.0.0-alpha3",
   "description": "Library for transforming HTML to Markdown",
   "homepage": "https://github.com/Skelp/europa",
   "bugs": {
@@ -23,7 +23,7 @@
     "url": "https://github.com/Skelp/europa.git"
   },
   "dependencies": {
-    "europa-core": "^4.0.0-alpha2"
+    "europa-core": "^4.0.0-alpha3"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.0",
