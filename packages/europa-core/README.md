@@ -1,17 +1,4 @@
-    oooooooooooo
-    `888'     `8
-     888         oooo  oooo  oooo d8b  .ooooo.  oo.ooooo.   .oooo.
-     888oooo8    `888  `888  `888""8P d88' `88b  888' `88b `P  )88b
-     888    "     888   888   888     888   888  888   888  .oP"888
-     888       o  888   888   888     888   888  888   888 d8(  888
-    o888ooooood8  `V88V"V8P' d888b    `Y8bod8P'  888bod8P' `Y888""8o
-                                    .oooooo.     888
-                                   d8P'  `Y8b   o888o
-                                  888           .ooooo.  oooo d8b  .ooooo.
-                                  888          d88' `88b `888""8P d88' `88b
-                                  888          888   888  888     888ooo888
-                                  `88b    ooo  888   888  888     888    .o
-                                   `Y8bood8P'  `Y8bod8P' d888b    `Y8bod8P'
+![Europa Core](https://cdn.rawgit.com/Skelp/europa-branding/master/assets/banner/europa-core/europa-core-banner.png)
 
 [Europa Core](https://github.com/Skelp/europa-core) is the heart of [Europa](https://github.com/Skelp/europa).
 
@@ -46,4 +33,4 @@ A list of Europa Core contributors can be found in
 See [LICENSE.md](https://github.com/Skelp/europa-core/raw/master/LICENSE.md) for more information on our MIT license.
 
 © 2016 [Skelp](https://skelp.io)
-<img align="right" width="16" height="16" src="https://raw.githubusercontent.com/Skelp/skelp-branding/master/assets/logo/base/skelp-logo-16x16.png">
+<img align="right" width="16" height="16" src="https://cdn.rawgit.com/Skelp/skelp-branding/master/assets/logo/base/skelp-logo-16x16.png">
