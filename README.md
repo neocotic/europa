@@ -1,12 +1,4 @@
-    oooooooooooo
-    `888'     `8
-     888         oooo  oooo  oooo d8b  .ooooo.  oo.ooooo.   .oooo.
-     888oooo8    `888  `888  `888""8P d88' `88b  888' `88b `P  )88b
-     888    "     888   888   888     888   888  888   888  .oP"888
-     888       o  888   888   888     888   888  888   888 d8(  888
-    o888ooooood8  `V88V"V8P' d888b    `Y8bod8P'  888bod8P' `Y888""8o
-                                                 888
-                                                o888o
+![Europa](https://cdn.rawgit.com/Skelp/europa-branding/master/assets/banner/europa/europa-banner.png)
 
 [Europa](https://github.com/Skelp/europa) is a library for transforming HTML to Markdown.
 
@@ -76,4 +68,4 @@ A list of Europa contributors can be found in [AUTHORS.md](https://github.com/Sk
 See [LICENSE.md](https://github.com/Skelp/europa/raw/master/LICENSE.md) for more information on our MIT license.
 
 © 2016 [Skelp](https://skelp.io)
-<img align="right" width="16" height="16" src="https://raw.githubusercontent.com/Skelp/skelp-branding/master/assets/logo/base/skelp-logo-16x16.png">
+<img align="right" width="16" height="16" src="https://cdn.rawgit.com/Skelp/skelp-branding/master/assets/logo/base/skelp-logo-16x16.png">
