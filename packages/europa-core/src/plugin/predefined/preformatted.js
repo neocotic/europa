@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs the contents in a preformatted block.
@@ -69,4 +69,4 @@ class PreformattedPlugin extends Plugin {
 
 }
 
-export default PreformattedPlugin
+export { PreformattedPlugin }

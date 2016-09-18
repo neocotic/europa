@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which extracts the URL from an image.
@@ -127,4 +127,4 @@ class ImagePlugin extends Plugin {
 
 }
 
-export default ImagePlugin
+export { ImagePlugin }

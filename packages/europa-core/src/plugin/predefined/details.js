@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs a details section.
@@ -67,4 +67,4 @@ class DetailsPlugin extends Plugin {
 
 }
 
-export default DetailsPlugin
+export { DetailsPlugin }

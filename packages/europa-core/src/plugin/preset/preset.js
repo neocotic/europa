@@ -84,4 +84,4 @@ class Preset {
 
 }
 
-export default Preset
+export { Preset }

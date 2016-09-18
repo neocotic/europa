@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs a paragraph.
@@ -41,4 +41,4 @@ class ParagraphPlugin extends Plugin {
 
 }
 
-export default ParagraphPlugin
+export { ParagraphPlugin }

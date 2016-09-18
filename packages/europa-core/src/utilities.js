@@ -66,4 +66,4 @@ class Utilities {
 
 }
 
-export default Utilities
+export { Utilities }

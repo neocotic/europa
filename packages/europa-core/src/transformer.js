@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import Transformation from './transformation'
+import { Transformation } from './transformation'
 
 /**
  * Transforms an HTML string or DOM element into Markdown.
@@ -171,4 +171,4 @@ class Transformer {
 
 }
 
-export default Transformer
+export { Transformer }

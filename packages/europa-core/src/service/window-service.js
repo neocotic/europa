@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Utilities from '../utilities'
+import { Utilities } from '../utilities'
 
 /**
  * A service used to retrieve the <code>Window</code> object for transforming HTML to Markdown and, optionally, to close
@@ -86,4 +86,4 @@ class WindowService {
 
 }
 
-export default WindowService
+export { WindowService }

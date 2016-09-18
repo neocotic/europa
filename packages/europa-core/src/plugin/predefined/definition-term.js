@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import StrongPlugin from './strong'
+import { StrongPlugin } from './strong'
 
 /**
  * A {@link Plugin} which outputs a definition term as strong text.
@@ -41,4 +41,4 @@ class DefinitionTermPlugin extends StrongPlugin {
 
 }
 
-export default DefinitionTermPlugin
+export { DefinitionTermPlugin }

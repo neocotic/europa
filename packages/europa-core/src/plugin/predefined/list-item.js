@@ -22,8 +22,8 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
-import Utilities from '../../utilities'
+import { Plugin } from '../plugin'
+import { Utilities } from '../../utilities'
 
 /**
  * A {@link Plugin} which outputs a list item. The prefix for the list item will vary depending on what type of list the
@@ -55,4 +55,4 @@ class ListItemPlugin extends Plugin {
 
 }
 
-export default ListItemPlugin
+export { ListItemPlugin }

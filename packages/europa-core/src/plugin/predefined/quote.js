@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs as quoted text.
@@ -50,4 +50,4 @@ class QuotePlugin extends Plugin {
 
 }
 
-export default QuotePlugin
+export { QuotePlugin }

@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs an unordered list.
@@ -64,4 +64,4 @@ class UnorderedListPlugin extends Plugin {
 
 }
 
-export default UnorderedListPlugin
+export { UnorderedListPlugin }

@@ -20,6 +20,6 @@
  * SOFTWARE.
  */
 
-import Europa from './europa'
+import { Europa } from './europa'
 
 export default Europa

@@ -420,7 +420,7 @@ for (const key of Object.keys(Transformation.REPLACEMENTS)) {
   Transformation.REPLACEMENTS_REGEXP[key] = new RegExp(key, 'g')
 }
 
-export default Transformation
+export { Transformation }
 
 /**
  * The options for {@link Transformation}.

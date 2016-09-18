@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import Transformer from './transformer'
+import { Transformer } from './transformer'
 import defaultPreset from './plugin/preset/default'
 
 /**
@@ -174,4 +174,4 @@ class Europa {
 
 }
 
-export default Europa
+export { Europa }

@@ -1,6 +1,6 @@
 {
   "name": "europa-core",
-  "version": "4.0.0-alpha3",
+  "version": "4.0.0-alpha4",
   "description": "Core engine of Europa",
   "homepage": "https://github.com/Skelp/europa-core",
   "bugs": {
@@ -23,6 +23,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Skelp/europa-core.git"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.11.6"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.0",

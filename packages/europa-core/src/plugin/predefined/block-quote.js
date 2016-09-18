@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs the contents in a block quote.
@@ -67,4 +67,4 @@ class BlockQuotePlugin extends Plugin {
 
 }
 
-export default BlockQuotePlugin
+export { BlockQuotePlugin }

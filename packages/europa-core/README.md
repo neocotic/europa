@@ -14,6 +14,10 @@
 * [Contributors](#contributors)
 * [License](#license)
 
+## API
+
+TODO: Document
+
 ## Bugs
 
 If you have any problems with Europa Core or would like to see changes currently in development you can do so

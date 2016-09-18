@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs as strong text.
@@ -50,4 +50,4 @@ class StrongPlugin extends Plugin {
 
 }
 
-export default StrongPlugin
+export { StrongPlugin }

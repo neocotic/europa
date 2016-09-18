@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs the contents in a code block.
@@ -63,4 +63,4 @@ class CodePlugin extends Plugin {
 
 }
 
-export default CodePlugin
+export { CodePlugin }

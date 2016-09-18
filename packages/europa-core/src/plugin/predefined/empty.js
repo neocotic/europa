@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which simply ensures that all children elements are not transformed.
@@ -55,4 +55,4 @@ class EmptyPlugin extends Plugin {
 
 }
 
-export default EmptyPlugin
+export { EmptyPlugin }

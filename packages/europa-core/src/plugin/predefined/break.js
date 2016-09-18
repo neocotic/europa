@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs an inline line break.
@@ -44,4 +44,4 @@ class BreakPlugin extends Plugin {
 
 }
 
-export default BreakPlugin
+export { BreakPlugin }

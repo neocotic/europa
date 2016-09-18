@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs the contents of nested frame.
@@ -65,4 +65,4 @@ class FramePlugin extends Plugin {
 
 }
 
-export default FramePlugin
+export { FramePlugin }

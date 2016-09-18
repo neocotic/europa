@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which extracts the URL from an anchor. Anchors without an <code>href</code> are treated as plain
@@ -122,4 +122,4 @@ class AnchorPlugin extends Plugin {
 
 }
 
-export default AnchorPlugin
+export { AnchorPlugin }

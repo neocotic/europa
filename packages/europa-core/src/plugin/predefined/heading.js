@@ -22,7 +22,7 @@
 
 /* eslint no-unused-vars: "off" */
 
-import Plugin from '../plugin'
+import { Plugin } from '../plugin'
 
 /**
  * A {@link Plugin} which outputs a heading of various levels.
@@ -50,4 +50,4 @@ class HeadingPlugin extends Plugin {
 
 }
 
-export default HeadingPlugin
+export { HeadingPlugin }
