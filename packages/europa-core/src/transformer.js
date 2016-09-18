@@ -80,7 +80,7 @@ class Transformer {
 
     let root
     if (typeof html === 'string') {
-      root = this._document.createElement('div')
+      root = this.document.createElement('div')
       root.innerHTML = html
     } else {
       root = html
