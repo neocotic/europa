@@ -23,77 +23,79 @@
 import { expect } from 'chai'
 import os from 'os'
 import sinon from 'sinon'
-import WindowService from 'europa-core/lib/service/window-service'
+import { WindowService } from 'europa-core/lib/service/window-service'
 
-import NodeWindowService from '../../lib/service/node-window-service'
+import { NodeWindowService } from '../../lib/service/node-window-service'
 
-describe('NodeWindowService', () => {
-  let windowService
-
-  beforeEach(() => {
-    windowService = new NodeWindowService()
-  })
-
-  it('should extend from WindowService', () => {
-    expect(windowService).to.be.an.instanceof(WindowService)
-  })
-
-  describe('#closeWindow', () => {
-    it('should close the window', () => {
-      const stubWindow = sinon.stub({ close() {} })
-
-      windowService.closeWindow(stubWindow)
-
-      expect(stubWindow.close.called).to.be.true
-    })
-  })
-
-  describe('#getBaseUri', () => {
-    let previousWorkingDirectory
-
-    afterEach(() => {
-      process.chdir(previousWorkingDirectory)
-    })
+describe('service/node-window-service', () => {
+  describe('NodeWindowService', () => {
+    let windowService
 
     beforeEach(() => {
-      previousWorkingDirectory = process.cwd()
-
-      process.chdir(os.homedir())
+      windowService = new NodeWindowService()
     })
 
-    it('should return file URI for current working directory', () => {
-      expect(windowService.getBaseUri(null)).to.equal(`file:///${os.homedir().replace(/\\/g, '/')}`)
-    })
-  })
-
-  describe('#getWindow', () => {
-    let previousWorkingDirectory
-    let window
-
-    afterEach(() => {
-      process.chdir(previousWorkingDirectory)
-
-      window.close()
+    it('should extend from WindowService', () => {
+      expect(windowService).to.be.an.instanceof(WindowService)
     })
 
-    beforeEach(() => {
-      previousWorkingDirectory = process.cwd()
+    describe('#closeWindow', () => {
+      it('should close the window', () => {
+        const stubWindow = sinon.stub({ close() {} })
 
-      process.chdir(os.homedir())
+        windowService.closeWindow(stubWindow)
+
+        expect(stubWindow.close.called).to.be.true
+      })
     })
 
-    it('should current window', () => {
-      window = windowService.getWindow()
+    describe('#getBaseUri', () => {
+      let previousWorkingDirectory
 
-      expect(window).not.to.be.null
-      expect(window.document).not.to.be.null
-      expect(window.document.baseURI).to.equal(`file:///${os.homedir().replace(/\\/g, '/')}`)
+      afterEach(() => {
+        process.chdir(previousWorkingDirectory)
+      })
+
+      beforeEach(() => {
+        previousWorkingDirectory = process.cwd()
+
+        process.chdir(os.homedir())
+      })
+
+      it('should return file URI for current working directory', () => {
+        expect(windowService.getBaseUri(null)).to.equal(`file:///${os.homedir().replace(/\\/g, '/')}`)
+      })
     })
-  })
 
-  describe('#isCloseable', () => {
-    it('should return true', () => {
-      expect(windowService.isCloseable(null)).to.be.true
+    describe('#getWindow', () => {
+      let previousWorkingDirectory
+      let window
+
+      afterEach(() => {
+        process.chdir(previousWorkingDirectory)
+
+        window.close()
+      })
+
+      beforeEach(() => {
+        previousWorkingDirectory = process.cwd()
+
+        process.chdir(os.homedir())
+      })
+
+      it('should current window', () => {
+        window = windowService.getWindow()
+
+        expect(window).not.to.be.null
+        expect(window.document).not.to.be.null
+        expect(window.document.baseURI).to.equal(`file:///${os.homedir().replace(/\\/g, '/')}`)
+      })
+    })
+
+    describe('#isCloseable', () => {
+      it('should return true', () => {
+        expect(windowService.isCloseable(null)).to.be.true
+      })
     })
   })
 })

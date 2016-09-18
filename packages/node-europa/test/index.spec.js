@@ -20,4 +20,39 @@
  * SOFTWARE.
  */
 
-// TODO: Complete unit tests (incl. fixtures)
+/* eslint "no-underscore-dangle": "off" */
+
+import { expect } from 'chai'
+import { Europa } from 'europa-core/lib/europa'
+import fs from 'fs'
+import glob from 'glob'
+import path from 'path'
+
+import europa from '../lib/index'
+import { NodeWindowService } from '../lib/service/node-window-service'
+
+describe('index', () => {
+  describe('default', () => {
+    const htmlFiles = glob.sync('test/fixtures/**.html')
+
+    it('should be an instance of Europa', () => {
+      expect(europa).to.be.an.instanceof(Europa)
+    })
+
+    it('should be using NodeWindowService', () => {
+      expect(europa._windowService).to.be.an.instanceof(NodeWindowService)
+    })
+
+    for (const htmlFile of htmlFiles) {
+      const fixture = path.basename(htmlFile, '.html')
+
+      it(`should transform HTML to Markdown for fixture "${fixture}"`, () => {
+        const markdownFile = `${path.join(path.dirname(htmlFile), fixture)}.md`
+        const html = fs.readFileSync(htmlFile, 'utf8')
+        const expected = fs.readFileSync(markdownFile, 'utf8')
+
+        expect(europa.transform(html)).to.equal(expected)
+      })
+    }
+  })
+})

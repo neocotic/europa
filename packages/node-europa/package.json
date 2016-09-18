@@ -1,6 +1,6 @@
 {
   "name": "node-europa",
-  "version": "4.0.0-alpha3",
+  "version": "4.0.0-alpha7",
   "description": "Node.js version of Europa for transforming HTML to Markdown",
   "homepage": "https://github.com/Skelp/node-europa",
   "bugs": {
@@ -25,8 +25,9 @@
     "url": "https://github.com/Skelp/node-europa.git"
   },
   "dependencies": {
+    "babel-runtime": "^6.11.6",
     "commander": "^2.9.0",
-    "europa-core": "^4.0.0-alpha3",
+    "europa-core": "^4.0.0-alpha7",
     "glob": "^7.0.6",
     "jsdom": "^9.5.0",
     "mkdirp": "^0.5.1"
@@ -38,6 +39,7 @@
     "babel-register": "^6.14.0",
     "chai": "^3.5.0",
     "eslint-config-skelp": "^0.1.4",
+    "glob": "^7.0.6",
     "grunt": "^1.0.1",
     "grunt-babel": "^6.0.0",
     "grunt-cli": "^1.2.0",

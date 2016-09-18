@@ -22,9 +22,8 @@
 
 /* eslint no-unused-vars: "off" */
 
+import { WindowService } from 'europa-core/lib/service/window-service'
 import { jsdom } from 'jsdom'
-
-import WindowService from 'europa-core/lib/service/window-service'
 
 /**
  * A Node-based implementation of {@link WindowService} uses the jsdom library to create a virtual <code>Window</code>
@@ -61,4 +60,4 @@ class NodeWindowService extends WindowService {
 
 }
 
-export default NodeWindowService
+export { NodeWindowService }

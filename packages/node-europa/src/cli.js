@@ -236,4 +236,4 @@ class CLI {
 
 }
 
-export default CLI
+export { CLI }

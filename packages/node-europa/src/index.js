@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-import Europa from 'europa-core/lib/europa'
+import { Europa } from 'europa-core/lib/europa'
 
-import NodeWindowService from './service/node-window-service'
+import { NodeWindowService } from './service/node-window-service'
 
 export default new Europa(new NodeWindowService())

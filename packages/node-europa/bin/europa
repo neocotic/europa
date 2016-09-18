@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const CLI = require('../lib/cli').default
+const CLI = require('../lib/cli').CLI
 const europa = require('../lib').default
 
 const cli = new CLI(europa, process.stdin, process.stdout)
