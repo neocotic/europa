@@ -58,10 +58,10 @@ class DetailsPlugin extends Plugin {
     transformation.appendParagraph()
 
     if (!element.hasAttribute('open')) {
-      transformation.skipChildren = true
-
       const summary = element.querySelector('summary')
       transformation.transformer.transformElement(summary, transformation)
+
+      transformation.skipChildren = true
     }
   }
 
