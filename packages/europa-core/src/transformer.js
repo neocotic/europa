@@ -113,11 +113,15 @@ class Transformer {
    * @public
    */
   transformElement(element, transformation) {
-    if (!(element && this._isVisible(element))) {
+    if (!element) {
       return
     }
 
     if (element.nodeType === this.window.Node.ELEMENT_NODE) {
+      if (!this._isVisible(element)) {
+        return
+      }
+
       transformation.element = element
 
       const context = new Map()
