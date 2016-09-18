@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import WindowService from 'europa-core/src/service/window-service'
+import { WindowService } from 'europa-core/src/service/window-service'
 
 /**
  * A very simplistic implementation of {@link WindowService} that returns the global <code>Window</code> object to be
@@ -47,4 +47,4 @@ class NativeWindowService extends WindowService {
 
 }
 
-export default NativeWindowService
+export { NativeWindowService }

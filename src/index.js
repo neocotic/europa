@@ -22,6 +22,6 @@
 
 import Europa from 'europa-core'
 
-import NativeWindowService from './service/native-window-service'
+import { NativeWindowService } from './service/native-window-service'
 
 export default new Europa(new NativeWindowService())
