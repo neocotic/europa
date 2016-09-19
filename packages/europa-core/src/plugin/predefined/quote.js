@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -46,6 +44,8 @@ class QuotePlugin extends Plugin {
     transformation.output('"')
 
     transformation.atNoWhiteSpace = true
+
+    return true
   }
 
 }

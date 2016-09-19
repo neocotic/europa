@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -37,6 +35,8 @@ class ParagraphPlugin extends Plugin {
    */
   transform(transformation, context) {
     transformation.appendParagraph()
+
+    return true
   }
 
 }

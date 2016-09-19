@@ -126,14 +126,15 @@ class Transformer {
 
       const context = new Map()
       const plugin = this._plugins.get(transformation.tagName)
+      let transformChildren = true
       if (plugin) {
         transformation.pluginStack.push(plugin)
 
         plugin.before(transformation, context)
-        plugin.transform(transformation, context)
+        transformChildren = plugin.transform(transformation, context)
       }
 
-      if (!transformation.skipChildren) {
+      if (transformChildren) {
         for (const child of Array.from(element.childNodes)) {
           this.transformElement(child, transformation)
         }

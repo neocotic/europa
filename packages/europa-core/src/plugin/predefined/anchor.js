@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -53,14 +51,15 @@ class AnchorPlugin extends Plugin {
    * @override
    */
   afterAll(transformation) {
-    if (!this._anchors.length) {
+    const anchors = transformation.context.get('anchors')
+    if (!anchors.length) {
       return
     }
 
     transformation.append('\n\n')
 
-    for (let i = 0; i < this._anchors.length; i++) {
-      transformation.append(`[anchor${i}]: ${this._anchors[i]}\n`)
+    for (let i = 0; i < anchors.length; i++) {
+      transformation.append(`[anchor${i}]: ${anchors[i]}\n`)
     }
   }
 
@@ -68,25 +67,8 @@ class AnchorPlugin extends Plugin {
    * @override
    */
   beforeAll(transformation) {
-    /**
-     * The anchor values (which will contain the HREF and any title) mapped to their index.
-     *
-     * This is only used when the <code>inline</code> option is enabled.
-     *
-     * @private
-     * @type {Map<string, number>}
-     */
-    this._anchorMap = new Map()
-
-    /**
-     * The indexed anchor values.
-     *
-     * This is only used when the <code>inline</code> option is enabled.
-     *
-     * @private
-     * @type {string[]}
-     */
-    this._anchors = []
+    transformation.context.set('anchorMap', new Map())
+    transformation.context.set('anchors', [])
   }
 
   /**
@@ -96,7 +78,7 @@ class AnchorPlugin extends Plugin {
     const { element, options } = transformation
     const href = options.absolute ? element.href : element.getAttribute('href')
     if (!href) {
-      return
+      return true
     }
 
     const title = element.getAttribute('title')
@@ -105,11 +87,13 @@ class AnchorPlugin extends Plugin {
     if (options.inline) {
       context.set('value', `(${value})`)
     } else {
-      let index = this._anchorMap.get(value)
+      const anchorMap = transformation.context.get('anchorMap')
+      const anchors = transformation.context.get('anchors')
+      let index = anchorMap.get(value)
       if (index == null) {
-        index = this._anchors.push(value) - 1
+        index = anchors.push(value) - 1
 
-        this._anchorMap.set(value, index)
+        anchorMap.set(value, index)
       }
 
       context.set('value', `[anchor${index}]`)
@@ -118,6 +102,8 @@ class AnchorPlugin extends Plugin {
     transformation.output('[')
 
     transformation.atNoWhiteSpace = true
+
+    return true
   }
 
 }

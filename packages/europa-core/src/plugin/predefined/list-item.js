@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 import { Utilities } from '../../utilities'
 
@@ -51,6 +49,8 @@ class ListItemPlugin extends Plugin {
     }
 
     transformation.append(Utilities.leftPad(value, (transformation.listDepth - 1) * 2))
+
+    return true
   }
 
 }

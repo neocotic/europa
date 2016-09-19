@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -36,7 +34,6 @@ class FramePlugin extends Plugin {
    * @override
    */
   after(transformation, context) {
-    transformation.skipChildren = context.get('previousSkipChildren')
     transformation.window = context.get('previousWindow')
   }
 
@@ -44,7 +41,6 @@ class FramePlugin extends Plugin {
    * @override
    */
   before(transformation, context) {
-    context.set('previousSkipChildren', transformation.skipChildren)
     context.set('previousWindow', transformation.window)
   }
 
@@ -54,13 +50,13 @@ class FramePlugin extends Plugin {
   transform(transformation, context) {
     const window = transformation.element.contentWindow
 
-    transformation.skipChildren = true
-
     if (window) {
       transformation.window = window
 
       transformation.transformer.transformElement(window.document.body, transformation)
     }
+
+    return false
   }
 
 }

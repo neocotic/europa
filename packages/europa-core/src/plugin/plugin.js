@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-/* eslint no-empty-function: "off", no-unused-vars: "off" */
+/* eslint no-empty-function: "off" */
 
 /**
  * A plugin that can tap into multiple parts in the transformation process.
@@ -77,17 +77,20 @@ class Plugin {
 
   /**
    * Transforms the current element within the specified <code>transformation</code> which can be used to provide
-   * control over the transformation.
+   * control over the transformation and returns whether the children of the element should be transformed.
    *
    * <code>context</code> can be used to pass any state for a single element transformation from {@link Plugin#before}
    * to {@link Plugin#after}.
    *
    * @param {Transformation} transformation - the current {@link Transformation}
    * @param {Map<string, *>} context - the current context for this {@link Plugin}
-   * @return {void}
+   * @return {boolean} <code>true</code> if the children of the current element should be transformed; otherwise
+   * <code>false</code>.
    * @public
    */
-  transform(transformation, context) {}
+  transform(transformation, context) {
+    return true
+  }
 
 }
 

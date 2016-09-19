@@ -59,6 +59,8 @@ class CodePlugin extends Plugin {
 
       transformation.inCodeBlock = true
     }
+
+    return true
   }
 
 }

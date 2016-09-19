@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -40,6 +38,8 @@ class HorizontalRulePlugin extends Plugin {
       .appendParagraph()
       .output('---')
       .appendParagraph()
+
+    return false
   }
 
 }

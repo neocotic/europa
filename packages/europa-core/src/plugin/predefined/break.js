@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -40,6 +38,8 @@ class BreakPlugin extends Plugin {
 
     transformation.atLeft = true
     transformation.atNoWhiteSpace = true
+
+    return false
   }
 
 }

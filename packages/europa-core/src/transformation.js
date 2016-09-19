@@ -86,6 +86,14 @@ class Transformation {
     this.buffer = ''
 
     /**
+     * The context for this {@link Transformation}.
+     *
+     * @public
+     * @type {Map<string, *>}
+     */
+    this.context = new Map()
+
+    /**
      * Indicates whether the buffer is currently within a code block.
      *
      * @public
@@ -148,14 +156,6 @@ class Transformation {
      * @type {Plugin[]}
      */
     this.pluginStack = []
-
-    /**
-     * Indicates whether transformation of the children of the current element should be skippped.
-     *
-     * @public
-     * @type {boolean}
-     */
-    this.skipChildren = false
 
     /**
      * The current document for this {@link Transformation}.

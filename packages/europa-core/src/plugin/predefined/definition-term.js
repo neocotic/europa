@@ -36,7 +36,7 @@ class DefinitionTermPlugin extends StrongPlugin {
   transform(transformation, context) {
     transformation.appendParagraph()
 
-    super.transform(transformation, context)
+    return super.transform(transformation, context)
   }
 
 }

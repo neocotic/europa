@@ -1,6 +1,7 @@
 ![Europa Core](https://cdn.rawgit.com/Skelp/europa-branding/master/assets/banner/europa-core/europa-core-banner.png)
 
-[Europa Core](https://github.com/Skelp/europa-core) is the heart of [Europa](https://github.com/Skelp/europa).
+[Europa Core](https://github.com/Skelp/europa-core) is the heart of [Europa](https://github.com/Skelp/europa) (for
+browsers) and [Node Europa](https://github.com/Skelp/node-europa) (for Node.js and CLI).
 
 > **IMPORTANT:** Europa Core is still under development!
 

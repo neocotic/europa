@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -60,6 +58,8 @@ class UnorderedListPlugin extends Plugin {
     transformation.inOrderedList = false
     transformation.listIndex = 1
     transformation.listDepth++
+
+    return true
   }
 
 }

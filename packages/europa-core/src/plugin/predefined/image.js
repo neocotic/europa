@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -42,67 +40,35 @@ class ImagePlugin extends Plugin {
   /**
    * @override
    */
-  after(transformation, context) {
-    transformation.skipChildren = context.get('previousSkipChildren')
-  }
-
-  /**
-   * @override
-   */
   afterAll(transformation) {
-    if (!this._images.length) {
+    const images = transformation.context.get('images')
+    if (!images.length) {
       return
     }
 
     transformation.append('\n\n')
 
-    for (let i = 0; i < this._images.length; i++) {
-      transformation.append(`[image${i}]: ${this._images[i]}\n`)
+    for (let i = 0; i < images.length; i++) {
+      transformation.append(`[image${i}]: ${images[i]}\n`)
     }
-  }
-
-  /**
-   * @override
-   */
-  before(transformation, context) {
-    context.set('previousSkipChildren', transformation.skipChildren)
   }
 
   /**
    * @override
    */
   beforeAll(transformation) {
-    /**
-     * The image values (which will contain the HREF) mapped to their index.
-     *
-     * This is only used when the <code>inline</code> option is enabled.
-     *
-     * @private
-     * @type {Map<string, number>}
-     */
-    this._imageMap = new Map()
-
-    /**
-     * The indexed image values.
-     *
-     * This is only used when the <code>inline</code> option is enabled.
-     *
-     * @private
-     * @type {string[]}
-     */
-    this._images = []
+    transformation.context.set('imageMap', new Map())
+    transformation.context.set('images', [])
   }
 
   /**
    * @override
    */
   transform(transformation, context) {
-    transformation.skipChildren = true
-
     const { element, options } = transformation
     const source = options.absolute ? element.src : element.getAttribute('src')
     if (!source) {
-      return
+      return false
     }
 
     const alternativeText = element.getAttribute('alt') || ''
@@ -112,17 +78,21 @@ class ImagePlugin extends Plugin {
     if (options.inline) {
       value = `(${value})`
     } else {
-      let index = this._imageMap.get(value)
+      const imageMap = transformation.context.get('imageMap')
+      const images = transformation.context.get('images')
+      let index = imageMap.get(value)
       if (index == null) {
-        index = this._images.push(value) - 1
+        index = images.push(value) - 1
 
-        this._imageMap.set(value, index)
+        imageMap.set(value, index)
       }
 
       value = `[image${index}]`
     }
 
     transformation.output(`![${alternativeText}]${value}`)
+
+    return false
   }
 
 }

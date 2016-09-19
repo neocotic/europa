@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -38,31 +36,19 @@ class DetailsPlugin extends Plugin {
   /**
    * @override
    */
-  after(transformation, context) {
-    transformation.skipChildren = context.get('previousSkipChildren')
-  }
-
-  /**
-   * @override
-   */
-  before(transformation, context) {
-    context.set('previousSkipChildren', transformation.skipChildren)
-  }
-
-  /**
-   * @override
-   */
   transform(transformation, context) {
     const { element } = transformation
 
     transformation.appendParagraph()
 
-    if (!element.hasAttribute('open')) {
-      const summary = element.querySelector('summary')
-      transformation.transformer.transformElement(summary, transformation)
-
-      transformation.skipChildren = true
+    if (element.hasAttribute('open')) {
+      return true
     }
+
+    const summary = element.querySelector('summary')
+    transformation.transformer.transformElement(summary, transformation)
+
+    return false
   }
 
 }

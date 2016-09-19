@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -35,22 +33,8 @@ class EmptyPlugin extends Plugin {
   /**
    * @override
    */
-  after(transformation, context) {
-    transformation.skipChildren = context.get('previousSkipChildren')
-  }
-
-  /**
-   * @override
-   */
-  before(transformation, context) {
-    context.set('previousSkipChildren', transformation.skipChildren)
-  }
-
-  /**
-   * @override
-   */
   transform(transformation, context) {
-    transformation.skipChildren = true
+    return false
   }
 
 }

@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { Plugin } from '../plugin'
 
 /**
@@ -63,6 +61,8 @@ class BlockQuotePlugin extends Plugin {
     } else {
       transformation.appendParagraph()
     }
+
+    return true
   }
 
 }
