@@ -1508,6 +1508,14 @@ var 	$export$8  = __moduleExports$2;
 	    this.buffer = '';
 
 	    /**
+	     * The context for this {@link Transformation}.
+	     *
+	     * @public
+	     * @type {Map<string, *>}
+	     */
+	    this.context = new _Map();
+
+	    /**
 	     * Indicates whether the buffer is currently within a code block.
 	     *
 	     * @public
@@ -1570,14 +1578,6 @@ var 	$export$8  = __moduleExports$2;
 	     * @type {Plugin[]}
 	     */
 	    this.pluginStack = [];
-
-	    /**
-	     * Indicates whether transformation of the children of the current element should be skippped.
-	     *
-	     * @public
-	     * @type {boolean}
-	     */
-	    this.skipChildren = false;
 
 	    /**
 	     * The current document for this {@link Transformation}.
@@ -2094,14 +2094,15 @@ var 	$export$8  = __moduleExports$2;
 
 	        var context = new _Map();
 	        var plugin = this._plugins.get(transformation.tagName);
+	        var transformChildren = true;
 	        if (plugin) {
 	          transformation.pluginStack.push(plugin);
 
 	          plugin.before(transformation, context);
-	          plugin.transform(transformation, context);
+	          transformChildren = plugin.transform(transformation, context);
 	        }
 
-	        if (!transformation.skipChildren) {
+	        if (transformChildren) {
 	          var _iteratorNormalCompletion3 = true;
 	          var _didIteratorError3 = false;
 	          var _iteratorError3 = undefined;
@@ -2692,7 +2693,7 @@ var 	anObject$6 = __moduleExports$9;
 	 * SOFTWARE.
 	 */
 
-	/* eslint no-empty-function: "off", no-unused-vars: "off" */
+	/* eslint no-empty-function: "off" */
 
 	/**
 	 * A plugin that can tap into multiple parts in the transformation process.
@@ -2765,20 +2766,23 @@ var 	anObject$6 = __moduleExports$9;
 
 	    /**
 	     * Transforms the current element within the specified <code>transformation</code> which can be used to provide
-	     * control over the transformation.
+	     * control over the transformation and returns whether the children of the element should be transformed.
 	     *
 	     * <code>context</code> can be used to pass any state for a single element transformation from {@link Plugin#before}
 	     * to {@link Plugin#after}.
 	     *
 	     * @param {Transformation} transformation - the current {@link Transformation}
 	     * @param {Map<string, *>} context - the current context for this {@link Plugin}
-	     * @return {void}
+	     * @return {boolean} <code>true</code> if the children of the current element should be transformed; otherwise
+	     * <code>false</code>.
 	     * @public
 	     */
 
 	  }, {
 	    key: "transform",
-	    value: function transform(transformation, context) {}
+	    value: function transform(transformation, context) {
+	      return true;
+	    }
 	  }]);
 
 	  return Plugin;
@@ -2805,8 +2809,6 @@ var 	anObject$6 = __moduleExports$9;
 	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	 * SOFTWARE.
 	 */
-
-	/* eslint no-unused-vars: "off" */
 
 	/**
 	 * A {@link Plugin} which extracts the URL from an anchor. Anchors without an <code>href</code> are treated as plain
@@ -2852,14 +2854,15 @@ var 	anObject$6 = __moduleExports$9;
 	  }, {
 	    key: 'afterAll',
 	    value: function afterAll(transformation) {
-	      if (!this._anchors.length) {
+	      var anchors = transformation.context.get('anchors');
+	      if (!anchors.length) {
 	        return;
 	      }
 
 	      transformation.append('\n\n');
 
-	      for (var i = 0; i < this._anchors.length; i++) {
-	        transformation.append('[anchor' + i + ']: ' + this._anchors[i] + '\n');
+	      for (var i = 0; i < anchors.length; i++) {
+	        transformation.append('[anchor' + i + ']: ' + anchors[i] + '\n');
 	      }
 	    }
 
@@ -2870,25 +2873,8 @@ var 	anObject$6 = __moduleExports$9;
 	  }, {
 	    key: 'beforeAll',
 	    value: function beforeAll(transformation) {
-	      /**
-	       * The anchor values (which will contain the HREF and any title) mapped to their index.
-	       *
-	       * This is only used when the <code>inline</code> option is enabled.
-	       *
-	       * @private
-	       * @type {Map<string, number>}
-	       */
-	      this._anchorMap = new _Map();
-
-	      /**
-	       * The indexed anchor values.
-	       *
-	       * This is only used when the <code>inline</code> option is enabled.
-	       *
-	       * @private
-	       * @type {string[]}
-	       */
-	      this._anchors = [];
+	      transformation.context.set('anchorMap', new _Map());
+	      transformation.context.set('anchors', []);
 	    }
 
 	    /**
@@ -2903,7 +2889,7 @@ var 	anObject$6 = __moduleExports$9;
 
 	      var href = options.absolute ? element.href : element.getAttribute('href');
 	      if (!href) {
-	        return;
+	        return true;
 	      }
 
 	      var title = element.getAttribute('title');
@@ -2912,11 +2898,13 @@ var 	anObject$6 = __moduleExports$9;
 	      if (options.inline) {
 	        context.set('value', '(' + value + ')');
 	      } else {
-	        var index = this._anchorMap.get(value);
+	        var anchorMap = transformation.context.get('anchorMap');
+	        var anchors = transformation.context.get('anchors');
+	        var index = anchorMap.get(value);
 	        if (index == null) {
-	          index = this._anchors.push(value) - 1;
+	          index = anchors.push(value) - 1;
 
-	          this._anchorMap.set(value, index);
+	          anchorMap.set(value, index);
 	        }
 
 	        context.set('value', '[anchor' + index + ']');
@@ -2925,6 +2913,8 @@ var 	anObject$6 = __moduleExports$9;
 	      transformation.output('[');
 
 	      transformation.atNoWhiteSpace = true;
+
+	      return true;
 	    }
 	  }]);
 
@@ -2952,8 +2942,6 @@ var 	anObject$6 = __moduleExports$9;
 	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	 * SOFTWARE.
 	 */
-
-	/* eslint no-unused-vars: "off" */
 
 	/**
 	 * A {@link Plugin} which outputs the contents in a block quote.
@@ -3012,6 +3000,8 @@ var 	anObject$6 = __moduleExports$9;
 	      } else {
 	        transformation.appendParagraph();
 	      }
+
+	      return true;
 	    }
 	  }]);
 
@@ -3039,8 +3029,6 @@ var 	anObject$6 = __moduleExports$9;
 	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	 * SOFTWARE.
 	 */
-
-	/* eslint no-unused-vars: "off" */
 
 	/**
 	 * A {@link Plugin} which outputs an inline line break.
@@ -3070,6 +3058,8 @@ var 	anObject$6 = __moduleExports$9;
 
 	      transformation.atLeft = true;
 	      transformation.atNoWhiteSpace = true;
+
+	      return false;
 	    }
 	  }]);
 
@@ -3153,6 +3143,8 @@ var 	anObject$6 = __moduleExports$9;
 
 	        transformation.inCodeBlock = true;
 	      }
+
+	      return true;
 	    }
 	  }]);
 
@@ -3243,8 +3235,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * SOFTWARE.
 	 */
 
-	/* eslint no-unused-vars: "off" */
-
 	/**
 	 * A {@link Plugin} which outputs as strong text.
 	 *
@@ -3282,6 +3272,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	      transformation.output('**');
 
 	      transformation.atNoWhiteSpace = true;
+
+	      return true;
 	    }
 	  }]);
 
@@ -3336,7 +3328,7 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	    value: function transform(transformation, context) {
 	      transformation.appendParagraph();
 
-	      _get(DefinitionTermPlugin.prototype.__proto__ || _Object$getPrototypeOf(DefinitionTermPlugin.prototype), 'transform', this).call(this, transformation, context);
+	      return _get(DefinitionTermPlugin.prototype.__proto__ || _Object$getPrototypeOf(DefinitionTermPlugin.prototype), 'transform', this).call(this, transformation, context);
 	    }
 	  }]);
 
@@ -3365,8 +3357,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * SOFTWARE.
 	 */
 
-	/* eslint no-unused-vars: "off" */
-
 	/**
 	 * A {@link Plugin} which outputs a details section.
 	 *
@@ -3387,44 +3377,26 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	  }
 
 	  _createClass(DetailsPlugin, [{
-	    key: 'after',
-
-
-	    /**
-	     * @override
-	     */
-	    value: function after(transformation, context) {
-	      transformation.skipChildren = context.get('previousSkipChildren');
-	    }
-
-	    /**
-	     * @override
-	     */
-
-	  }, {
-	    key: 'before',
-	    value: function before(transformation, context) {
-	      context.set('previousSkipChildren', transformation.skipChildren);
-	    }
-
-	    /**
-	     * @override
-	     */
-
-	  }, {
 	    key: 'transform',
+
+
+	    /**
+	     * @override
+	     */
 	    value: function transform(transformation, context) {
 	      var element = transformation.element;
 
 
 	      transformation.appendParagraph();
 
-	      if (!element.hasAttribute('open')) {
-	        var summary = element.querySelector('summary');
-	        transformation.transformer.transformElement(summary, transformation);
-
-	        transformation.skipChildren = true;
+	      if (element.hasAttribute('open')) {
+	        return true;
 	      }
+
+	      var summary = element.querySelector('summary');
+	      transformation.transformer.transformElement(summary, transformation);
+
+	      return false;
 	    }
 	  }]);
 
@@ -3452,8 +3424,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	 * SOFTWARE.
 	 */
-
-	/* eslint no-unused-vars: "off" */
 
 	/**
 	 * A {@link Plugin} which outputs as emphasised text.
@@ -3492,6 +3462,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	      transformation.output('_');
 
 	      transformation.atNoWhiteSpace = true;
+
+	      return true;
 	    }
 	  }]);
 
@@ -3520,8 +3492,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * SOFTWARE.
 	 */
 
-	/* eslint no-unused-vars: "off" */
-
 	/**
 	 * A {@link Plugin} which simply ensures that all children elements are not transformed.
 	 *
@@ -3539,34 +3509,14 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	  }
 
 	  _createClass(EmptyPlugin, [{
-	    key: 'after',
-
-
-	    /**
-	     * @override
-	     */
-	    value: function after(transformation, context) {
-	      transformation.skipChildren = context.get('previousSkipChildren');
-	    }
-
-	    /**
-	     * @override
-	     */
-
-	  }, {
-	    key: 'before',
-	    value: function before(transformation, context) {
-	      context.set('previousSkipChildren', transformation.skipChildren);
-	    }
-
-	    /**
-	     * @override
-	     */
-
-	  }, {
 	    key: 'transform',
+
+
+	    /**
+	     * @override
+	     */
 	    value: function transform(transformation, context) {
-	      transformation.skipChildren = true;
+	      return false;
 	    }
 	  }]);
 
@@ -3594,8 +3544,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	 * SOFTWARE.
 	 */
-
-	/* eslint no-unused-vars: "off" */
 
 	/**
 	 * A {@link Plugin} which outputs a heading of various levels.
@@ -3631,6 +3579,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	      }
 
 	      transformation.output(heading + ' ');
+
+	      return true;
 	    }
 	  }]);
 
@@ -3659,8 +3609,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * SOFTWARE.
 	 */
 
-	/* eslint no-unused-vars: "off" */
-
 	/**
 	 * A {@link Plugin} which outputs a horizontal rule.
 	 *
@@ -3686,6 +3634,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	     */
 	    value: function transform(transformation, context) {
 	      transformation.appendParagraph().output('---').appendParagraph();
+
+	      return false;
 	    }
 	  }]);
 
@@ -3714,8 +3664,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * SOFTWARE.
 	 */
 
-	/* eslint no-unused-vars: "off" */
-
 	/**
 	 * A {@link Plugin} which extracts the URL from an image.
 	 *
@@ -3740,42 +3688,23 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	  }
 
 	  _createClass(ImagePlugin, [{
-	    key: 'after',
-
-
-	    /**
-	     * @override
-	     */
-	    value: function after(transformation, context) {
-	      transformation.skipChildren = context.get('previousSkipChildren');
-	    }
-
-	    /**
-	     * @override
-	     */
-
-	  }, {
 	    key: 'afterAll',
+
+
+	    /**
+	     * @override
+	     */
 	    value: function afterAll(transformation) {
-	      if (!this._images.length) {
+	      var images = transformation.context.get('images');
+	      if (!images.length) {
 	        return;
 	      }
 
 	      transformation.append('\n\n');
 
-	      for (var i = 0; i < this._images.length; i++) {
-	        transformation.append('[image' + i + ']: ' + this._images[i] + '\n');
+	      for (var i = 0; i < images.length; i++) {
+	        transformation.append('[image' + i + ']: ' + images[i] + '\n');
 	      }
-	    }
-
-	    /**
-	     * @override
-	     */
-
-	  }, {
-	    key: 'before',
-	    value: function before(transformation, context) {
-	      context.set('previousSkipChildren', transformation.skipChildren);
 	    }
 
 	    /**
@@ -3785,25 +3714,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	  }, {
 	    key: 'beforeAll',
 	    value: function beforeAll(transformation) {
-	      /**
-	       * The image values (which will contain the HREF) mapped to their index.
-	       *
-	       * This is only used when the <code>inline</code> option is enabled.
-	       *
-	       * @private
-	       * @type {Map<string, number>}
-	       */
-	      this._imageMap = new _Map();
-
-	      /**
-	       * The indexed image values.
-	       *
-	       * This is only used when the <code>inline</code> option is enabled.
-	       *
-	       * @private
-	       * @type {string[]}
-	       */
-	      this._images = [];
+	      transformation.context.set('imageMap', new _Map());
+	      transformation.context.set('images', []);
 	    }
 
 	    /**
@@ -3813,14 +3725,12 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	  }, {
 	    key: 'transform',
 	    value: function transform(transformation, context) {
-	      transformation.skipChildren = true;
-
 	      var element = transformation.element;
 	      var options = transformation.options;
 
 	      var source = options.absolute ? element.src : element.getAttribute('src');
 	      if (!source) {
-	        return;
+	        return false;
 	      }
 
 	      var alternativeText = element.getAttribute('alt') || '';
@@ -3830,17 +3740,21 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	      if (options.inline) {
 	        value = '(' + value + ')';
 	      } else {
-	        var index = this._imageMap.get(value);
+	        var imageMap = transformation.context.get('imageMap');
+	        var images = transformation.context.get('images');
+	        var index = imageMap.get(value);
 	        if (index == null) {
-	          index = this._images.push(value) - 1;
+	          index = images.push(value) - 1;
 
-	          this._imageMap.set(value, index);
+	          imageMap.set(value, index);
 	        }
 
 	        value = '[image' + index + ']';
 	      }
 
 	      transformation.output('![' + alternativeText + ']' + value);
+
+	      return false;
 	    }
 	  }]);
 
@@ -3953,8 +3867,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * SOFTWARE.
 	 */
 
-	/* eslint no-unused-vars: "off" */
-
 	/**
 	 * A {@link Plugin} which outputs a list item. The prefix for the list item will vary depending on what type of list the
 	 * item is contained within.
@@ -3993,6 +3905,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	      }
 
 	      transformation.append(Utilities.leftPad(value, (transformation.listDepth - 1) * 2));
+
+	      return true;
 	    }
 	  }]);
 
@@ -4020,8 +3934,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	 * SOFTWARE.
 	 */
-
-	/* eslint no-unused-vars: "off" */
 
 	/**
 	 * A {@link Plugin} which outputs an ordered list.
@@ -4077,6 +3989,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	      transformation.inOrderedList = true;
 	      transformation.listIndex = 1;
 	      transformation.listDepth++;
+
+	      return true;
 	    }
 	  }]);
 
@@ -4105,8 +4019,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * SOFTWARE.
 	 */
 
-	/* eslint no-unused-vars: "off" */
-
 	/**
 	 * A {@link Plugin} which outputs a paragraph.
 	 *
@@ -4132,6 +4044,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	     */
 	    value: function transform(transformation, context) {
 	      transformation.appendParagraph();
+
+	      return true;
 	    }
 	  }]);
 
@@ -4159,8 +4073,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	 * SOFTWARE.
 	 */
-
-	/* eslint no-unused-vars: "off" */
 
 	/**
 	 * A {@link Plugin} which outputs the contents in a preformatted block.
@@ -4221,6 +4133,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	      } else {
 	        transformation.appendParagraph();
 	      }
+
+	      return true;
 	    }
 	  }]);
 
@@ -4373,8 +4287,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * SOFTWARE.
 	 */
 
-	/* eslint no-unused-vars: "off" */
-
 	/**
 	 * A {@link Plugin} which outputs as quoted text.
 	 *
@@ -4412,6 +4324,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	      transformation.output('"');
 
 	      transformation.atNoWhiteSpace = true;
+
+	      return true;
 	    }
 	  }]);
 
@@ -4439,8 +4353,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	 * SOFTWARE.
 	 */
-
-	/* eslint no-unused-vars: "off" */
 
 	/**
 	 * A {@link Plugin} which outputs an unordered list.
@@ -4496,6 +4408,8 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	      transformation.inOrderedList = false;
 	      transformation.listIndex = 1;
 	      transformation.listDepth++;
+
+	      return true;
 	    }
 	  }]);
 
@@ -4812,8 +4726,6 @@ var 	$getOwnPropertyDescriptor$1 = __moduleExports$107.f;
 	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	 * SOFTWARE.
 	 */
-
-	/* eslint no-unused-vars: "off" */
 
 	/**
 	 * A service used to retrieve the <code>Window</code> object for transforming HTML to Markdown and, optionally, to close
