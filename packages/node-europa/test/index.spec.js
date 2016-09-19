@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint "no-underscore-dangle": "off" */
-
 import { expect } from 'chai'
 import { Europa } from 'europa-core/lib/europa'
 import fs from 'fs'

@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-/* eslint no-unused-vars: "off" */
-
 import { WindowService } from 'europa-core/lib/service/window-service'
 import { jsdom } from 'jsdom'
 
