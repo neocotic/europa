@@ -1,6 +1,6 @@
 {
   "name": "europa",
-  "version": "4.0.0-alpha7",
+  "version": "4.0.0-alpha8",
   "description": "Library for transforming HTML to Markdown",
   "homepage": "https://github.com/Skelp/europa",
   "authors": [
@@ -21,14 +21,14 @@
     "type": "git",
     "url": "https://github.com/Skelp/europa.git"
   },
-  "main": "dist/umd/europa.js",
+  "main": "dist/europa.js",
   "moduleType": [
     "amd",
     "globals",
     "node"
   ],
   "ignore": [
-    "src/",
+    "lib/",
     "test/",
     ".*",
     "AUTHORS.md",

@@ -32,8 +32,8 @@ you want to install that way instead of using `npm`.
 
 If you want to simply download the file to be used in the browser you can find them below:
 
-* [Development Version](https://github.com/Skelp/europa/blob/master/dist/umd/europa.js)
-* [Production Version](https://github.com/Skelp/europa/blob/master/dist/umd/europa.min.js)
+* [Development Version](https://github.com/Skelp/europa/blob/master/dist/europa.js)
+* [Production Version](https://github.com/Skelp/europa/blob/master/dist/europa.min.js)
 
 ## API
 
