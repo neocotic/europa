@@ -706,1129 +706,6 @@
   var Conversion_1 = Conversion;
 
   /**
-   * A plugin that can tap into multiple parts in the conversion process while being specific to only a sub-set of tags.
-   *
-   * @public
-   * @class
-   * @extends Nevis
-   */
-  var Plugin = lite.extend({
-
-    /**
-     * Called after {@link Plugin#convert} <b>and</b> only once all children elements have been converted as well,
-     * provided they weren't skipped, and intended for tidying up after the conversion.
-     *
-     * <code>context</code> can be used to receive any state for a single element conversion from {@link Plugin#before}
-     * and {@link Plugin#convert}.
-     *
-     * @param {Conversion} conversion - the current {@link Conversion}
-     * @param {Object.<string, *>} context - the current context for this {@link Plugin}
-     * @return {void}
-     * @public
-     * @memberof Plugin#
-     */
-    after: function(conversion, context) {},
-
-    /**
-     * Called before any elements are converted and intended to setup this {@link Plugin} initially.
-     *
-     * @param {Conversion} conversion - the current {@link Conversion}
-     * @return {void}
-     * @public
-     * @memberof Plugin#
-     */
-    afterAll: function(conversion) {},
-
-    /**
-     * Called immediately before {@link Plugin#convert} and intended for preparing this {@link Plugin} for conversion.
-     *
-     * <code>context</code> can be used to pass any state for a single element conversion to {@link Plugin#convert} and
-     * then to {@link Plugin#after}.
-     *
-     * @param {Conversion} conversion - the current {@link Conversion}
-     * @param {Object.<string, *>} context - the current context for this {@link Plugin}
-     * @return {void}
-     * @public
-     * @memberof Plugin#
-     */
-    before: function(conversion, context) {},
-
-    /**
-     * Called after all elements have been converted and intended to completing any steps for this {@link Plugin}.
-     *
-     * @param {Conversion} conversion - the current {@link Conversion}
-     * @return {void}
-     * @public
-     * @memberof Plugin#
-     */
-    beforeAll: function(conversion) {},
-
-    /**
-     * Converts the current element within the specified <code>conversion</code> which can be used to provide control over
-     * the conversion and returns whether the children of the element should be converted.
-     *
-     * <code>context</code> can be used to pass any state for a single element conversion from {@link Plugin#before} to
-     * {@link Plugin#after}.
-     *
-     * @param {Conversion} conversion - the current {@link Conversion}
-     * @param {Object.<string, *>} context - the current context for this {@link Plugin}
-     * @return {boolean} <code>true</code> if the children of the current element should be converted; otherwise
-     * <code>false</code>.
-     * @public
-     * @memberof Plugin#
-     */
-    convert: function(conversion, context) {
-      return true;
-    },
-
-    /**
-     * Returns the names of tags with which this {@link Plugin} should be registered to handle.
-     *
-     * @return {string[]} The names of supported tags.
-     * @public
-     * @memberof Plugin#
-     */
-    getTagNames: function() {
-      return [];
-    }
-
-  });
-
-  var Plugin_1 = Plugin;
-
-  /**
-   * A {@link Plugin} which extracts the URL from an anchor. Anchors without an <code>href</code> are treated as plain
-   * text.
-   *
-   * If the <code>absolute</code> option is enabled, then the URL extracted from the anchor will be absolute. Otherwise,
-   * the URL will be exactly as it is in the <code>href</code> attribute.
-   *
-   * If the <code>inline</code> option is enabled, then the URL (and any <code>title</code> on the anchor) will be
-   * inserted immediately after the anchor contents (e.g. <code>[foo](/bar)</code>). Otherwise, all unique URL and title
-   * combinations will be indexed (e.g. <code>[foo][anchor0]</code>) and the references will be output at the very end.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var AnchorPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      if (context.value != null) {
-        conversion.output(']' + context.value);
-      }
-    },
-
-    /**
-     * @override
-     */
-    afterAll: function(conversion) {
-      var anchors = conversion.context.anchors;
-      if (!anchors.length) {
-        return;
-      }
-
-      conversion.append('\n\n');
-
-      for (var i = 0; i < anchors.length; i++) {
-        conversion.append('[anchor' + i + ']: ' + anchors[i] + '\n');
-      }
-    },
-
-    /**
-     * @override
-     */
-    beforeAll: function(conversion) {
-      conversion.context.anchorMap = {};
-      conversion.context.anchors = [];
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      var element = conversion.element;
-      var options = conversion.options;
-      var href = options.absolute ? element.href : element.getAttribute('href');
-      if (!href) {
-        return true;
-      }
-
-      var anchorMap = conversion.context.anchorMap;
-      var anchors = conversion.context.anchors;
-      var title = element.getAttribute('title');
-      var value = title ? href + ' "' + title + '"' : href;
-      var index;
-
-      if (options.inline) {
-        context.value = '(' + value + ')';
-      } else {
-        index = anchorMap[value];
-        if (index == null) {
-          index = anchors.push(value) - 1;
-
-          anchorMap[value] = index;
-        }
-
-        context.value = '[anchor' + index + ']';
-      }
-
-      conversion.output('[');
-
-      conversion.atNoWhiteSpace = true;
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'a' ];
-    }
-
-  });
-
-  var AnchorPlugin_1 = AnchorPlugin;
-
-  /**
-   * A {@link Plugin} which outputs the contents in a block quote.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var BlockQuotePlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      conversion.atLeft = false;
-      conversion.atParagraph = false;
-      conversion.left = context.previousLeft;
-
-      conversion.appendParagraph();
-    },
-
-    /**
-     * @override
-     */
-    before: function(conversion, context) {
-      context.previousLeft = conversion.left;
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      var value = '> ';
-
-      conversion.left += value;
-
-      if (conversion.atParagraph) {
-        conversion.append(value);
-      } else {
-        conversion.appendParagraph();
-      }
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [
-        'blockquote',
-        'dd'
-      ];
-    }
-
-  });
-
-  var BlockQuotePlugin_1 = BlockQuotePlugin;
-
-  /**
-   * A {@link Plugin} which outputs an inline line break.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var BreakPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      conversion.append('  ' + conversion.left);
-
-      conversion.atLeft = true;
-      conversion.atNoWhiteSpace = true;
-
-      return false;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'br' ];
-    }
-
-  });
-
-  var BreakPlugin_1 = BreakPlugin;
-
-  /**
-   * A {@link Plugin} which outputs the contents in a code block.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var CodePlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      if (!context.skipped) {
-        conversion.inCodeBlock = context.previousInCodeBlock;
-
-        conversion.output('`');
-      }
-    },
-
-    /**
-     * @override
-     */
-    before: function(conversion, context) {
-      context.previousInCodeBlock = conversion.inCodeBlock;
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      if (conversion.inPreformattedBlock) {
-        context.skipped = true;
-      } else {
-        conversion.output('`');
-
-        conversion.inCodeBlock = true;
-      }
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [
-        'code',
-        'kbd',
-        'samp'
-      ];
-    }
-
-  });
-
-  var CodePlugin_1 = CodePlugin;
-
-  /**
-   * A {@link Plugin} which outputs a definition term as strong text.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var DefinitionTermPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      conversion.output('**');
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      conversion.appendParagraph();
-
-      conversion.output('**');
-
-      conversion.atNoWhiteSpace = true;
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'dt' ];
-    }
-
-  });
-
-  var DefinitionTermPlugin_1 = DefinitionTermPlugin;
-
-  /**
-   * A {@link Plugin} which outputs a details section.
-   *
-   * If the details has an <code>open</code> attribute then all of its children are converted. Otherwise, only the nested
-   * <code>summary</code>, if any, will be converted.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var DetailsPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      var element = conversion.element;
-
-      conversion.appendParagraph();
-
-      if (element.hasAttribute('open')) {
-        return true;
-      }
-
-      var summary = element.querySelector('summary');
-      conversion.europa.convertElement(summary, conversion);
-
-      return false;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'details' ];
-    }
-
-  });
-
-  var DetailsPlugin_1 = DetailsPlugin;
-
-  /**
-   * A {@link Plugin} which outputs as emphasised text.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var EmphasisPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      conversion.output('_');
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      conversion.output('_');
-
-      conversion.atNoWhiteSpace = true;
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [
-        'cite',
-        'dfn',
-        'em',
-        'i',
-        'u',
-        'var'
-      ];
-    }
-
-  });
-
-  var EmphasisPlugin_1 = EmphasisPlugin;
-
-  /**
-   * A {@link Plugin} which simply ensures that no children elements are converted.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var EmptyPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      return false;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [
-        'applet',
-        'area',
-        'audio',
-        'button',
-        'canvas',
-        'datalist',
-        'embed',
-        'head',
-        'input',
-        'map',
-        'menu',
-        'meter',
-        'noframes',
-        'noscript',
-        'object',
-        'optgroup',
-        'option',
-        'param',
-        'progress',
-        'rp',
-        'rt',
-        'ruby',
-        'script',
-        'select',
-        'style',
-        'textarea',
-        'title',
-        'video'
-      ];
-    }
-
-  });
-
-  var EmptyPlugin_1 = EmptyPlugin;
-
-  /**
-   * A {@link Plugin} which outputs the contents of nested frame.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var FramePlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      conversion.window = context.previousWindow;
-    },
-
-    /**
-     * @override
-     */
-    before: function(conversion, context) {
-      context.previousWindow = conversion.window;
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      var window = conversion.element.contentWindow;
-
-      if (window) {
-        conversion.window = window;
-
-        conversion.europa.convertElement(window.document.body, conversion);
-      }
-
-      return false;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'frame', 'iframe' ];
-    }
-
-  });
-
-  var FramePlugin_1 = FramePlugin;
-
-  /**
-   * A {@link Plugin} which outputs a heading of various levels.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var HeadingPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      var level = parseInt(conversion.tagName.match(/([1-6])$/)[1], 10);
-
-      conversion.appendParagraph();
-
-      var heading = '';
-      for (var i = 0; i < level; i++) {
-        heading += '#';
-      }
-
-      conversion.output(heading + ' ');
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [
-        'h1',
-        'h2',
-        'h3',
-        'h4',
-        'h5',
-        'h6'
-      ];
-    }
-
-  });
-
-  var HeadingPlugin_1 = HeadingPlugin;
-
-  /**
-   * A {@link Plugin} which outputs a horizontal rule.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var HorizontalRulePlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      conversion
-        .appendParagraph()
-        .output('---')
-        .appendParagraph();
-
-      return false;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'hr' ];
-    }
-
-  });
-
-  var HorizontalRulePlugin_1 = HorizontalRulePlugin;
-
-  /**
-   * A {@link Plugin} which extracts the URL from an image.
-   *
-   * If the <code>absolute</code> option is enabled, then the URL extracted from the image will be absolute. Otherwise,
-   * the URL will be exactly as it is in the <code>src</code> attribute.
-   *
-   * If the <code>inline</code> option is enabled, then the URL will be inserted immediately after the <code>alt</code> on
-   * the image (e.g. <code>![foo](/bar.png)</code>). Otherwise, all unique URLs will be indexed
-   * (e.g. <code>![foo][image0]</code>) and the references will be output at the very end.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var ImagePlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    afterAll: function(conversion) {
-      var images = conversion.context.images;
-      if (!images.length) {
-        return;
-      }
-
-      conversion.append('\n\n');
-
-      for (var i = 0; i < images.length; i++) {
-        conversion.append('[image' + i + ']: ' + images[i] + '\n');
-      }
-    },
-
-    /**
-     * @override
-     */
-    beforeAll: function(conversion) {
-      conversion.context.imageMap = {};
-      conversion.context.images = [];
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      var element = conversion.element;
-      var options = conversion.options;
-      var source = options.absolute ? element.src : element.getAttribute('src');
-      if (!source) {
-        return false;
-      }
-
-      var alternativeText = element.getAttribute('alt') || '';
-      var imageMap = conversion.context.imageMap;
-      var images = conversion.context.images;
-      var title = element.getAttribute('title');
-      var value = title ? source + ' "' + title + '"' : source;
-      var index;
-
-      if (options.inline) {
-        value = '(' + value + ')';
-      } else {
-        index = imageMap[value];
-        if (index == null) {
-          index = images.push(value) - 1;
-
-          imageMap[value] = index;
-        }
-
-        value = '[image' + index + ']';
-      }
-
-      conversion.output('![' + alternativeText + ']' + value);
-
-      return false;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'img' ];
-    }
-
-  });
-
-  var ImagePlugin_1 = ImagePlugin;
-
-  /**
-   * A {@link Plugin} which outputs a list item. The prefix for the list item will vary depending on what type of list the
-   * item is contained within.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var ListItemPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      var value = conversion.inOrderedList ? conversion.listIndex++ + '. ' : '* ';
-
-      if (!conversion.atLeft) {
-        conversion.append(conversion.left.replace(/[ ]{2,4}$/, '\n'));
-
-        conversion.atLeft = true;
-        conversion.atNoWhiteSpace = true;
-        conversion.atParagraph = true;
-      } else if (conversion.last) {
-        conversion.last = conversion.last.replace(/[ ]{2,4}$/, '\n');
-      }
-
-      conversion.append(Utilities_1.leftPad(value, (conversion.listDepth - 1) * 2));
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'li' ];
-    }
-
-  });
-
-  var ListItemPlugin_1 = ListItemPlugin;
-
-  /**
-   * A {@link Plugin} which outputs an ordered list.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var OrderedListPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      conversion.inOrderedList = context.previousInOrderedList;
-      conversion.listIndex = context.previousListIndex;
-      conversion.listDepth--;
-    },
-
-    /**
-     * @override
-     */
-    before: function(conversion, context) {
-      context.previousInOrderedList = conversion.inOrderedList;
-      context.previousListIndex = conversion.listIndex;
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      if (conversion.listDepth === 0) {
-        conversion.appendParagraph();
-      }
-
-      conversion.inOrderedList = true;
-      conversion.listIndex = 1;
-      conversion.listDepth++;
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'ol' ];
-    }
-
-  });
-
-  var OrderedListPlugin_1 = OrderedListPlugin;
-
-  /**
-   * A {@link Plugin} which outputs a paragraph.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var ParagraphPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      conversion.appendParagraph();
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [
-        'address',
-        'article',
-        'aside',
-        'div',
-        'fieldset',
-        'footer',
-        'header',
-        'nav',
-        'p',
-        'section'
-      ];
-    }
-
-  });
-
-  var ParagraphPlugin_1 = ParagraphPlugin;
-
-  /**
-   * A {@link Plugin} which outputs the contents in a preformatted block.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var PreformattedPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      conversion.atLeft = false;
-      conversion.atParagraph = false;
-      conversion.inPreformattedBlock = context.previousInPreformattedBlock;
-      conversion.left = context.previousLeft;
-
-      conversion.appendParagraph();
-    },
-
-    /**
-     * @override
-     */
-    before: function(conversion, context) {
-      context.previousInPreformattedBlock = conversion.inPreformattedBlock;
-      context.previousLeft = conversion.left;
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      var value = '    ';
-
-      conversion.left += value;
-
-      if (conversion.atParagraph) {
-        conversion.append(value);
-      } else {
-        conversion.appendParagraph();
-      }
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'pre' ];
-    }
-
-  });
-
-  var PreformattedPlugin_1 = PreformattedPlugin;
-
-  /**
-   * A preset of plugins usually grouped for a specific purpose.
-   *
-   * @param {Plugin[]} [plugins] - the plugins that are to be registered
-   * @public
-   * @class
-   * @extends Nevis
-   */
-  var Preset = lite.extend(function(plugins) {
-    /**
-     * The plugins for this {@link Preset}.
-     *
-     * @public
-     * @type {Plugin[]}
-     * @memberof Preset#
-     */
-    this.plugins = plugins ? plugins.slice() : [];
-  }, {
-
-    /**
-     * Adds the specified <code>plugin</code> to this {@link Preset}.
-     *
-     * @param {Plugin} plugin - the {@link Plugin} to be added
-     * @return {Preset} A reference to this {@link Preset} for chaining purposes.
-     * @public
-     * @memberof Preset#
-     */
-    add: function(plugin) {
-      this.plugins.push(plugin);
-
-      return this;
-    }
-
-  });
-
-  var Preset_1 = Preset;
-
-  /**
-   * A {@link Plugin} which outputs as quoted text.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var QuotePlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      conversion.output('"');
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      conversion.output('"');
-
-      conversion.atNoWhiteSpace = true;
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'q' ];
-    }
-
-  });
-
-  var QuotePlugin_1 = QuotePlugin;
-
-  /**
-   * A {@link Plugin} which outputs as strong text.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var StrongPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      conversion.output('**');
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      conversion.output('**');
-
-      conversion.atNoWhiteSpace = true;
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [
-        'b',
-        'strong'
-      ];
-    }
-
-  });
-
-  var StrongPlugin_1 = StrongPlugin;
-
-  /**
-   * A {@link Plugin} which outputs an unordered list.
-   *
-   * @public
-   * @class
-   * @extends Plugin
-   */
-  var UnorderedListPlugin = Plugin_1.extend({
-
-    /**
-     * @override
-     */
-    after: function(conversion, context) {
-      conversion.inOrderedList = context.previousInOrderedList;
-      conversion.listIndex = context.previousListIndex;
-      conversion.listDepth--;
-    },
-
-    /**
-     * @override
-     */
-    before: function(conversion, context) {
-      context.previousInOrderedList = conversion.inOrderedList;
-      context.previousListIndex = conversion.listIndex;
-    },
-
-    /**
-     * @override
-     */
-    convert: function(conversion, context) {
-      if (conversion.listDepth === 0) {
-        conversion.appendParagraph();
-      }
-
-      conversion.inOrderedList = false;
-      conversion.listIndex = 1;
-      conversion.listDepth++;
-
-      return true;
-    },
-
-    /**
-     * @override
-     */
-    getTagNames: function() {
-      return [ 'ul' ];
-    }
-
-  });
-
-  var UnorderedListPlugin_1 = UnorderedListPlugin;
-
-  /**
-   * A default preset containing all of the predefined plugins.
-   *
-   * @public
-   * @class
-   * @extends Preset
-   */
-  var DefaultPreset = Preset_1.extend(function() {
-    DefaultPreset.super_.call(this, [
-      new AnchorPlugin_1(),
-      new BlockQuotePlugin_1(),
-      new BreakPlugin_1(),
-      new CodePlugin_1(),
-      new DefinitionTermPlugin_1(),
-      new DetailsPlugin_1(),
-      new EmphasisPlugin_1(),
-      new EmptyPlugin_1(),
-      new FramePlugin_1(),
-      new HeadingPlugin_1(),
-      new HorizontalRulePlugin_1(),
-      new ImagePlugin_1(),
-      new ListItemPlugin_1(),
-      new OrderedListPlugin_1(),
-      new ParagraphPlugin_1(),
-      new PreformattedPlugin_1(),
-      new QuotePlugin_1(),
-      new StrongPlugin_1(),
-      new UnorderedListPlugin_1()
-    ]);
-  });
-
-  var DefaultPreset_1 = DefaultPreset;
-
-  /**
    * Contains utility methods that are useful when dealing with the DOM.
    *
    * @public
@@ -1969,59 +846,95 @@
   var OptionParser_1 = OptionParser;
 
   /**
-   * A basic manager for {@link Plugin} implementations that are mapped to tag names.
+   * A plugin that can tap into multiple parts in the conversion process while being specific to only a sub-set of tags.
    *
    * @public
    * @class
    * @extends Nevis
    */
-  var PluginManager = lite.extend(function() {
-    /**
-     * The plugins managed by this {@link PluginManager}.
-     *
-     * @public
-     * @type {Object.<string, Plugin>}
-     * @memberof PluginManager#
-     */
-    this.plugins = {};
-  }, {
+  var Plugin = lite.extend({
 
     /**
-     * Registers the specified <code>plugin</code> with this {@link PluginManager}.
+     * Called after {@link Plugin#convert} <b>and</b> only once all children elements have been converted as well,
+     * provided they weren't skipped, and intended for tidying up after the conversion.
      *
-     * If <code>plugin</code> declares support for a tag name which already has a {@link Plugin} registered for it,
-     * <code>plugin</code> will replace the previously registered plugin, but only for conflicting tag names.
+     * <code>context</code> can be used to receive any state for a single element conversion from {@link Plugin#before}
+     * and {@link Plugin#convert}.
      *
-     * @param {Plugin} plugin - the {@link Plugin} to be registered
+     * @param {Conversion} conversion - the current {@link Conversion}
+     * @param {Object.<string, *>} context - the current context for this {@link Plugin}
      * @return {void}
      * @public
-     * @memberof PluginManager#
+     * @memberof Plugin#
      */
-    register: function(plugin) {
-      plugin.getTagNames().forEach(function(tag) {
-        this.plugins[tag] = plugin;
-      }, this);
+    after: function(conversion, context) {},
+
+    /**
+     * Called before any elements are converted and intended to setup this {@link Plugin} initially.
+     *
+     * @param {Conversion} conversion - the current {@link Conversion}
+     * @return {void}
+     * @public
+     * @memberof Plugin#
+     */
+    afterAll: function(conversion) {},
+
+    /**
+     * Called immediately before {@link Plugin#convert} and intended for preparing this {@link Plugin} for conversion.
+     *
+     * <code>context</code> can be used to pass any state for a single element conversion to {@link Plugin#convert} and
+     * then to {@link Plugin#after}.
+     *
+     * @param {Conversion} conversion - the current {@link Conversion}
+     * @param {Object.<string, *>} context - the current context for this {@link Plugin}
+     * @return {void}
+     * @public
+     * @memberof Plugin#
+     */
+    before: function(conversion, context) {},
+
+    /**
+     * Called after all elements have been converted and intended to completing any steps for this {@link Plugin}.
+     *
+     * @param {Conversion} conversion - the current {@link Conversion}
+     * @return {void}
+     * @public
+     * @memberof Plugin#
+     */
+    beforeAll: function(conversion) {},
+
+    /**
+     * Converts the current element within the specified <code>conversion</code> which can be used to provide control over
+     * the conversion and returns whether the children of the element should be converted.
+     *
+     * <code>context</code> can be used to pass any state for a single element conversion from {@link Plugin#before} to
+     * {@link Plugin#after}.
+     *
+     * @param {Conversion} conversion - the current {@link Conversion}
+     * @param {Object.<string, *>} context - the current context for this {@link Plugin}
+     * @return {boolean} <code>true</code> if the children of the current element should be converted; otherwise
+     * <code>false</code>.
+     * @public
+     * @memberof Plugin#
+     */
+    convert: function(conversion, context) {
+      return true;
     },
 
     /**
-     * Registers all of the plugins within the specified <code>preset</code> with this {@link PluginManager}.
+     * Returns the names of tags with which this {@link Plugin} should be registered to handle.
      *
-     * If a {@link Plugin} within <code>preset</code> declares support for a tag name which already has a plugin
-     * registered for it, the plugin within <code>preset</code> will replace the previously registered plugin, but only
-     * for conflicting tag names.
-     *
-     * @param {Preset} preset - the {@link Preset} whose plugins are to be registered
-     * @return {void}
+     * @return {string[]} The names of supported tags.
      * @public
-     * @memberof PluginManager#
+     * @memberof Plugin#
      */
-    registerPreset: function(preset) {
-      preset.plugins.forEach(this.register.bind(this));
+    getTagNames: function() {
+      return [];
     }
 
   });
 
-  var PluginManager_1 = PluginManager;
+  var Plugin_1 = Plugin;
 
   /**
    * A basic manager for {@link Service} implementations that are mapped to simple names.
@@ -2077,8 +990,7 @@
 
   var ServiceManager_1 = ServiceManager;
 
-  var pluginManager = new PluginManager_1();
-  pluginManager.registerPreset(new DefaultPreset_1());
+  var plugins = {};
   var serviceManager = new ServiceManager_1();
 
   /**
@@ -2140,13 +1052,13 @@
       }
 
       try {
-        Utilities_1.forOwn(pluginManager.plugins, function(plugin) {
+        Utilities_1.forOwn(plugins, function(plugin) {
           plugin.beforeAll(conversion);
         });
 
         this.convertElement(root, conversion);
 
-        Utilities_1.forOwn(pluginManager.plugins, function(plugin) {
+        Utilities_1.forOwn(plugins, function(plugin) {
           plugin.afterAll(conversion);
         });
       } finally {
@@ -2189,7 +1101,7 @@
         conversion.element = element;
 
         context = {};
-        plugin = pluginManager.plugins[conversion.tagName];
+        plugin = plugins[conversion.tagName];
         convertChildren = true;
 
         if (plugin) {
@@ -2220,17 +1132,17 @@
     },
 
     /**
-     * Destroys the window used by this {@link Europa} instance.
+     * Releases the window used by this {@link Europa} instance.
      *
      * This allows closeable {@link WindowService} implementations to close the window and free up resources. However,
-     * this instance can and will simply retrieve another Window from the {@link WindowService} the next time it is
-     * required.
+     * this instance can and will simply retrieve another window from the {@link WindowService} the next time it is
+     * required (i.e. {@link Europa#convert} is called).
      *
      * @return {Europa} A reference to this {@link Europa} for chaining purposes.
      * @public
      * @memberof Europa#
      */
-    destroy: function() {
+    release: function() {
       if (this._window) {
         serviceManager.getService('window').closeWindow(this._window);
         this._window = null;
@@ -2252,16 +1164,6 @@
     Plugin: Plugin_1,
 
     /**
-     * A convient reference to {@link Preset} exposed on {@link Europa} for cases where Europa Core is bundled.
-     *
-     * @public
-     * @static
-     * @type {Function}
-     * @memberof Europa
-     */
-    Preset: Preset_1,
-
-    /**
      * Registers the specified <code>plugin</code> to be used by all {@link Europa} instances.
      *
      * If <code>plugin</code> declares support for a tag name which already has a {@link Plugin} registered for it,
@@ -2274,24 +1176,9 @@
      * @memberof Europa
      */
     register: function(plugin) {
-      pluginManager.register(plugin);
-    },
-
-    /**
-     * Registers all of the plugins within the specified <code>preset</code> to be used by all {@link Europa} instances.
-     *
-     * If a {@link Plugin} within <code>preset</code> declares support for a tag name which already has a plugin
-     * registered for it, the plugin within <code>preset</code> will replace the previously registered plugin, but only
-     * for conflicting tag names.
-     *
-     * @param {Preset} preset - the {@link Preset} whose plugins are to be registered
-     * @return {void}
-     * @public
-     * @static
-     * @memberof Europa
-     */
-    registerPreset: function(preset) {
-      pluginManager.registerPreset(preset);
+      plugin.getTagNames().forEach(function(tag) {
+        plugins[tag] = plugin;
+      });
     },
 
     /**
@@ -2357,6 +1244,968 @@
    * be changed.
    * @property {boolean} [inline=false] - Whether anchor/image URLs are to be inserted inline.
    */
+
+  /**
+   * A {@link Plugin} which extracts the URL from an anchor. Anchors without an <code>href</code> are treated as plain
+   * text.
+   *
+   * If the <code>absolute</code> option is enabled, then the URL extracted from the anchor will be absolute. Otherwise,
+   * the URL will be exactly as it is in the <code>href</code> attribute.
+   *
+   * If the <code>inline</code> option is enabled, then the URL (and any <code>title</code> on the anchor) will be
+   * inserted immediately after the anchor contents (e.g. <code>[foo](/bar)</code>). Otherwise, all unique URL and title
+   * combinations will be indexed (e.g. <code>[foo][anchor0]</code>) and the references will be output at the very end.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var AnchorPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      if (context.value != null) {
+        conversion.output(']' + context.value);
+      }
+    },
+
+    /**
+     * @override
+     */
+    afterAll: function(conversion) {
+      var anchors = conversion.context.anchors;
+      if (!anchors.length) {
+        return;
+      }
+
+      conversion.append('\n\n');
+
+      for (var i = 0; i < anchors.length; i++) {
+        conversion.append('[anchor' + i + ']: ' + anchors[i] + '\n');
+      }
+    },
+
+    /**
+     * @override
+     */
+    beforeAll: function(conversion) {
+      conversion.context.anchorMap = {};
+      conversion.context.anchors = [];
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      var element = conversion.element;
+      var options = conversion.options;
+      var href = options.absolute ? element.href : element.getAttribute('href');
+      if (!href) {
+        return true;
+      }
+
+      var anchorMap = conversion.context.anchorMap;
+      var anchors = conversion.context.anchors;
+      var title = element.getAttribute('title');
+      var value = title ? href + ' "' + title + '"' : href;
+      var index;
+
+      if (options.inline) {
+        context.value = '(' + value + ')';
+      } else {
+        index = anchorMap[value];
+        if (index == null) {
+          index = anchors.push(value) - 1;
+
+          anchorMap[value] = index;
+        }
+
+        context.value = '[anchor' + index + ']';
+      }
+
+      conversion.output('[');
+
+      conversion.atNoWhiteSpace = true;
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'a' ];
+    }
+
+  });
+
+  Europa_1$2.register(new AnchorPlugin());
+
+  /**
+   * A {@link Plugin} which outputs the contents in a block quote.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var BlockQuotePlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      conversion.atLeft = false;
+      conversion.atParagraph = false;
+      conversion.left = context.previousLeft;
+
+      conversion.appendParagraph();
+    },
+
+    /**
+     * @override
+     */
+    before: function(conversion, context) {
+      context.previousLeft = conversion.left;
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      var value = '> ';
+
+      conversion.left += value;
+
+      if (conversion.atParagraph) {
+        conversion.append(value);
+      } else {
+        conversion.appendParagraph();
+      }
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [
+        'blockquote',
+        'dd'
+      ];
+    }
+
+  });
+
+  Europa_1$2.register(new BlockQuotePlugin());
+
+  /**
+   * A {@link Plugin} which outputs an inline line break.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var BreakPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      conversion.append('  ' + conversion.left);
+
+      conversion.atLeft = true;
+      conversion.atNoWhiteSpace = true;
+
+      return false;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'br' ];
+    }
+
+  });
+
+  Europa_1$2.register(new BreakPlugin());
+
+  /**
+   * A {@link Plugin} which outputs the contents in a code block.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var CodePlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      if (!context.skipped) {
+        conversion.inCodeBlock = context.previousInCodeBlock;
+
+        conversion.output('`');
+      }
+    },
+
+    /**
+     * @override
+     */
+    before: function(conversion, context) {
+      context.previousInCodeBlock = conversion.inCodeBlock;
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      if (conversion.inPreformattedBlock) {
+        context.skipped = true;
+      } else {
+        conversion.output('`');
+
+        conversion.inCodeBlock = true;
+      }
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [
+        'code',
+        'kbd',
+        'samp'
+      ];
+    }
+
+  });
+
+  Europa_1$2.register(new CodePlugin());
+
+  /**
+   * A {@link Plugin} which outputs a definition term as strong text.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var DefinitionTermPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      conversion.output('**');
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      conversion.appendParagraph();
+
+      conversion.output('**');
+
+      conversion.atNoWhiteSpace = true;
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'dt' ];
+    }
+
+  });
+
+  Europa_1$2.register(new DefinitionTermPlugin());
+
+  /**
+   * A {@link Plugin} which outputs a details section.
+   *
+   * If the details has an <code>open</code> attribute then all of its children are converted. Otherwise, only the nested
+   * <code>summary</code>, if any, will be converted.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var DetailsPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      var element = conversion.element;
+
+      conversion.appendParagraph();
+
+      if (element.hasAttribute('open')) {
+        return true;
+      }
+
+      var summary = element.querySelector('summary');
+      conversion.europa.convertElement(summary, conversion);
+
+      return false;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'details' ];
+    }
+
+  });
+
+  Europa_1$2.register(new DetailsPlugin());
+
+  /**
+   * A {@link Plugin} which outputs as emphasised text.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var EmphasisPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      conversion.output('_');
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      conversion.output('_');
+
+      conversion.atNoWhiteSpace = true;
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [
+        'cite',
+        'dfn',
+        'em',
+        'i',
+        'u',
+        'var'
+      ];
+    }
+
+  });
+
+  Europa_1$2.register(new EmphasisPlugin());
+
+  /**
+   * A {@link Plugin} which simply ensures that no children elements are converted.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var EmptyPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      return false;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [
+        'applet',
+        'area',
+        'audio',
+        'button',
+        'canvas',
+        'datalist',
+        'embed',
+        'head',
+        'input',
+        'map',
+        'menu',
+        'meter',
+        'noframes',
+        'noscript',
+        'object',
+        'optgroup',
+        'option',
+        'param',
+        'progress',
+        'rp',
+        'rt',
+        'ruby',
+        'script',
+        'select',
+        'style',
+        'textarea',
+        'title',
+        'video'
+      ];
+    }
+
+  });
+
+  Europa_1$2.register(new EmptyPlugin());
+
+  /**
+   * A {@link Plugin} which outputs the contents of nested frame.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var FramePlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      conversion.window = context.previousWindow;
+    },
+
+    /**
+     * @override
+     */
+    before: function(conversion, context) {
+      context.previousWindow = conversion.window;
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      var window = conversion.element.contentWindow;
+
+      if (window) {
+        conversion.window = window;
+
+        conversion.europa.convertElement(window.document.body, conversion);
+      }
+
+      return false;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'frame', 'iframe' ];
+    }
+
+  });
+
+  Europa_1$2.register(new FramePlugin());
+
+  /**
+   * A {@link Plugin} which outputs a heading of various levels.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var HeadingPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      var level = parseInt(conversion.tagName.match(/([1-6])$/)[1], 10);
+
+      conversion.appendParagraph();
+
+      var heading = '';
+      for (var i = 0; i < level; i++) {
+        heading += '#';
+      }
+
+      conversion.output(heading + ' ');
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6'
+      ];
+    }
+
+  });
+
+  Europa_1$2.register(new HeadingPlugin());
+
+  /**
+   * A {@link Plugin} which outputs a horizontal rule.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var HorizontalRulePlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      conversion
+        .appendParagraph()
+        .output('---')
+        .appendParagraph();
+
+      return false;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'hr' ];
+    }
+
+  });
+
+  Europa_1$2.register(new HorizontalRulePlugin());
+
+  /**
+   * A {@link Plugin} which extracts the URL from an image.
+   *
+   * If the <code>absolute</code> option is enabled, then the URL extracted from the image will be absolute. Otherwise,
+   * the URL will be exactly as it is in the <code>src</code> attribute.
+   *
+   * If the <code>inline</code> option is enabled, then the URL will be inserted immediately after the <code>alt</code> on
+   * the image (e.g. <code>![foo](/bar.png)</code>). Otherwise, all unique URLs will be indexed
+   * (e.g. <code>![foo][image0]</code>) and the references will be output at the very end.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var ImagePlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    afterAll: function(conversion) {
+      var images = conversion.context.images;
+      if (!images.length) {
+        return;
+      }
+
+      conversion.append('\n\n');
+
+      for (var i = 0; i < images.length; i++) {
+        conversion.append('[image' + i + ']: ' + images[i] + '\n');
+      }
+    },
+
+    /**
+     * @override
+     */
+    beforeAll: function(conversion) {
+      conversion.context.imageMap = {};
+      conversion.context.images = [];
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      var element = conversion.element;
+      var options = conversion.options;
+      var source = options.absolute ? element.src : element.getAttribute('src');
+      if (!source) {
+        return false;
+      }
+
+      var alternativeText = element.getAttribute('alt') || '';
+      var imageMap = conversion.context.imageMap;
+      var images = conversion.context.images;
+      var title = element.getAttribute('title');
+      var value = title ? source + ' "' + title + '"' : source;
+      var index;
+
+      if (options.inline) {
+        value = '(' + value + ')';
+      } else {
+        index = imageMap[value];
+        if (index == null) {
+          index = images.push(value) - 1;
+
+          imageMap[value] = index;
+        }
+
+        value = '[image' + index + ']';
+      }
+
+      conversion.output('![' + alternativeText + ']' + value);
+
+      return false;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'img' ];
+    }
+
+  });
+
+  Europa_1$2.register(new ImagePlugin());
+
+  /**
+   * A {@link Plugin} which outputs a list item. The prefix for the list item will vary depending on what type of list the
+   * item is contained within.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var ListItemPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      var value = conversion.inOrderedList ? conversion.listIndex++ + '. ' : '* ';
+
+      if (!conversion.atLeft) {
+        conversion.append(conversion.left.replace(/[ ]{2,4}$/, '\n'));
+
+        conversion.atLeft = true;
+        conversion.atNoWhiteSpace = true;
+        conversion.atParagraph = true;
+      } else if (conversion.last) {
+        conversion.last = conversion.last.replace(/[ ]{2,4}$/, '\n');
+      }
+
+      conversion.append(Utilities_1.leftPad(value, (conversion.listDepth - 1) * 2));
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'li' ];
+    }
+
+  });
+
+  Europa_1$2.register(new ListItemPlugin());
+
+  /**
+   * A {@link Plugin} which outputs an ordered list.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var OrderedListPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      conversion.inOrderedList = context.previousInOrderedList;
+      conversion.listIndex = context.previousListIndex;
+      conversion.listDepth--;
+    },
+
+    /**
+     * @override
+     */
+    before: function(conversion, context) {
+      context.previousInOrderedList = conversion.inOrderedList;
+      context.previousListIndex = conversion.listIndex;
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      if (conversion.listDepth === 0) {
+        conversion.appendParagraph();
+      }
+
+      conversion.inOrderedList = true;
+      conversion.listIndex = 1;
+      conversion.listDepth++;
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'ol' ];
+    }
+
+  });
+
+  Europa_1$2.register(new OrderedListPlugin());
+
+  /**
+   * A {@link Plugin} which outputs a paragraph.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var ParagraphPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      conversion.appendParagraph();
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [
+        'address',
+        'article',
+        'aside',
+        'div',
+        'fieldset',
+        'footer',
+        'header',
+        'nav',
+        'p',
+        'section'
+      ];
+    }
+
+  });
+
+  Europa_1$2.register(new ParagraphPlugin());
+
+  /**
+   * A {@link Plugin} which outputs the contents in a preformatted block.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var PreformattedPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      conversion.atLeft = false;
+      conversion.atParagraph = false;
+      conversion.inPreformattedBlock = context.previousInPreformattedBlock;
+      conversion.left = context.previousLeft;
+
+      conversion.appendParagraph();
+    },
+
+    /**
+     * @override
+     */
+    before: function(conversion, context) {
+      context.previousInPreformattedBlock = conversion.inPreformattedBlock;
+      context.previousLeft = conversion.left;
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      var value = '    ';
+
+      conversion.left += value;
+
+      if (conversion.atParagraph) {
+        conversion.append(value);
+      } else {
+        conversion.appendParagraph();
+      }
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'pre' ];
+    }
+
+  });
+
+  Europa_1$2.register(new PreformattedPlugin());
+
+  /**
+   * A {@link Plugin} which outputs as quoted text.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var QuotePlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      conversion.output('"');
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      conversion.output('"');
+
+      conversion.atNoWhiteSpace = true;
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'q' ];
+    }
+
+  });
+
+  Europa_1$2.register(new QuotePlugin());
+
+  /**
+   * A {@link Plugin} which outputs as strong text.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var StrongPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      conversion.output('**');
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      conversion.output('**');
+
+      conversion.atNoWhiteSpace = true;
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [
+        'b',
+        'strong'
+      ];
+    }
+
+  });
+
+  Europa_1$2.register(new StrongPlugin());
+
+  /**
+   * A {@link Plugin} which outputs an unordered list.
+   *
+   * @public
+   * @class
+   * @extends Plugin
+   */
+  var UnorderedListPlugin = Plugin_1.extend({
+
+    /**
+     * @override
+     */
+    after: function(conversion, context) {
+      conversion.inOrderedList = context.previousInOrderedList;
+      conversion.listIndex = context.previousListIndex;
+      conversion.listDepth--;
+    },
+
+    /**
+     * @override
+     */
+    before: function(conversion, context) {
+      context.previousInOrderedList = conversion.inOrderedList;
+      context.previousListIndex = conversion.listIndex;
+    },
+
+    /**
+     * @override
+     */
+    convert: function(conversion, context) {
+      if (conversion.listDepth === 0) {
+        conversion.appendParagraph();
+      }
+
+      conversion.inOrderedList = false;
+      conversion.listIndex = 1;
+      conversion.listDepth++;
+
+      return true;
+    },
+
+    /**
+     * @override
+     */
+    getTagNames: function() {
+      return [ 'ul' ];
+    }
+
+  });
+
+  Europa_1$2.register(new UnorderedListPlugin());
 
   var index = Europa_1$2;
 

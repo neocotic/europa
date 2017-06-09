@@ -29,8 +29,8 @@ $ bower install --save europa
 
 If you want to simply download the file to be used in the browser you can find them below:
 
-* [Development Version](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.js) (TODO - [Source Map](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.js.map))
-* [Production Version](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.min.js) (TODO - [Source Map](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.min.js.map))
+* [Development Version](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.js) (58kb - [Source Map](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.js.map))
+* [Production Version](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.min.js) (13kb - [Source Map](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.min.js.map))
 
 Check out [node-europa](https://github.com/NotNinja/node-europa) if you want to install it for use within
 [Node.js](https://nodejs.org).
@@ -107,6 +107,42 @@ div.innerHTML = 'Please keep my <span style="display: none">treasure</span> secr
 europa.convert(div);
 //=> "Please keep my secret safe..."
 ```
+
+## `release()`
+
+Releases the window being used.
+
+Some environments use virtual windows and, since each `Europa` instance will have its own window, calling this method
+when you're done with the instance can help to free up resources.
+
+However, a new window will be used if you attempt to call `convert` on the same instance. So you don't have to worry
+about creating lots of instances, just ensuring that you `release` them after its done its job to free up resources.
+
+Windows are only ever created when `convert` is called and *not* when you instantiate `Europa`!
+
+You may well want to keep the window "open" in order to speed up consecutive conversions (e.g. in an iteration).
+
+``` javascript
+var europa = new Europa({ inline: true });
+
+var input = [
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>',
+  '<p>Etiam sed felis ligula. Maecenas sit amet tristique risus...</p>',
+  '<p>In dictum consequat nulla at lobortis...</p>'
+];
+var output = input.map(function(html) {
+  return europa.convert(html);
+});
+
+europa.release();
+
+// ...
+
+europa.convert('Wow! <a href="https://github.com/NotNinja/europa">Europa</a> is awesome!');
+//=> "Wow! [Europa](https://github.com/NotNinja/europa) is awesome!"
+```
+
+Other environments (e.g. browsers) should never have to worry about calling this method.
 
 ## Plugins
 

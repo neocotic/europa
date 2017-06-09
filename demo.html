@@ -47,37 +47,40 @@ SOFTWARE.
 
     body {
       background-color: #ccc;
+      color: #444;
     }
 
     form {
       height: 100%;
     }
 
-    form label {
+    form label span {
+      display: inline-block;
+      padding: 10px;
+    }
+
+    form > label {
       position: absolute;
       left: 0;
       right: 0;
     }
 
-    form label:first-child {
+    form > label:first-of-type {
       top: 0;
       height: 50%;
     }
 
-    form label:last-child {
+    form > label:last-of-type {
       bottom: 0;
       height: 50%;
     }
 
-    form label span {
-      display: block;
-      padding: 10px;
-      color: #444;
+    form > label span {
       font-weight: bold;
       text-transform: uppercase;
     }
 
-    form label textarea {
+    form > label textarea {
       display: block;
       width: 100%;
       height: calc(100% - 36px);
@@ -85,6 +88,20 @@ SOFTWARE.
       padding: 10px;
       font-family: monospace;
       resize: none;
+    }
+
+    form .options {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    form .options label, form .options label span {
+      padding-right: 7px;
+    }
+
+    form .options label span {
+      text-transform: lowercase;
     }
   </style>
 </head>
@@ -99,19 +116,42 @@ SOFTWARE.
       <span>Markdown</span>
       <textarea name="output" spellcheck="false" readonly>We &hearts; **Europa**!</textarea>
     </label>
+
+    <div class="options">
+      <label>
+        <span>Absolute</span>
+        <input name="absolute-option" type="checkbox">
+      </label>
+
+      <label>
+        <span>Inline</span>
+        <input name="inline-option" type="checkbox">
+      </label>
+    </div>
   </form>
 
   <script src="./dist/europa.js"></script>
   <script>
     (function() {
+      var absoluteOption = document.querySelector('form [name="absolute-option"]');
+      var inlineOption = document.querySelector('form [name="inline-option"]');
       var input = document.querySelector('form [name="input"]');
       var output = document.querySelector('form [name="output"]');
 
-      var europa = window.europa = new Europa();
+      function update() {
+        var europa = window.europa = new Europa({
+          absolute: absoluteOption.checked,
+          inline: inlineOption.checked
+        });
 
-      input.addEventListener('input', function() {
         output.value = europa.convert(input.value);
-      });
+      }
+
+      absoluteOption.addEventListener('change', update);
+      inlineOption.addEventListener('change', update);
+      input.addEventListener('input', update);
+
+      update();
     }());
   </script>
 </body>
