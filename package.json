@@ -1,45 +1,49 @@
 {
-  "name": "html-md",
-  "description": "JavaScript library for converting HTML in to valid Markdown",
-  "version": "3.1.0",
-  "homepage": "http://neocotic.com/html.md",
+  "name": "europa",
+  "version": "4.0.0",
+  "description": "Library for converting HTML into valid Markdown",
+  "homepage": "https://github.com/NotNinja/europa",
   "bugs": {
-    "url": "https://github.com/neocotic/html.md/issues"
+    "url": "https://github.com/NotNinja/europa/issues"
   },
   "author": {
     "name": "Alasdair Mercer",
     "email": "mercer.alasdair@gmail.com",
-    "url": "http://neocotic.com"
+    "url": "https://not.ninja"
   },
-  "license": "GPL-2.0",
+  "license": "MIT",
   "keywords": [
     "html",
     "markdown",
-    "convert"
+    "convert",
+    "converter"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/neocotic/html.md.git"
-  },
-  "dependencies": {
-    "commander": "~2.0.0",
-    "fs-extra": "~0.7.0",
-    "jsdom": "~0.8.6"
+    "url": "https://github.com/NotNinja/europa.git"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-coffee": "~0.7.0",
-    "grunt-contrib-nodeunit": "~0.2.1",
-    "grunt-contrib-uglify": "~0.2.4",
-    "grunt-docco": "~0.2.0"
+    "chai": "^4.0.2",
+    "eslint-config-notninja": "^0.1.1",
+    "europa-core": "^4.0.0",
+    "europa-test": "^4.0.0",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-eslint": "^19.0.0",
+    "grunt-mocha-phantomjs": "^4.0.0",
+    "grunt-rollup": "^1.0.1",
+    "load-grunt-tasks": "^3.5.2",
+    "mocha": "^3.4.2",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^2.0.1"
   },
+  "main": "dist/europa.js",
   "scripts": {
+    "build": "grunt build",
+    "ci": "grunt ci",
     "test": "grunt test"
-  },
-  "man": "./man/doc.1",
-  "bin": {
-    "htmlmd": "./bin/htmlmd"
-  },
-  "main": "./lib/md"
+  }
 }
