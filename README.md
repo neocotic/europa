@@ -2,6 +2,7 @@
 
 [Europa](https://github.com/NotNinja/europa) is a pure JavaScript library for converting HTML into valid Markdown.
 
+[![Demo](https://img.shields.io/badge/demo-live-brightgreen.svg?style=flat-square)](https://codepen.io/NotNinja/full/BZjRMK)
 [![Build Status](https://img.shields.io/travis/NotNinja/europa/develop.svg?style=flat-square)](https://travis-ci.org/NotNinja/europa)
 [![Dev Dependency Status](https://img.shields.io/david/dev/NotNinja/europa.svg?style=flat-square)](https://david-dm.org/NotNinja/europa?type=dev)
 [![License](https://img.shields.io/npm/l/europa.svg?style=flat-square)](https://github.com/NotNinja/europa/blob/master/LICENSE.md)
