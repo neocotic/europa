@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Alasdair Mercer, Skelp
+ * Copyright (C) 2017 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,4 +20,44 @@
  * SOFTWARE.
  */
 
-// TODO: Complete unit tests (incl. fixtures)
+'use strict';
+
+const { JSDOM } = require('jsdom');
+const WindowService = require('europa-core/src/service/window/WindowService');
+
+/**
+ * An implementation of {@link WindowService} intended for use within a Node.js environment that uses the "jsdom" module
+ * to create a virtual window object.
+ *
+ * @public
+ * @class
+ * @extends WindowService
+ */
+const NodeWindowService = WindowService.extend({
+
+  /**
+   * @override
+   */
+  getDefaultBaseUri() {
+    return `file:///${process.cwd().replace(/\\/g, '/')}`;
+  },
+
+  /**
+   * @override
+   */
+  getWindow(baseUri) {
+    const dom = new JSDOM('', { url: baseUri });
+
+    return dom.window;
+  },
+
+  /**
+   * @override
+   */
+  isCloseable(window) {
+    return true;
+  }
+
+});
+
+module.exports = NodeWindowService;

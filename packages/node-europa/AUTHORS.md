@@ -1,3 +1,3 @@
 # Authors ordered by first contribution
 
-* Alasdair Mercer <alasdair@skelp.io>
+* Alasdair Mercer <mercer.alasdair@gmail.com>

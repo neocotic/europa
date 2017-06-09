@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Alasdair Mercer, Skelp
+ * Copyright (C) 2017 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,42 +20,17 @@
  * SOFTWARE.
  */
 
-import { WindowService } from 'europa-core/lib/service/window-service'
-import { jsdom } from 'jsdom'
+'use strict';
 
-/**
- * A Node-based implementation of {@link WindowService} uses the jsdom library to create a virtual <code>Window</code>
- * object to be used for transforming HTML into Markdown.
- *
- * @public
- * @extends {WindowService}
- */
-class NodeWindowService extends WindowService {
+const fs = require('fs');
+const path = require('path');
+const test = require('europa-test');
 
-  /**
-   * @override
-   */
-  getBaseUri(window) {
-    return `file:///${process.cwd().replace(/\\/g, '/')}`
+const Europa = require('../src/Europa');
+
+test({
+  Europa,
+  loadFixture: (fixturePath, callback) => {
+    fs.readFile(path.resolve(__dirname, path.join('../node_modules/europa-test', fixturePath)), 'utf8', callback);
   }
-
-  /**
-   * @override
-   */
-  getWindow() {
-    return jsdom(null, {
-      features: { FetchExternalResources: false },
-      url: this.getBaseUri(null)
-    }).defaultView
-  }
-
-  /**
-   * @override
-   */
-  isCloseable(window) {
-    return true
-  }
-
-}
-
-export { NodeWindowService }
+});
