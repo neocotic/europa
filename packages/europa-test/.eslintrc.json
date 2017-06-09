@@ -1,0 +1,18 @@
+{
+  "extends": "notninja/es5",
+  "env": {
+    "amd": true,
+    "browser": true,
+    "mocha": true,
+    "node": true
+  },
+  "rules": {
+    "no-extra-parens": "off",
+    "no-invalid-this": "off",
+    "no-unused-expressions": "off",
+    "strict": [
+      "error",
+      "function"
+    ]
+  }
+}
