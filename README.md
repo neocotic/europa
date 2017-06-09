@@ -30,7 +30,7 @@ If you want to simply download the file to be used in the browser you can find t
 * [Development Version](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.js) (TODO - [Source Map](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.js.map))
 * [Production Version](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.min.js) (TODO - [Source Map](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.min.js.map))
 
-Check out [node-qrious](https://github.com/NotNinja/node-europa) if you want to install it for use within
+Check out [node-europa](https://github.com/NotNinja/node-europa) if you want to install it for use within
 [Node.js](https://nodejs.org).
 
 ## Examples
