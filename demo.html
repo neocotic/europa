@@ -89,30 +89,30 @@ SOFTWARE.
   </style>
 </head>
 <body>
-<form autocomplete="off">
-  <label>
-    <span>HTML</span>
-    <textarea name="input" spellcheck="false">We &amp;hearts; &lt;b&gt;Europa&lt;/b&gt;!</textarea>
-  </label>
+  <form autocomplete="off">
+    <label>
+      <span>HTML</span>
+      <textarea name="input" spellcheck="false">We &amp;hearts; &lt;b&gt;Europa&lt;/b&gt;!</textarea>
+    </label>
 
-  <label>
-    <span>Markdown</span>
-    <textarea name="output" spellcheck="false" readonly>We &hearts; **Europa**!</textarea>
-  </label>
-</form>
+    <label>
+      <span>Markdown</span>
+      <textarea name="output" spellcheck="false" readonly>We &hearts; **Europa**!</textarea>
+    </label>
+  </form>
 
-<script src="./dist/europa.js"></script>
-<script>
-  (function() {
-    var input = document.querySelector('form [name="input"]');
-    var output = document.querySelector('form [name="output"]');
+  <script src="./dist/europa.js"></script>
+  <script>
+    (function() {
+      var input = document.querySelector('form [name="input"]');
+      var output = document.querySelector('form [name="output"]');
 
-    var europa = window.europa = new Europa();
+      var europa = window.europa = new Europa();
 
-    input.addEventListener('input', function() {
-      output.value = europa.convert(input.value);
-    });
-  }());
-</script>
+      input.addEventListener('input', function() {
+        output.value = europa.convert(input.value);
+      });
+    }());
+  </script>
 </body>
 </html>
