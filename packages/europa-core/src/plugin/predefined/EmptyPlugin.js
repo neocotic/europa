@@ -22,22 +22,63 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Europa = require('../../Europa');
+var Plugin = require('../Plugin');
+
+/**
+ * A {@link Plugin} which simply ensures that no children elements are converted.
+ *
+ * @public
+ * @class
+ * @extends Plugin
+ */
+var EmptyPlugin = Plugin.extend({
+
+  /**
+   * @override
+   */
+  convert: function(conversion, context) {
+    return false;
+  },
+
+  /**
+   * @override
+   */
+  getTagNames: function() {
+    return [
+      'applet',
+      'area',
+      'audio',
+      'button',
+      'canvas',
+      'datalist',
+      'embed',
+      'head',
+      'input',
+      'map',
+      'menu',
+      'meter',
+      'noframes',
+      'noscript',
+      'object',
+      'optgroup',
+      'option',
+      'param',
+      'progress',
+      'rp',
+      'rt',
+      'ruby',
+      'script',
+      'select',
+      'style',
+      'textarea',
+      'title',
+      'video'
+    ];
+  }
+
+});
+
+Europa.register(new EmptyPlugin());
+
+module.exports = EmptyPlugin;

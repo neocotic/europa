@@ -22,22 +22,7 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Europa = require('./src/Europa');
+require('./src/plugin/preset/default');
+
+module.exports = Europa;

@@ -22,22 +22,48 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Europa = require('../../Europa');
+var Plugin = require('../Plugin');
+
+/**
+ * A {@link Plugin} which outputs a details section.
+ *
+ * If the details has an <code>open</code> attribute then all of its children are converted. Otherwise, only the nested
+ * <code>summary</code>, if any, will be converted.
+ *
+ * @public
+ * @class
+ * @extends Plugin
+ */
+var DetailsPlugin = Plugin.extend({
+
+  /**
+   * @override
+   */
+  convert: function(conversion, context) {
+    var element = conversion.element;
+
+    conversion.appendParagraph();
+
+    if (element.hasAttribute('open')) {
+      return true;
+    }
+
+    var summary = element.querySelector('summary');
+    conversion.europa.convertElement(summary, conversion);
+
+    return false;
+  },
+
+  /**
+   * @override
+   */
+  getTagNames: function() {
+    return [ 'details' ];
+  }
+
+});
+
+Europa.register(new DetailsPlugin());
+
+module.exports = DetailsPlugin;

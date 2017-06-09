@@ -22,22 +22,47 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Europa = require('../../Europa');
+var Plugin = require('../Plugin');
+
+/**
+ * A {@link Plugin} which outputs a paragraph.
+ *
+ * @public
+ * @class
+ * @extends Plugin
+ */
+var ParagraphPlugin = Plugin.extend({
+
+  /**
+   * @override
+   */
+  convert: function(conversion, context) {
+    conversion.appendParagraph();
+
+    return true;
+  },
+
+  /**
+   * @override
+   */
+  getTagNames: function() {
+    return [
+      'address',
+      'article',
+      'aside',
+      'div',
+      'fieldset',
+      'footer',
+      'header',
+      'nav',
+      'p',
+      'section'
+    ];
+  }
+
+});
+
+Europa.register(new ParagraphPlugin());
+
+module.exports = ParagraphPlugin;

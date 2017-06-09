@@ -22,22 +22,64 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Europa = require('../../Europa');
+var Plugin = require('../Plugin');
+
+/**
+ * A {@link Plugin} which outputs the contents in a code block.
+ *
+ * @public
+ * @class
+ * @extends Plugin
+ */
+var CodePlugin = Plugin.extend({
+
+  /**
+   * @override
+   */
+  after: function(conversion, context) {
+    if (!context.skipped) {
+      conversion.inCodeBlock = context.previousInCodeBlock;
+
+      conversion.output('`');
+    }
+  },
+
+  /**
+   * @override
+   */
+  before: function(conversion, context) {
+    context.previousInCodeBlock = conversion.inCodeBlock;
+  },
+
+  /**
+   * @override
+   */
+  convert: function(conversion, context) {
+    if (conversion.inPreformattedBlock) {
+      context.skipped = true;
+    } else {
+      conversion.output('`');
+
+      conversion.inCodeBlock = true;
+    }
+
+    return true;
+  },
+
+  /**
+   * @override
+   */
+  getTagNames: function() {
+    return [
+      'code',
+      'kbd',
+      'samp'
+    ];
+  }
+
+});
+
+Europa.register(new CodePlugin());
+
+module.exports = CodePlugin;

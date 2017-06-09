@@ -22,22 +22,36 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Nevis = require('nevis/lite');
+
+/**
+ * Contains utility methods that are useful when dealing with the DOM.
+ *
+ * @public
+ * @class
+ * @extends Nevis
+ */
+var DOMUtilities = Nevis.extend(null, {
+
+  /**
+   * Checks whether the specified <code>element</code> is currently visible using the <code>window</code> provided.
+   *
+   * This is not a very sophisticated check and could easily be mistaken, but it should catch a lot of the most simple
+   * cases.
+   *
+   * @param {Element} element - the element whose visibility is to be checked
+   * @param {Window} window - the window to be used
+   * @return {boolean} <code>true</code> if <code>element</code> is visible; otherwise <code>false</code>.
+   * @public
+   * @static
+   * @memberof DOMUtilities
+   */
+  isVisible: function(element, window) {
+    var style = window.getComputedStyle(element);
+
+    return style.getPropertyValue('display') !== 'none' && style.getPropertyValue('visibility') !== 'hidden';
+  }
+
+});
+
+module.exports = DOMUtilities;

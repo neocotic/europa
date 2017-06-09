@@ -22,22 +22,48 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Nevis = require('nevis/lite');
+
+/**
+ * Defines an available option.
+ *
+ * If <code>defaultValue</code> is a function, it will be called if/when needed and the return value will be used as the
+ * default value. If the default value is to be a function itself, then <code>defaultValue</code> must return that
+ * function.
+ *
+ * @param {string} name - the name to be used
+ * @param {*} [defaultValue] - the default value to be used
+ * @public
+ * @class
+ * @extends Nevis
+ */
+var Option = Nevis.extend(function(name, defaultValue) {
+  /**
+   * The name for this {@link Option}.
+   *
+   * @public
+   * @type {string}
+   * @memberof Option#
+   */
+  this.name = name;
+
+  this._defaultValue = defaultValue;
+});
+
+Object.defineProperty(Option.prototype, 'defaultValue', {
+  /**
+   * Returns the default value for this {@link Option}.
+   *
+   * @return {*} The default value.
+   * @public
+   * @memberof Option#
+   * @alias defaultValue
+   */
+  get: function() {
+    var defaultValue = this._defaultValue;
+
+    return typeof defaultValue === 'function' ? defaultValue.call(this) : defaultValue;
+  }
+});
+
+module.exports = Option;

@@ -22,22 +22,27 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Nevis = require('nevis/lite');
+
+/**
+ * Defines a service contract that must be met by all implementations.
+ *
+ * @public
+ * @class
+ * @extends Nevis
+ */
+var Service = Nevis.extend({
+
+  /**
+   * Returns the name of this {@link Service}.
+   *
+   * @return {string} The service name.
+   * @public
+   * @abstract
+   * @memberof Service#
+   */
+  getName: function() {}
+
+});
+
+module.exports = Service;

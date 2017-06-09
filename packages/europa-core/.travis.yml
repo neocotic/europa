@@ -1,8 +1,15 @@
+sudo: false
 language: node_js
 node_js:
-  - "0.10"
-  - "0.12"
-  - "4.0"
-  - "6.0"
+  - "4"
+  - "6"
+  - "8"
+before_script:
+  - npm install -g npm@latest
 script:
-  - npm test
+  - npm run ci
+notifications:
+  slack:
+    rooms:
+      - secure: FzeWFyALZVrl/dv1wGdGWucf7myiYX9DkTlNBF28vwHEAkZcjk4Polq1wI6OXql6TQENwlGu7kcPADtSn6frUAGKapKnvQiRFhoAQ+caymHPulyJzT9blzDm9xahwrUZWKtmbCtfL8Oy87vjqwIszmnhKRZdepX2vFOAw92d8Gv7LsquJI3Zjdf9UNZSNmG7XF5VHT421QaDuZ9PChZUsUtHmz2/M+XF8dTD0P17tmBbY5YwXJfHUDxAJG50HvgjQblW83coJktfjMktzqx9I/Wi+NiPflmPnEsmIzO3VSPlQ+F7OyP72BlfxHLqkTvl0F6tdzuZ3edj3w38vf5Nk+qpTA1s2jyfBPu+OefGdJHhOCUdO8hGF66XMK4m9cACL2VnV0+m/62fq/B4e9iiU0lNPQNX1oNGFmL+Jj0ZHItzTN2Rqu7H/qAjmkfzibzklRAluID6Vo3mYt6hpOMEGmd9NBFiAhXfOz6yIiDN0Btl+ZJtBJrjZ4gQZnqI8Ir1nOj8sBYrmJNnOlaYO32i3KV+BkIYahRpwj49qy7H2jjpOptMBv+Yi7ht83fML+qDJ99wessHSCNNj03y8RNvGF8YBvlgzRamcEc6l3kXP3URc78EJIDNxTBWO+EYBYVtkTpuE6JMVNVicPK4mTfbzkVt8dE1HaxEUfzBlM9+HYw=
+    on_success: change

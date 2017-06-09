@@ -22,22 +22,65 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Europa = require('../../Europa');
+var Plugin = require('../Plugin');
+
+/**
+ * A {@link Plugin} which outputs the contents in a block quote.
+ *
+ * @public
+ * @class
+ * @extends Plugin
+ */
+var BlockQuotePlugin = Plugin.extend({
+
+  /**
+   * @override
+   */
+  after: function(conversion, context) {
+    conversion.atLeft = false;
+    conversion.atParagraph = false;
+    conversion.left = context.previousLeft;
+
+    conversion.appendParagraph();
+  },
+
+  /**
+   * @override
+   */
+  before: function(conversion, context) {
+    context.previousLeft = conversion.left;
+  },
+
+  /**
+   * @override
+   */
+  convert: function(conversion, context) {
+    var value = '> ';
+
+    conversion.left += value;
+
+    if (conversion.atParagraph) {
+      conversion.append(value);
+    } else {
+      conversion.appendParagraph();
+    }
+
+    return true;
+  },
+
+  /**
+   * @override
+   */
+  getTagNames: function() {
+    return [
+      'blockquote',
+      'dd'
+    ];
+  }
+
+});
+
+Europa.register(new BlockQuotePlugin());
+
+module.exports = BlockQuotePlugin;

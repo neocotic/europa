@@ -22,22 +22,48 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Europa = require('../../Europa');
+var Plugin = require('../Plugin');
+
+/**
+ * A {@link Plugin} which outputs as strong text.
+ *
+ * @public
+ * @class
+ * @extends Plugin
+ */
+var StrongPlugin = Plugin.extend({
+
+  /**
+   * @override
+   */
+  after: function(conversion, context) {
+    conversion.output('**');
+  },
+
+  /**
+   * @override
+   */
+  convert: function(conversion, context) {
+    conversion.output('**');
+
+    conversion.atNoWhiteSpace = true;
+
+    return true;
+  },
+
+  /**
+   * @override
+   */
+  getTagNames: function() {
+    return [
+      'b',
+      'strong'
+    ];
+  }
+
+});
+
+Europa.register(new StrongPlugin());
+
+module.exports = StrongPlugin;

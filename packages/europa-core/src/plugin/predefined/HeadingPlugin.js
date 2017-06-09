@@ -22,22 +22,52 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Europa = require('../../Europa');
+var Plugin = require('../Plugin');
+
+/**
+ * A {@link Plugin} which outputs a heading of various levels.
+ *
+ * @public
+ * @class
+ * @extends Plugin
+ */
+var HeadingPlugin = Plugin.extend({
+
+  /**
+   * @override
+   */
+  convert: function(conversion, context) {
+    var level = parseInt(conversion.tagName.match(/([1-6])$/)[1], 10);
+
+    conversion.appendParagraph();
+
+    var heading = '';
+    for (var i = 0; i < level; i++) {
+      heading += '#';
+    }
+
+    conversion.output(heading + ' ');
+
+    return true;
+  },
+
+  /**
+   * @override
+   */
+  getTagNames: function() {
+    return [
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6'
+    ];
+  }
+
+});
+
+Europa.register(new HeadingPlugin());
+
+module.exports = HeadingPlugin;

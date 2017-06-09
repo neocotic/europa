@@ -22,22 +22,59 @@
 
 'use strict';
 
-require('../predefined/AnchorPlugin');
-require('../predefined/BlockQuotePlugin');
-require('../predefined/BreakPlugin');
-require('../predefined/CodePlugin');
-require('../predefined/DefinitionTermPlugin');
-require('../predefined/DetailsPlugin');
-require('../predefined/EmphasisPlugin');
-require('../predefined/EmptyPlugin');
-require('../predefined/FramePlugin');
-require('../predefined/HeadingPlugin');
-require('../predefined/HorizontalRulePlugin');
-require('../predefined/ImagePlugin');
-require('../predefined/ListItemPlugin');
-require('../predefined/OrderedListPlugin');
-require('../predefined/ParagraphPlugin');
-require('../predefined/PreformattedPlugin');
-require('../predefined/QuotePlugin');
-require('../predefined/StrongPlugin');
-require('../predefined/UnorderedListPlugin');
+var Europa = require('../../Europa');
+var Plugin = require('../Plugin');
+
+/**
+ * A {@link Plugin} which outputs an unordered list.
+ *
+ * @public
+ * @class
+ * @extends Plugin
+ */
+var UnorderedListPlugin = Plugin.extend({
+
+  /**
+   * @override
+   */
+  after: function(conversion, context) {
+    conversion.inOrderedList = context.previousInOrderedList;
+    conversion.listIndex = context.previousListIndex;
+    conversion.listDepth--;
+  },
+
+  /**
+   * @override
+   */
+  before: function(conversion, context) {
+    context.previousInOrderedList = conversion.inOrderedList;
+    context.previousListIndex = conversion.listIndex;
+  },
+
+  /**
+   * @override
+   */
+  convert: function(conversion, context) {
+    if (conversion.listDepth === 0) {
+      conversion.appendParagraph();
+    }
+
+    conversion.inOrderedList = false;
+    conversion.listIndex = 1;
+    conversion.listDepth++;
+
+    return true;
+  },
+
+  /**
+   * @override
+   */
+  getTagNames: function() {
+    return [ 'ul' ];
+  }
+
+});
+
+Europa.register(new UnorderedListPlugin());
+
+module.exports = UnorderedListPlugin;

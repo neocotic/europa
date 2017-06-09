@@ -1,7 +1,5 @@
-test/
 .*
 AUTHORS.md
 CHANGES.md
 CONTRIBUTING.md
-Gruntfile.js
 README.md
