@@ -1,7 +1,15 @@
 {
-  "extends": "skelp/v2/es5",
+  "extends": "notninja/es5",
   "env": {
     "browser": true,
     "node": true
+  },
+  "rules": {
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "none"
+      }
+    ]
   }
 }

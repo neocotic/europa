@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Alasdair Mercer, Skelp
+ * Copyright (C) 2017 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,117 +20,97 @@
  * SOFTWARE.
  */
 
+'use strict';
+
 module.exports = function(grunt) {
-  var commonjs
-  var nodeResolve
-  var semver = require('semver')
-  var uglify
+  var commonjs = require('rollup-plugin-commonjs');
+  var nodeResolve = require('rollup-plugin-node-resolve');
+  var uglify = require('rollup-plugin-uglify');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    watch: {
-      all: {
-        files: [ 'lib/**/*.js' ],
-        tasks: [ 'build' ]
-      }
-    }
-  })
+    clean: {
+      build: [ 'dist/**' ]
+    },
 
-  var buildTasks = [ 'compile' ]
-  var compileTasks = []
-  var testTasks = [ 'compile' ]
-
-  if (semver.satisfies(process.version, '>=0.12')) {
-    commonjs = require('rollup-plugin-commonjs')
-    nodeResolve = require('rollup-plugin-node-resolve')
-    uglify = require('rollup-plugin-uglify')
-
-    compileTasks.push('clean', 'rollup')
-
-    grunt.config.merge({
-      clean: {
-        build: [ 'dist/**' ]
-      },
-
-      rollup: {
-        umdDevelopment: {
-          options: {
-            format: 'umd',
-            moduleId: 'europa',
-            moduleName: 'europa',
-            sourceMap: true,
-            sourceMapRelativePaths: true,
-            plugins: function() {
-              return [
-                nodeResolve({
-                  browser: true,
-                  main: true
-                }),
-                commonjs()
-              ]
-            }
-          },
-          files: {
-            'dist/europa.js': 'lib/index.js'
-          }
-        },
-        umdProduction: {
-          options: {
-            format: 'umd',
-            moduleId: 'europa',
-            moduleName: 'europa',
-            sourceMap: true,
-            sourceMapRelativePaths: true,
-            banner: '/*! Europa v<%= pkg.version %> | (C) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> | MIT License */',
-            plugins: function() {
-              return [
-                nodeResolve({
-                  browser: true,
-                  main: true
-                }),
-                commonjs(),
-                uglify({
-                  output: {
-                    comments: function(node, comment) {
-                      return comment.type === 'comment2' && /^\!/.test(comment.value)
-                    }
-                  }
-                })
-              ]
-            }
-          },
-          files: {
-            'dist/europa.min.js': 'lib/index.js'
-          }
+    connect: {
+      test: {
+        options: {
+          base: '.',
+          port: 8000
         }
       }
-    })
+    },
 
-    grunt.loadNpmTasks('grunt-contrib-clean')
-    grunt.loadNpmTasks('grunt-rollup')
-  } else {
-    grunt.log.writeln('"clean" and "rollup" tasks are disabled because Node.js version is <0.12! Please consider upgrading Node.js...')
-  }
+    eslint: {
+      target: [
+        'src/**/*.js',
+        'test/**/*.js'
+      ]
+    },
 
-  if (semver.satisfies(process.version, '>=4')) {
-    buildTasks.unshift('eslint')
-    testTasks.unshift('eslint')
+    mocha_phantomjs: {
+      test: {
+        options: {
+          reporter: 'list',
+          urls: [ 'http://localhost:8000/test/test.html' ]
+        }
+      }
+    },
 
-    grunt.config.set('eslint', {
-      target: [ 'lib/**/*.js' ]
-    })
+    rollup: {
+      umdDevelopment: {
+        options: {
+          format: 'umd',
+          moduleId: 'europa',
+          moduleName: 'Europa',
+          sourceMap: true,
+          sourceMapRelativePaths: true,
+          plugins: function() {
+            return [
+              nodeResolve(),
+              commonjs()
+            ];
+          }
+        },
+        files: {
+          'dist/europa.js': 'src/Europa.js'
+        }
+      },
+      umdProduction: {
+        options: {
+          format: 'umd',
+          moduleId: 'europa',
+          moduleName: 'Europa',
+          sourceMap: true,
+          sourceMapRelativePaths: true,
+          banner: '/*! Europa v<%= pkg.version %> | (C) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>, !ninja | <%= pkg.license %> License */',
+          plugins: function() {
+            return [
+              nodeResolve(),
+              commonjs(),
+              uglify({
+                output: {
+                  comments: function(node, comment) {
+                    return comment.type === 'comment2' && /^\!/.test(comment.value);
+                  }
+                }
+              })
+            ];
+          }
+        },
+        files: {
+          'dist/europa.min.js': 'src/Europa.js'
+        }
+      }
+    }
+  });
 
-    grunt.loadNpmTasks('grunt-eslint')
-  } else {
-    grunt.log.writeln('"eslint" task is disabled because Node.js version is <4! Please consider upgrading Node.js...')
-  }
+  require('load-grunt-tasks')(grunt);
 
-  grunt.loadNpmTasks('grunt-contrib-watch')
-  grunt.loadNpmTasks('grunt-mocha-test')
-
-  grunt.registerTask('default', [ 'build' ])
-  grunt.registerTask('build', buildTasks)
-  grunt.registerTask('compile', compileTasks)
-  grunt.registerTask('test', testTasks)
-}
+  grunt.registerTask('default', [ 'ci' ]);
+  grunt.registerTask('build', [ 'eslint', 'clean:build', 'rollup' ]);
+  grunt.registerTask('ci', [ 'eslint', 'clean', 'rollup', 'connect', 'mocha_phantomjs' ]);
+  grunt.registerTask('test', [ 'eslint', 'connect', 'mocha_phantomjs' ]);
+};

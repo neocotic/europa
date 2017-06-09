@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Alasdair Mercer, Skelp
+ * Copyright (C) 2017 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,33 @@
  * SOFTWARE.
  */
 
-'use strict'
+'use strict';
 
-var Europa = require('europa-core')
+var WindowService = require('europa-core/src/service/window/WindowService');
 
-var NativeWindowService = require('./service/native-window-service').NativeWindowService
+/**
+ * An implementation of {@link WindowService} intended for use within a browser environment.
+ *
+ * @public
+ * @class
+ * @extends WindowService
+ */
+var BrowserWindowService = WindowService.extend({
 
-module.exports = new Europa(new NativeWindowService())
+  /**
+   * @override
+   */
+  getDefaultBaseUri: function() {
+    return window.document.baseURI;
+  },
+
+  /**
+   * @override
+   */
+  getWindow: function(baseUri) {
+    return window;
+  }
+
+});
+
+module.exports = BrowserWindowService;

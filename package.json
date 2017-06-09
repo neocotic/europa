@@ -1,44 +1,49 @@
 {
   "name": "europa",
-  "version": "4.0.0-alpha8",
-  "description": "Library for transforming HTML to Markdown",
-  "homepage": "https://github.com/Skelp/europa",
+  "version": "4.0.0-alpha9",
+  "description": "Library for converting HTML into valid Markdown",
+  "homepage": "https://github.com/NotNinja/europa",
   "bugs": {
-    "url": "https://github.com/Skelp/europa/issues"
+    "url": "https://github.com/NotNinja/europa/issues"
   },
   "author": {
     "name": "Alasdair Mercer",
-    "email": "alasdair@skelp.io",
-    "url": "https://skelp.io"
+    "email": "mercer.alasdair@gmail.com",
+    "url": "https://not.ninja"
   },
   "license": "MIT",
   "keywords": [
     "html",
     "markdown",
-    "transform",
-    "convert"
+    "convert",
+    "converter"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Skelp/europa.git"
+    "url": "https://github.com/NotNinja/europa.git"
   },
   "devDependencies": {
-    "eslint-config-skelp": "^0.1.5",
-    "europa-core": "^4.0.0-alpha8",
+    "chai": "^4.0.2",
+    "eslint-config-notninja": "^0.1.1",
+    "europa-core": "^4.0.0-alpha13",
+    "europa-test": "^4.0.0-alpha1",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-eslint": "^18.1.0",
-    "grunt-rollup": "^0.7.1",
-    "rollup-plugin-commonjs": "^5.0.3",
-    "rollup-plugin-node-resolve": "^2.0.0",
-    "rollup-plugin-uglify": "^1.0.1",
-    "semver": "^5.3.0"
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-eslint": "^19.0.0",
+    "grunt-mocha-phantomjs": "^4.0.0",
+    "grunt-rollup": "^1.0.1",
+    "load-grunt-tasks": "^3.5.2",
+    "mocha": "^3.4.2",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^2.0.1"
   },
   "main": "dist/europa.js",
   "scripts": {
     "build": "grunt build",
+    "ci": "grunt ci",
     "test": "grunt test"
   }
 }

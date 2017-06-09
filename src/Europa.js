@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Alasdair Mercer, Skelp
+ * Copyright (C) 2017 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,12 @@
  * SOFTWARE.
  */
 
-'use strict'
+'use strict';
 
-var WindowService = require('europa-core/lib/service/window-service').WindowService
+var Europa = require('europa-core');
 
-/**
- * A very simplistic implementation of {@link WindowService} that returns the global <code>Window</code> object to be
- * used for transforming HTML into Markdown.
- *
- * @public
- * @constructor NativeWindowService
- * @extends {WindowService}
- */
-var NativeWindowService = WindowService.extend({
+var BrowserWindowService = require('./service/window/BrowserWindowService');
 
-  /**
-   * @override
-   */
-  getBaseUri: function(window) {
-    return window.document.baseURI
-  },
+Europa.use(new BrowserWindowService());
 
-  /**
-   * @override
-   */
-  getWindow: function() {
-    return window
-  }
-
-})
-
-exports.NativeWindowService = NativeWindowService
+module.exports = Europa;

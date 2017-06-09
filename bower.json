@@ -1,41 +1,38 @@
 {
   "name": "europa",
-  "version": "4.0.0-alpha8",
-  "description": "Library for transforming HTML to Markdown",
-  "homepage": "https://github.com/Skelp/europa",
+  "version": "4.0.0-alpha9",
+  "description": "Library for converting HTML into valid Markdown",
+  "homepage": "https://github.com/NotNinja/europa",
   "authors": [
     {
       "name": "Alasdair Mercer",
-      "email": "alasdair@skelp.io",
-      "homepage": "https://skelp.io"
+      "email": "mercer.alasdair@gmail.com",
+      "homepage": "https://not.ninja"
     }
   ],
   "license": "MIT",
   "keywords": [
     "html",
     "markdown",
-    "transform",
-    "convert"
+    "convert",
+    "converter"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Skelp/europa.git"
+    "url": "https://github.com/NotNinja/europa.git"
   },
   "main": "dist/europa.js",
-  "moduleType": [
-    "amd",
-    "globals",
-    "node"
-  ],
   "ignore": [
-    "lib/",
+    "src/",
     "test/",
     ".*",
     "AUTHORS.md",
     "CHANGES.md",
     "CONTRIBUTING.md",
+    "demo.html",
     "Gruntfile.js",
     "package.json",
+    "package-lock.json",
     "README.md"
   ]
 }
