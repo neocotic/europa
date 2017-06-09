@@ -8,3 +8,8 @@ before_script:
   - npm install -g npm@latest
 script:
   - npm run ci
+notifications:
+  slack:
+    rooms:
+      - secure: WHQ5tkFTGNfiVP3ukCgpJ7ublarl7XYYa4WRuTeU/S+yIUAYLDUyrI1WfAh4oRhLvrqXPL62qsqKbAnNIkUcybvpig7VFddJWJot+RpVICKYuatHNNM/PIhRxyfkYwAX22IkM9d9e3FzAEMywE9uiIZviignh0E7r9wYfDhCSxY=
+    on_success: change

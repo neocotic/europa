@@ -1,6 +1,6 @@
 {
   "name": "europa",
-  "version": "4.0.0-alpha9",
+  "version": "4.0.0",
   "description": "Library for converting HTML into valid Markdown",
   "homepage": "https://github.com/NotNinja/europa",
   "bugs": {
