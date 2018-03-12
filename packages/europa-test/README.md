@@ -1,4 +1,4 @@
-![Europa Test](https://cdn.rawgit.com/NotNinja/europa-branding/master/assets/banner-europa-test/europa-test-banner-710x200.png)
+![Europa Test](https://cdn.rawgit.com/NotNinja/europa-branding/master/assets/banner/europa-test/europa-test-banner-710x200.png)
 
 [Europa Test](https://github.com/NotNinja/europa-test) is a framework for testing
 [Europa Core](https://github.com/NotNinja/europa-core) implementations.
