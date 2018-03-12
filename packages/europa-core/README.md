@@ -1,4 +1,4 @@
-![Europa Core](https://cdn.rawgit.com/NotNinja/europa-branding/master/assets/banner-europa-core/europa-core-banner-742x200.png)
+![Europa Core](https://cdn.rawgit.com/NotNinja/europa-branding/master/assets/banner/europa-core/europa-core-banner-742x200.png)
 
 [Europa Core](https://github.com/NotNinja/europa-core) is the core engine for
 [Europa](https://github.com/NotNinja/europa)'s HTML to Markdown conversion as well as modules to support other
