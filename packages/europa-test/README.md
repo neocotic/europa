@@ -4,8 +4,8 @@
 [Europa Core](https://github.com/NotNinja/europa/tree/master/packages/europa-core) implementations.
 
 [![Build Status](https://img.shields.io/travis/NotNinja/europa/develop.svg?style=flat-square)](https://travis-ci.org/NotNinja/europa)
-[![License](https://img.shields.io/github/license/europa-test.svg?style=flat-square)](https://github.com/NotNinja/europa/blob/master/LICENSE.md)
-[![Release](https://img.shields.io/github/release/europa-test.svg?style=flat-square)](https://github.com/NotNinja/europa/tree/master/packages/europa-test)
+[![License](https://img.shields.io/github/license/NotNinja/europa.svg?style=flat-square)](https://github.com/NotNinja/europa/blob/master/LICENSE.md)
+[![Release](https://img.shields.io/github/release/NotNinja/europa.svg?style=flat-square)](https://github.com/NotNinja/europa/tree/master/packages/europa-test)
 
 * [Install](#install)
 * [API](#api)

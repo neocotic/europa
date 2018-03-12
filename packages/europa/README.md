@@ -1,7 +1,8 @@
 ![Europa](https://cdn.rawgit.com/NotNinja/europa-branding/master/assets/banner/europa/europa-banner-500x200.png)
 
 [Europa](https://github.com/NotNinja/europa/tree/master/packages/europa) is a pure JavaScript library for converting
-HTML into valid Markdown in the browser.
+HTML into valid Markdown in the browser using the
+[Europa Core](https://github.com/NotNinja/europa/tree/master/packages/europa-core) engine.
 
 [![Demo](https://img.shields.io/badge/demo-live-brightgreen.svg?style=flat-square)](https://codepen.io/NotNinja/full/BZjRMK)
 [![Build Status](https://img.shields.io/travis/NotNinja/europa/develop.svg?style=flat-square)](https://travis-ci.org/NotNinja/europa)
@@ -30,7 +31,7 @@ If you want to simply download the file to be used in the browser you can find t
 * [Development Version](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.js) (58kb - [Source Map](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.js.map))
 * [Production Version](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.min.js) (13kb - [Source Map](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.min.js.map))
 
-Check out [node-europa](https://github.com/NotNinja/europa/tree/master/packages/node-europa) if you want to install it
+Check out [Europa Node](https://github.com/NotNinja/europa/tree/master/packages/node-europa) if you want to install it
 for use within [Node.js](https://nodejs.org).
 
 ## Examples
@@ -63,6 +64,8 @@ for use within [Node.js](https://nodejs.org).
 If you have cloned the source code, you can open up `demo.html` in your browser to play around a bit.
 
 ## API
+
+TODO: Improve documentation within monorepo
 
 Simply create an instance of `Europa` and you've done most of the work. You can control many aspects of the HTML to
 Markdown conversion by passing the following options to the constructor:

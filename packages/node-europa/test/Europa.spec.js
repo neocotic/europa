@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Alasdair Mercer, !ninja
+ * Copyright (C) 2018 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +22,15 @@
 
 'use strict';
 
-module.exports = (grunt) => {
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+const EuropaTest = require('europa-test');
+const fs = require('fs');
+const path = require('path');
 
-    eslint: {
-      target: [
-        'src/**/*.js',
-        'test/**/*.js',
-        'index.js'
-      ]
-    },
+const Europa = require('../src/Europa');
 
-    mochaTest: {
-      test: {
-        options: {
-          reporter: 'list'
-        },
-        src: [
-          'test/**/*.spec.js',
-          'test/test.js'
-        ]
-      }
-    }
-  })
-
-  require('load-grunt-tasks')(grunt)
-
-  grunt.registerTask('default', [ 'ci' ]);
-  grunt.registerTask('ci', [ 'eslint', 'mochaTest' ]);
-  grunt.registerTask('test', [ 'eslint', 'mochaTest' ]);
-};
+EuropaTest.test({
+  Europa,
+  loadFixture: (fixturePath, callback) => {
+    fs.readFile(path.resolve(__dirname, path.join('../node_modules/europa-test', fixturePath)), 'utf8', callback);
+  }
+});

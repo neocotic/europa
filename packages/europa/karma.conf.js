@@ -22,7 +22,7 @@
 
 'use strict';
 
-var puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer');
 
 module.exports = function(config) {
   process.env.CHROME_BIN = puppeteer.executablePath();
@@ -48,7 +48,6 @@ module.exports = function(config) {
       '/fixtures/': '/base/node_modules/europa-test/fixtures/'
     },
     reporters: [ 'progress' ],
-    port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,

@@ -2,9 +2,9 @@
   "name": "node-europa",
   "version": "4.0.0",
   "description": "Node.js module for converting HTML into valid Markdown via Europa",
-  "homepage": "https://github.com/NotNinja/node-europa",
+  "homepage": "https://github.com/NotNinja/europa",
   "bugs": {
-    "url": "https://github.com/NotNinja/node-europa/issues"
+    "url": "https://github.com/NotNinja/europa/issues"
   },
   "author": {
     "name": "Alasdair Mercer",
@@ -20,7 +20,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/NotNinja/node-europa.git"
+    "url": "https://github.com/NotNinja/europa.git"
   },
   "dependencies": {
     "commander": "^2.9.0",
@@ -31,23 +31,14 @@
     "nevis": "^0.5.0"
   },
   "devDependencies": {
-    "chai": "^4.0.2",
-    "eslint-config-notninja": "^0.1.1",
-    "europa-test": "^4.0.0",
-    "grunt": "^1.0.1",
-    "grunt-cli": "^1.2.0",
-    "grunt-eslint": "^19.0.0",
-    "grunt-mocha-test": "^0.13.2",
-    "load-grunt-tasks": "^3.5.2",
-    "mocha": "^3.4.2"
+    "europa-test": "^4.0.0"
   },
+  "main": "src/Europa.js",
   "bin": {
     "europa": "bin/europa"
   },
-  "main": "index.js",
   "scripts": {
-    "ci": "grunt ci",
-    "test": "grunt test"
+    "test": "mocha -R tap \"test/**/*.spec.js\""
   },
   "engines": {
     "node": ">=6"

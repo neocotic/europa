@@ -8,6 +8,15 @@
 * feat(europa): Add download links to `README.md` for browser distribution files
 * feat(europa-test): Create `europa-test` framework to help test `europa-core` implementations
 * feat(europa-test): Replace `nodeunit` with `mocha` and `chai`
+* feat(node-europa): Create `node-europa` spefically for using Europa in Node.js
+* feat(node-europa): Rename command from `htmlmd` to `europa`
+* feat(node-europa): Rename `--base` option to `--base-uri`
+* feat(node-europa): Remove `--debug` option
+* feat(node-europa): Remove `--long-ext` option
+* feat(node-europa): Remove `--print` option to simplify I/O streaming
+* feat(node-europa): Remove `man` page (for now at least)
+* feat(node-europa): Upgrade `jsdom` to v11 (no more problems for Windows users!)
+* feat(node-europa): Require Node.js version 6 or newer to be installed to be compatible with `jsdom` v11
 * Rename library to Europa :new_moon: and move package from `html-md` to `europa`
 * Rewrite entire code base from ground up and adopt OOP pattern (no more CoffeeScript)
 * Release fresh code base under MIT license
