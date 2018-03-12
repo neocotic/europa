@@ -42,7 +42,7 @@ module.exports = function(config) {
         watched: false,
         type: 'js'
       },
-      'test/EuropaTest.js'
+      'test/Europa.spec.js'
     ],
     proxies: {
       '/fixtures/': '/base/node_modules/europa-test/fixtures/'
