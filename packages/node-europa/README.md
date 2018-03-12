@@ -1,4 +1,4 @@
-![Europa Node](https://cdn.rawgit.com/NotNinja/europa-branding/master/assets/banner-node-europa/node-europa-banner-754x200.png)
+![Europa Node](https://cdn.rawgit.com/NotNinja/europa-branding/master/assets/banner/node-europa/node-europa-banner-754x200.png)
 
 [Europa Node](https://github.com/NotNinja/node-europa) is a [Node.js](https://nodejs.org) module for converting HTML
 into valid Markdown that uses the [Europa Core](https://github.com/NotNinja/europa-core) engine.
