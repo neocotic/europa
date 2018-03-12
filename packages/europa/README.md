@@ -148,8 +148,9 @@ Europa is fully pluggable and is packed with built-in plugins in order to get fu
 enables the creation of external plugins to further extend Europa's capabilities to support extended Markdown syntax or
 even new HTML elements should they not be added to Europa quick enough for you.
 
-The predefined plugins are included in [Europa Core](https://github.com/NotNinja/europa-core) for now, however, the plan
-is to externalize all of these as well, while keeping them as defaults. The hope is that this will continue to make them
+The predefined plugins are included in
+[Europa Core](https://github.com/NotNinja/europa/tree/master/packages/europa-core) for now, however, the plan is to
+externalize all of these as well, while keeping them as defaults. The hope is that this will continue to make them
 easier to maintain and make Europa more modular.
 
 The API for plugins is simple on a high level, but you'll need to get to grips with the internal API to understand what

@@ -1,18 +1,11 @@
 {
-  "extends": "notninja/es5",
+  "extends": "../../.eslintrc.json",
   "env": {
-    "amd": true,
-    "browser": true,
-    "mocha": true,
-    "node": true
+    "mocha": true
   },
   "rules": {
     "no-extra-parens": "off",
     "no-invalid-this": "off",
-    "no-unused-expressions": "off",
-    "strict": [
-      "error",
-      "function"
-    ]
+    "no-unused-expressions": "off"
   }
 }

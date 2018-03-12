@@ -20,24 +20,24 @@
  * SOFTWARE.
  */
 
-(function() {
-  'use strict';
+'use strict';
 
-  EuropaTest.test({
-    Europa: Europa,
-    loadFixture: function(fixturePath, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', fixturePath, true);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-            callback(null, xhr.responseText);
-          } else {
-            callback(new Error('Could not load fixture over XMLHttpRequest: ' + fixturePath));
-          }
-        }
-      };
-      xhr.send();
-    }
-  });
-}());
+import commonjs from 'rollup-plugin-commonjs';
+import nodeResolve from 'rollup-plugin-node-resolve';
+
+export default {
+  input: 'src/EuropaTest.js',
+  output: {
+    file: 'dist/europa-test.js',
+    format: 'umd',
+    name: 'EuropaTest'
+  },
+  external: [
+    'chai'
+  ],
+  plugins: [
+    nodeResolve({ browser: true }),
+    commonjs()
+  ],
+  sourceMap: true
+};

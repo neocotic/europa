@@ -6,7 +6,8 @@
   },
   "globals": {
     "chai": false,
-    "Europa": false
+    "Europa": false,
+    "EuropaTest": false
   },
   "rules": {
     "callback-return": "off",

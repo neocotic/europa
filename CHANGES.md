@@ -1,5 +1,13 @@
 ## Version 4.0.0, 2017.06.09
 
+* feat(europa): Change global variable to `Europa`
+* feat(europa): Use [Rollup](http://rollupjs.org) to bundle source code into distribution files
+* feat(europa): Replace `component.json` with `bower.json` for proper [Bower](https://bower.io) support
+* feat(europa): Add `demo.html` to allow contributors to experiment and test changes locally
+* feat(europa): Add live demo link to `README.md`
+* feat(europa): Add download links to `README.md` for browser distribution files
+* feat(europa-test): Create `europa-test` framework to help test `europa-core` implementations
+* feat(europa-test): Replace `nodeunit` with `mocha` and `chai`
 * Rename library to Europa :new_moon: and move package from `html-md` to `europa`
 * Rewrite entire code base from ground up and adopt OOP pattern (no more CoffeeScript)
 * Release fresh code base under MIT license
@@ -12,15 +20,6 @@
 * Switch to container-based Travis builds for faster boot times
 * Remove `noConflict` method
 * Remove `version` field
-
-### Specific to `europa`
-
-* Change global variable to `Europa`
-* Use [Rollup](http://rollupjs.org) to bundle source code into distribution files
-* Replace `component.json` with `bower.json` for proper [Bower](https://bower.io) support
-* Add `demo.html` to allow contributors to experiment and test changes locally
-* Add live demo link to `README.md`
-* Add download links to `README.md` for browser distribution files
 
 ## Version 3.1.0, 2016.09.02
 

@@ -29,6 +29,6 @@
     "demo.html",
     "karma.conf.js",
     "package.json",
-    "rollup.config.js"
+    "rollup.config.*.js"
   ]
 }

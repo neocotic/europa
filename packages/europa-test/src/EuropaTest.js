@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Alasdair Mercer, !ninja
+ * Copyright (C) 2018 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,25 +19,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-(function(global, factory) {
-  /* eslint global-require: "off", no-nested-ternary: "off", strict: "off" */
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('chai'))
-  : typeof define === 'function' && define.amd ? define([ 'chai' ], factory)
-  : (global.test = factory(global.chai));
-}(this, (function(chai) {
-  'use strict';
 
-  var expect = chai.expect;
-  var fixtures = [
-    'content',
-    'lists',
-    'scaffolding',
-    'tables',
-    'unformatted-lists',
-    'visibility'
-  ];
+'use strict';
 
-  return function(options) {
+var assert = require('chai').assert;
+var Nevis = require('nevis/lite');
+
+var fixtures = [
+  'content',
+  'lists',
+  'scaffolding',
+  'tables',
+  'unformatted-lists',
+  'visibility'
+];
+
+/**
+ * TODO: Document
+ *
+ * @public
+ * @class
+ * @extends Nevis
+ */
+var EuropaTest = Nevis.extend(null, {
+
+  /**
+   * TODO: Document
+   *
+   * @param {Object} options -
+   * @param {Function} options.Europa -
+   * @param {Function} options.loadFixture -
+   * @return {void}
+   * @public
+   * @static
+   * @memberof EuropaTest
+   */
+  test: function(options) {
     var europa = new options.Europa();
     var loadFixture = options.loadFixture;
 
@@ -69,10 +86,13 @@
           });
 
           it('should correctly convert HTML into Markdown', function() {
-            expect(europa.convert(html)).to.equal(markdown);
+            assert.equal(europa.convert(html), markdown);
           });
         });
       });
     });
-  };
-})));
+  }
+
+});
+
+module.exports = EuropaTest;

@@ -20,24 +20,33 @@
  * SOFTWARE.
  */
 
-(function() {
-  'use strict';
+'use strict';
 
-  EuropaTest.test({
-    Europa: Europa,
-    loadFixture: function(fixturePath, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', fixturePath, true);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-            callback(null, xhr.responseText);
-          } else {
-            callback(new Error('Could not load fixture over XMLHttpRequest: ' + fixturePath));
-          }
-        }
-      };
-      xhr.send();
-    }
-  });
-}());
+import commonjs from 'rollup-plugin-commonjs';
+import nodeResolve from 'rollup-plugin-node-resolve';
+import uglify from 'rollup-plugin-uglify';
+
+import pkg from './package.json';
+
+export default {
+  input: 'src/EuropaTest.js',
+  output: {
+    file: 'dist/europa-test.min.js',
+    format: 'umd',
+    name: 'EuropaTest'
+  },
+  banner: `/*! EuropaTest v${pkg.version} | (C) ${new Date().getFullYear()} ${pkg.author.name}, !ninja | ${pkg.license} License */`,
+  external: [
+    'chai'
+  ],
+  plugins: [
+    nodeResolve({ browser: true }),
+    commonjs(),
+    uglify({
+      output: {
+        comments: (node, comment) => comment.type === 'comment2' && /^\!/.test(comment.value)
+      }
+    })
+  ],
+  sourceMap: true
+};

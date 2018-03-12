@@ -1,5 +1,3 @@
+src/
 .*
-AUTHORS.md
-CHANGES.md
-CONTRIBUTING.md
-README.md
+rollup.config.*.js

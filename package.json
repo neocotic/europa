@@ -17,7 +17,7 @@
     "build": "lerna run build",
     "lint": "eslint .",
     "pretest": "npm run lint && npm run build",
-    "test": "lerna exec -- karma start"
+    "test": "lerna exec --ignore europa-test -- karma start"
   },
   "engines": {
     "node": ">=6"

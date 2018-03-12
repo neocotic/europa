@@ -34,7 +34,7 @@ module.exports = function(config) {
     ],
     files: [
       'dist/europa.js',
-      'node_modules/europa-test/test.js',
+      'node_modules/europa-test/dist/europa-test.js',
       {
         pattern: 'node_modules/europa-test/fixtures/**/*',
         included: false,
