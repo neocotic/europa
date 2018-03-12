@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Alasdair Mercer, !ninja
+ * Copyright (C) 2018 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,26 +20,30 @@
  * SOFTWARE.
  */
 
-/* global test: false */
+'use strict';
 
-(function() {
-  'use strict';
+import commonjs from 'rollup-plugin-commonjs';
+import nodeResolve from 'rollup-plugin-node-resolve';
+import uglify from 'rollup-plugin-uglify';
 
-  test({
-    Europa: Europa,
-    loadFixture: function(fixturePath, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', '../node_modules/europa-test' + fixturePath, true);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-            callback(null, xhr.responseText);
-          } else {
-            callback(new Error('Could not load fixture over XMLHttpRequest: ' + fixturePath));
-          }
-        }
-      };
-      xhr.send();
-    }
-  });
-}());
+import pkg from './package.json';
+
+export default {
+  input: 'src/Europa.js',
+  output: {
+    file: 'dist/europa.min.js',
+    format: 'umd',
+    name: 'Europa'
+  },
+  banner: `/*! Europa v${pkg.version} | (C) ${new Date().getFullYear()} ${pkg.author.name}, !ninja | ${pkg.license} License */`,
+  sourceMap: true,
+  plugins: [
+    nodeResolve({ browser: true }),
+    commonjs(),
+    uglify({
+      output: {
+        comments: (node, comment) => comment.type === 'comment2' && /^\!/.test(comment.value)
+      }
+    })
+  ]
+};

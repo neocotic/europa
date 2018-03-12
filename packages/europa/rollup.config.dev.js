@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Alasdair Mercer, !ninja
+ * Copyright (C) 2018 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,19 @@
 
 'use strict';
 
-var Europa = require('europa-core');
+import commonjs from 'rollup-plugin-commonjs';
+import nodeResolve from 'rollup-plugin-node-resolve';
 
-var BrowserWindowService = require('./service/window/BrowserWindowService');
-
-Europa.use(new BrowserWindowService());
-
-module.exports = Europa;
+export default {
+  input: 'src/Europa.js',
+  output: {
+    file: 'dist/europa.js',
+    format: 'umd',
+    name: 'Europa'
+  },
+  sourceMap: true,
+  plugins: [
+    nodeResolve({ browser: true }),
+    commonjs()
+  ]
+};

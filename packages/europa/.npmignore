@@ -1,0 +1,7 @@
+src/
+test/
+.*
+bower.json
+demo.html
+karma.conf.js
+rollup.config.js

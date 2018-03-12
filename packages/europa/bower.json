@@ -26,13 +26,9 @@
     "src/",
     "test/",
     ".*",
-    "AUTHORS.md",
-    "CHANGES.md",
-    "CONTRIBUTING.md",
     "demo.html",
-    "Gruntfile.js",
+    "karma.conf.js",
     "package.json",
-    "package-lock.json",
-    "README.md"
+    "rollup.config.js"
   ]
 }

@@ -1,2 +1,5 @@
-dist/
-Gruntfile.js
+packages/*/node_modules/
+packages/*/dist/
+packages/*/Gruntfile.js
+packages/*/karma.conf.js
+packages/*/rollup.config.*.js
