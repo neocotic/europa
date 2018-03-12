@@ -1,4 +1,4 @@
-![Europa](https://cdn.rawgit.com/NotNinja/europa-branding/master/assets/banner-europa/europa-banner-500x200.png)
+![Europa](https://cdn.rawgit.com/NotNinja/europa-branding/master/assets/banner/europa/europa-banner-500x200.png)
 
 [Europa](https://github.com/NotNinja/europa) is a pure JavaScript library for converting HTML into valid Markdown.
 
