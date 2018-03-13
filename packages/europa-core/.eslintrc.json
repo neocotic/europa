@@ -1,8 +1,5 @@
 {
-  "extends": "notninja/es5",
-  "env": {
-    "node": true
-  },
+  "extends": "../../.eslintrc.json",
   "rules": {
     "no-empty-function": "off",
     "no-invalid-this": "off",

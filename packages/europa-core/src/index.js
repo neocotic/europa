@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Alasdair Mercer, !ninja
+ * Copyright (C) 2018 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 
 'use strict';
 
-var Europa = require('./src/Europa');
-require('./src/plugin/preset/default');
+var Europa = require('./Europa');
+require('./plugin/preset/default');
 
 module.exports = Europa;

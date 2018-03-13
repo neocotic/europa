@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Alasdair Mercer, !ninja
+ * Copyright (C) 2018 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,8 +50,7 @@ var Europa = Nevis.extend(function(options) {
       return serviceManager.getService('window').getDefaultBaseUri();
     }),
     new Option('inline', false)
-  ])
-  .parse(options);
+  ]).parse(options);
   this._window = null;
 }, {
 

@@ -2,9 +2,9 @@
   "name": "europa-core",
   "version": "4.0.0",
   "description": "Europa core engine for converting HTML into valid Markdown",
-  "homepage": "https://github.com/NotNinja/europa-core",
+  "homepage": "https://github.com/NotNinja/europa",
   "bugs": {
-    "url": "https://github.com/NotNinja/europa-core/issues"
+    "url": "https://github.com/NotNinja/europa/issues"
   },
   "author": {
     "name": "Alasdair Mercer",
@@ -22,18 +22,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/NotNinja/europa-core.git"
+    "url": "https://github.com/NotNinja/europa.git"
   },
   "dependencies": {
     "nevis": "^0.5.0"
   },
-  "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-notninja": "^0.1.1"
-  },
-  "main": "index.js",
-  "scripts": {
-    "ci": "npm run test",
-    "test": "eslint \"index.js\" \"src/**/*.js\""
-  }
+  "main": "src/index.js"
 }

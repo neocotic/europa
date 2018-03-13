@@ -998,8 +998,7 @@ var Europa = lite.extend(function(options) {
       return serviceManager.getService('window').getDefaultBaseUri();
     }),
     new Option_1('inline', false)
-  ])
-  .parse(options);
+  ]).parse(options);
   this._window = null;
 }, {
 
@@ -2187,7 +2186,7 @@ var UnorderedListPlugin = Plugin_1.extend({
 
 Europa_1.register(new UnorderedListPlugin());
 
-var europaCore = Europa_1;
+var src = Europa_1;
 
 /**
  * Defines a service contract that must be met by all implementations.
@@ -2317,9 +2316,9 @@ var BrowserWindowService = WindowService_1.extend({
 
 var BrowserWindowService_1 = BrowserWindowService;
 
-europaCore.use(new BrowserWindowService_1());
+src.use(new BrowserWindowService_1());
 
-var Europa_1$1 = europaCore;
+var Europa_1$1 = src;
 
 return Europa_1$1;
 
