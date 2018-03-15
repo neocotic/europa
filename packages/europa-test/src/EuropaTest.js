@@ -35,7 +35,9 @@ var fixtures = [
 ];
 
 /**
- * TODO: Document
+ * A test runner for Europa Core test case based on a specific implementation.
+ *
+ * Mocha <b>must</b> be available in the current context when using <code>EuropaTest</code>.
  *
  * @public
  * @class
@@ -44,11 +46,12 @@ var fixtures = [
 var EuropaTest = Nevis.extend(null, {
 
   /**
-   * TODO: Document
+   * Runs the Europa Core test cases based on the <code>options</code> provided.
    *
-   * @param {Object} options -
-   * @param {Function} options.Europa -
-   * @param {Function} options.loadFixture -
+   * @param {Object} options - the options to be used
+   * @param {Function} options.Europa - the constructor for the {@link Europa} implementation to be tested
+   * @param {Function} options.loadFixture - a function that is passed the path of fixtures (relative to
+   * <code>europa-test</code>) to be loaded asynchronously
    * @return {void}
    * @public
    * @static

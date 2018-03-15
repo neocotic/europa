@@ -65,28 +65,13 @@ If you have cloned the source code, you can open up `demo.html` in your browser 
 
 ## API
 
-TODO: Improve documentation within monorepo
-
 Simply create an instance of `Europa` and you've done most of the work. You can control many aspects of the HTML to
 Markdown conversion by passing the following options to the constructor:
 
-| Option   | Type    | Description                                                                                | Default              |
-| -------- | ------- | ------------------------------------------------------------------------------------------ | -------------------- |
-| absolute | Boolean | Whether absolute URLS should be used for anchors/images                                    | `false`              |
-| baseUri  | String  | The base URI for the window (ignored in environments where the base URI cannot be changed) | Environment-specific |
-| inline   | Boolean | Whether anchor/image URLs are to be inserted inline                                        | `false`              |
-
-``` javascript
-var europa = new Europa({
-  absolute: true,
-  baseUri: 'http://example.com',
-  inline: true
-});
-```
-
-The `baseUri` option is ignored by environments where the base URI cannot be changed (e.g. browsers), however, some
-environments may support it and, in those cases, a default base URI is also provided. See the documentation for the
-implementation for more details on their default base URI.
+| Option   | Type    | Description                                             | Default |
+| -------- | ------- | ------------------------------------------------------- | ------- |
+| absolute | Boolean | Whether absolute URLS should be used for anchors/images | `false` |
+| inline   | Boolean | Whether anchor/image URLs are to be inserted inline     | `false` |
 
 ### `convert(html)`
 
@@ -108,42 +93,6 @@ div.innerHTML = 'Please keep my <span style="display: none">treasure</span> secr
 europa.convert(div);
 //=> "Please keep my secret safe..."
 ```
-
-## `release()`
-
-Releases the window being used.
-
-Some environments use virtual windows and, since each `Europa` instance will have its own window, calling this method
-when you're done with the instance can help to free up resources.
-
-However, a new window will be used if you attempt to call `convert` on the same instance. So you don't have to worry
-about creating lots of instances, just ensuring that you `release` them after its done its job to free up resources.
-
-Windows are only ever created when `convert` is called and *not* when you instantiate `Europa`!
-
-You may well want to keep the window "open" in order to speed up consecutive conversions (e.g. in an iteration).
-
-``` javascript
-var europa = new Europa({ inline: true });
-
-var input = [
-  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>',
-  '<p>Etiam sed felis ligula. Maecenas sit amet tristique risus...</p>',
-  '<p>In dictum consequat nulla at lobortis...</p>'
-];
-var output = input.map(function(html) {
-  return europa.convert(html);
-});
-
-europa.release();
-
-// ...
-
-europa.convert('Wow! <a href="https://github.com/NotNinja/europa">Europa</a> is awesome!');
-//=> "Wow! [Europa](https://github.com/NotNinja/europa) is awesome!"
-```
-
-Other environments (e.g. browsers) should never have to worry about calling this method.
 
 ## Plugins
 
