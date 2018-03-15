@@ -4,12 +4,6 @@
     "node": true
   },
   "rules": {
-    "no-invalid-this": "off",
-    "no-unused-vars": [
-      "error",
-      {
-        "args": "none"
-      }
-    ]
+    "no-invalid-this": "off"
   }
 }

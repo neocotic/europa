@@ -4,8 +4,6 @@
     "mocha": true
   },
   "rules": {
-    "no-extra-parens": "off",
-    "no-invalid-this": "off",
-    "no-unused-expressions": "off"
+    "no-invalid-this": "off"
   }
 }
