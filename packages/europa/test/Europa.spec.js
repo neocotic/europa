@@ -28,7 +28,7 @@
     loadFixture(fixturePath, callback) {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', fixturePath, true);
-      xhr.onreadystatechange = function() {
+      xhr.onreadystatechange = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status === 200) {
             callback(null, xhr.responseText);
