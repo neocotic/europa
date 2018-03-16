@@ -45,14 +45,14 @@ framework on demand.
 Most modules that use Europa Test will look something like the following:
 
 ``` javascript
-var EuropaTest = require('europa-test');
+const EuropaTest = require('europa-test');
 
-var Europa = require('../path/to/ExampleEuropa');
+const Europa = require('../path/to/ExampleEuropa');
 
 EuropaTest.test({
-  Europa: Europa,
-  loadFixture: function(fixturePath, callback) {
-    someAsyncFileLoader('../path/to/node_modules/europa-test' + fixturePath, callback);
+  Europa,
+  loadFixture(fixturePath, callback) {
+    someAsyncFileLoader(`../path/to/node_modules/europa-test${fixturePath}`, callback);
   }
 });
 ```

@@ -48,11 +48,11 @@ for use within [Node.js](https://nodejs.org).
     <script src="/path/to/europa.js"></script>
     <script>
       (function() {
-        var europa = new Europa();
-        var html = document.getElementById('html');
-        var markdown = document.getElementById('markdown');
+        const europa = new Europa();
+        const html = document.getElementById('html');
+        const markdown = document.getElementById('markdown');
 
-        html.addEventListener('input', function() {
+        html.addEventListener('input', () => {
           markdown.value = europa.convert(html.value);
         });
       }());
@@ -80,14 +80,14 @@ Converts the specified `html` into Markdown.
 `html` can either be an HTML string or a DOM element whose HTML contents are to be converted into Markdown.
 
 ``` javascript
-var europa = new Europa();
+const europa = new Europa();
 
 europa.convert('<blockquote>This <i>is</i> great!</blockquote>');
 //=> "> This *is* great!"
 europa.convert(document.querySelector('.lead'));
 //=> "We ♥ **Europa**!"
 
-var div = document.createElement('div');
+const div = document.createElement('div');
 div.innerHTML = 'Please keep my <span style="display: none">treasure</span> secret safe...';
 
 europa.convert(div);
@@ -109,14 +109,14 @@ The API for plugins is simple on a high level, but you'll need to get to grips w
 you can really do:
 
 ``` javascript
-var ExamplePlugin = Europa.Plugin.extend({
-  after: function(conversion, context) { /* ... */ },
-  afterAll: function(conversion) { /* ... */ },
-  before: function(conversion, context) { /* ... */ },
-  beforeAll: function(conversion) { /* ... */ },
-  convert: function(conversion, context) { /* ... */ },
-  getTagNames: function() { /* ... */ }
-});
+class ExamplePlugin extends Europa.Plugin {
+  after(conversion, context) { /* ... */ }
+  afterAll(conversion) { /* ... */ }
+  before(conversion, context) { /* ... */ }
+  beforeAll(conversion) { /* ... */ }
+  convert(conversion, context) { /* ... */ }
+  getTagNames() { /* ... */ }
+}
 
 Europa.register(new ExamplePlugin());
 ```
