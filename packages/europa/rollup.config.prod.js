@@ -41,7 +41,13 @@ export default {
   plugins: [
     nodeResolve(),
     commonjs(),
-    babel(),
+    babel({
+      babelrc: false,
+      presets: [
+        [ 'env', { modules: false } ]
+      ],
+      plugins: [ 'external-helpers' ]
+    }),
     uglify({
       output: {
         comments: (node, comment) => comment.type === 'comment2' && /^\!/.test(comment.value)

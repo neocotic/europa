@@ -38,6 +38,7 @@ export default {
     nodeResolve(),
     commonjs(),
     babel({
+      babelrc: false,
       presets: [
         [ 'env', { modules: false } ]
       ],
