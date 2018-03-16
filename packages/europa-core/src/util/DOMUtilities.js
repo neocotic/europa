@@ -22,16 +22,12 @@
 
 'use strict';
 
-var Nevis = require('nevis/lite');
-
 /**
  * Contains utility methods that are useful when dealing with the DOM.
  *
  * @public
- * @class
- * @extends Nevis
  */
-var DOMUtilities = Nevis.extend(null, {
+class DOMUtilities {
 
   /**
    * Checks whether the specified <code>element</code> is currently visible using the <code>window</code> provided.
@@ -43,15 +39,13 @@ var DOMUtilities = Nevis.extend(null, {
    * @param {Window} window - the window to be used
    * @return {boolean} <code>true</code> if <code>element</code> is visible; otherwise <code>false</code>.
    * @public
-   * @static
-   * @memberof DOMUtilities
    */
-  isVisible: function(element, window) {
-    var style = window.getComputedStyle(element);
+  static isVisible(element, window) {
+    const style = window.getComputedStyle(element);
 
     return style.getPropertyValue('display') !== 'none' && style.getPropertyValue('visibility') !== 'hidden';
   }
 
-});
+}
 
 module.exports = DOMUtilities;

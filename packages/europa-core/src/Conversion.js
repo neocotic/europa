@@ -22,9 +22,39 @@
 
 'use strict';
 
-var Nevis = require('nevis/lite');
+const Utilities = require('./util/Utilities');
 
-var Utilities = require('./util/Utilities');
+const replacements = {
+  '\\\\': '\\\\',
+  '\\[': '\\[',
+  '\\]': '\\]',
+  '>': '\\>',
+  '_': '\\_',
+  '\\*': '\\*',
+  '`': '\\`',
+  '#': '\\#',
+  '([0-9])\\.(\\s|$)': '$1\\.$2',
+  '\u00a9': '(c)',
+  '\u00ae': '(r)',
+  '\u2122': '(tm)',
+  '\u00a0': ' ',
+  '\u00b7': '\\*',
+  '\u2002': ' ',
+  '\u2003': ' ',
+  '\u2009': ' ',
+  '\u2018': '\'',
+  '\u2019': '\'',
+  '\u201c': '"',
+  '\u201d': '"',
+  '\u2026': '...',
+  '\u2013': '--',
+  '\u2014': '---'
+};
+const replacementsRegExp = {};
+
+Utilities.forOwn(replacements, (value, key) => {
+  replacementsRegExp[key] = new RegExp(key, 'g');
+});
 
 /**
  * Contains contextual information for a single conversion process.
@@ -32,141 +62,127 @@ var Utilities = require('./util/Utilities');
  * @param {Europa} europa - the {@link Europa} instance responsible for this conversion
  * @param {Europa~Options} options - the options to be used
  * @public
- * @class
- * @extends Nevis
  */
-var Conversion = Nevis.extend(function(europa, options) {
-  /**
-   * The {@link Europa} instance responsible for this {@link Conversion}.
-   *
-   * @public
-   * @type {Europa}
-   * @memberof Conversion#
-   */
-  this.europa = europa;
+class Conversion {
 
-  /**
-   * The options for this {@link Conversion}.
-   *
-   * @public
-   * @type {Europa~Options}
-   * @memberof Conversion#
-   */
-  this.options = options;
+  constructor(europa, options) {
+    /**
+     * The {@link Europa} instance responsible for this {@link Conversion}.
+     *
+     * @public
+     * @type {Europa}
+     */
+    this.europa = europa;
 
-  /**
-   * Whether the buffer is at the start of the current line.
-   *
-   * @public
-   * @type {boolean}
-   * @memberof Conversion#
-   */
-  this.atLeft = true;
+    /**
+     * The options for this {@link Conversion}.
+     *
+     * @public
+     * @type {Europa~Options}
+     */
+    this.options = options;
 
-  /**
-   * Whether any white space should be removed from the start of the next output.
-   *
-   * @public
-   * @type {boolean}
-   * @memberof Conversion#
-   */
-  this.atNoWhiteSpace = true;
+    /**
+     * Whether the buffer is at the start of the current line.
+     *
+     * @public
+     * @type {boolean}
+     */
+    this.atLeft = true;
 
-  /**
-   * Whether the buffer is at the start of a paragraph.
-   *
-   * @public
-   * @type {boolean}
-   * @memberof Conversion#
-   */
-  this.atParagraph = true;
+    /**
+     * Whether any white space should be removed from the start of the next output.
+     *
+     * @public
+     * @type {boolean}
+     */
+    this.atNoWhiteSpace = true;
 
-  /**
-   * The conversion output buffer to which the Markdown will be written.
-   *
-   * @public
-   * @type {string}
-   * @memberof Conversion#
-   */
-  this.buffer = '';
+    /**
+     * Whether the buffer is at the start of a paragraph.
+     *
+     * @public
+     * @type {boolean}
+     */
+    this.atParagraph = true;
 
-  /**
-   * The context for this {@link Conversion}.
-   *
-   * @public
-   * @type {Object.<string, *>}
-   * @memberof Conversion#
-   */
-  this.context = {};
+    /**
+     * The conversion output buffer to which the Markdown will be written.
+     *
+     * @public
+     * @type {string}
+     */
+    this.buffer = '';
 
-  /**
-   * Whether the buffer is currently within a code block.
-   *
-   * @public
-   * @type {boolean}
-   * @memberof Conversion#
-   */
-  this.inCodeBlock = false;
+    /**
+     * The context for this {@link Conversion}.
+     *
+     * @public
+     * @type {Object.<string, *>}
+     */
+    this.context = {};
 
-  /**
-   * Whether the buffer is currently within an ordered list.
-   *
-   * @public
-   * @type {boolean}
-   * @memberof Conversion#
-   */
-  this.inOrderedList = false;
+    /**
+     * Whether the buffer is currently within a code block.
+     *
+     * @public
+     * @type {boolean}
+     */
+    this.inCodeBlock = false;
 
-  /**
-   * Whether the buffer is currently within a preformatted block.
-   *
-   * @public
-   * @type {boolean}
-   * @memberof Conversion#
-   */
-  this.inPreformattedBlock = false;
+    /**
+     * Whether the buffer is currently within an ordered list.
+     *
+     * @public
+     * @type {boolean}
+     */
+    this.inOrderedList = false;
 
-  /**
-   * The last string to be output next to the buffer.
-   *
-   * @public
-   * @type {string}
-   * @memberof Conversion#
-   */
-  this.last = null;
+    /**
+     * Whether the buffer is currently within a preformatted block.
+     *
+     * @public
+     * @type {boolean}
+     */
+    this.inPreformattedBlock = false;
 
-  /**
-   * The start of the current line.
-   *
-   * @public
-   * @type {string}
-   * @memberof Conversion#
-   */
-  this.left = '\n';
+    /**
+     * The last string to be output next to the buffer.
+     *
+     * @public
+     * @type {string}
+     */
+    this.last = null;
 
-  /**
-   * The depth of nested lists.
-   *
-   * @public
-   * @type {number}
-   * @memberof Conversion#
-   */
-  this.listDepth = 0;
+    /**
+     * The start of the current line.
+     *
+     * @public
+     * @type {string}
+     */
+    this.left = '\n';
 
-  /**
-   * The one-based index for the current list item within the current list.
-   *
-   * @public
-   * @type {number}
-   * @memberof Conversion#
-   */
-  this.listIndex = 1;
+    /**
+     * The depth of nested lists.
+     *
+     * @public
+     * @type {number}
+     */
+    this.listDepth = 0;
 
-  this._document = europa.document;
-  this._element = null;
-  this._tagName = null;
-  this._window = europa.window;
-}, {
+    /**
+     * The one-based index for the current list item within the current list.
+     *
+     * @public
+     * @type {number}
+     */
+    this.listIndex = 1;
+
+    this._document = europa.document;
+    this._element = null;
+    this._tagName = null;
+    this._window = europa.window;
+  }
 
   /**
    * Appends the last output string to the buffer and then queues the specified <code>string</code> to be output.
@@ -174,9 +190,8 @@ var Conversion = Nevis.extend(function(europa, options) {
    * @param {string} string - the string to be appended
    * @return {Conversion} A reference to this {@link Conversion} for chaining purposes.
    * @public
-   * @memberof Conversion#
    */
-  append: function(string) {
+  append(string) {
     if (this.last != null) {
       this.buffer += this.last;
     }
@@ -184,16 +199,15 @@ var Conversion = Nevis.extend(function(europa, options) {
     this.last = string;
 
     return this;
-  },
+  }
 
   /**
    * Appends a paragraph to the output buffer.
    *
    * @return {Conversion} A reference to this {@link Conversion} for chaining purposes.
    * @public
-   * @memberof Conversion#
    */
-  appendParagraph: function() {
+  appendParagraph() {
     if (this.atParagraph) {
       return this;
     }
@@ -210,7 +224,7 @@ var Conversion = Nevis.extend(function(europa, options) {
     this.atParagraph = true;
 
     return this;
-  },
+  }
 
   /**
    * Outputs the specified <code>string</code> to the buffer.
@@ -222,9 +236,8 @@ var Conversion = Nevis.extend(function(europa, options) {
    * @param {boolean} [clean=false] - <code>true</code> to clean <code>string</code>; otherwise <code>false</code>
    * @return {Conversion} A reference to this {@link Conversion} for chaining purposes.
    * @public
-   * @memberof Conversion#
    */
-  output: function(string, clean) {
+  output(string, clean) {
     if (!string) {
       return this;
     }
@@ -236,8 +249,8 @@ var Conversion = Nevis.extend(function(europa, options) {
         .replace(/\n[ \t]+/g, '\n')
         .replace(/[ \t]+/g, ' ');
 
-      Utilities.forOwn(Conversion.replacements, function(value, key) {
-        string = string.replace(Conversion.replacementsRegExp[key], value);
+      Utilities.forOwn(replacements, (value, key) => {
+        string = string.replace(replacementsRegExp[key], value);
       });
     }
 
@@ -260,7 +273,7 @@ var Conversion = Nevis.extend(function(europa, options) {
     this.atParagraph = /\n{2}$/.test(string);
 
     return this.append(string.replace(/\n/g, this.left));
-  },
+  }
 
   /**
    * Replaces the start of the current line with the <code>string</code> provided.
@@ -268,9 +281,8 @@ var Conversion = Nevis.extend(function(europa, options) {
    * @param {string} string - the string to replace the start of the current line
    * @return {Conversion} A reference to this {@link Conversion} for chaining purposes.
    * @public
-   * @memberof Conversion#
    */
-  replaceLeft: function(string) {
+  replaceLeft(string) {
     if (!this.atLeft) {
       this.append(this.left.replace(/[ ]{2,4}$/, string));
 
@@ -284,156 +296,81 @@ var Conversion = Nevis.extend(function(europa, options) {
     return this;
   }
 
-}, {
-
   /**
-   * A map of special characters and their replacements.
+   * Returns the current document for this {@link Conversion}.
    *
-   * @public
-   * @static
-   * @type {Object.<string, string>}
-   * @memberof Conversion
-   */
-  replacements: {
-    '\\\\': '\\\\',
-    '\\[': '\\[',
-    '\\]': '\\]',
-    '>': '\\>',
-    '_': '\\_',
-    '\\*': '\\*',
-    '`': '\\`',
-    '#': '\\#',
-    '([0-9])\\.(\\s|$)': '$1\\.$2',
-    '\u00a9': '(c)',
-    '\u00ae': '(r)',
-    '\u2122': '(tm)',
-    '\u00a0': ' ',
-    '\u00b7': '\\*',
-    '\u2002': ' ',
-    '\u2003': ' ',
-    '\u2009': ' ',
-    '\u2018': '\'',
-    '\u2019': '\'',
-    '\u201c': '"',
-    '\u201d': '"',
-    '\u2026': '...',
-    '\u2013': '--',
-    '\u2014': '---'
-  },
-
-  /**
-   * A map of special characters and the regular expression used to identify them.
+   * This may not be the same document as is associated with the {@link Europa} instance as this document may be
+   * nested (e.g. a frame).
    *
+   * @return {?Document} The current document.
    * @public
-   * @static
-   * @type {Object.<string, RegExp>}
-   * @memberof Conversion
    */
-  replacementsRegExp: {}
-
-});
-
-Object.defineProperties(Conversion.prototype, {
-
-  document: {
-    /**
-     * Returns the current document for this {@link Conversion}.
-     *
-     * This may not be the same document as is associated with the {@link Europa} instance as this document may be
-     * nested (e.g. a frame).
-     *
-     * @return {Document} The current document.
-     * @public
-     * @memberof Conversion#
-     * @alias document
-     */
-    get: function() {
-      return this._document;
-    }
-  },
-
-  element: {
-    /**
-     * Returns the current element for this {@link Conversion}.
-     *
-     * @return {Element} The current element.
-     * @public
-     * @memberof Conversion#
-     * @alias element
-     */
-    get: function() {
-      return this._element;
-    },
-
-    /**
-     * Sets the current element for this {@link Conversion} to <code>element</code>.
-     *
-     * @param {Element} element - the current element to be set
-     * @return {void}
-     * @public
-     * @memberof Conversion#
-     * @alias element
-     */
-    set: function(element) {
-      this._element = element;
-      this._tagName = element && element.tagName ? element.tagName.toLowerCase() : null;
-    }
-  },
-
-  tagName: {
-    /**
-     * Returns the name of the tag for the current element for this {@link Conversion}.
-     *
-     * The tag name will always be in lower case, when available.
-     *
-     * @return {string} The current element's tag name.
-     * @public
-     * @memberof Conversion#
-     * @alias tagName
-     */
-    get: function() {
-      return this._tagName;
-    }
-  },
-
-  window: {
-    /**
-     * Returns the current window for this {@link Conversion}.
-     *
-     * This may not be the same window as is associated with the {@link Europa} instance as this window may be nested
-     * (e.g. a frame).
-     *
-     * @return {Window} The current window.
-     * @public
-     * @memberof Conversion#
-     * @alias window
-     */
-    get: function() {
-      return this._window;
-    },
-
-    /**
-     * Sets the current window for this {@link Conversion} to <code>window</code>.
-     *
-     * This may not be the same window as is associated with the {@link Europa} instance as this window may be nested
-     * (e.g. a frame).
-     *
-     * @param {Window} window - the window to be set
-     * @return {void}
-     * @public
-     * @memberof Conversion#
-     * @alias window
-     */
-    set: function(window) {
-      this._window = window;
-      this._document = window ? window.document : null;
-    }
+  get document() {
+    return this._document;
   }
 
-});
+  /**
+   * Returns the current element for this {@link Conversion}.
+   *
+   * @return {?Element} The current element.
+   * @public
+   */
+  get element() {
+    return this._element;
+  }
 
-Utilities.forOwn(Conversion.replacements, function(value, key) {
-  Conversion.replacementsRegExp[key] = new RegExp(key, 'g');
-});
+  /**
+   * Sets the current element for this {@link Conversion} to <code>element</code>.
+   *
+   * @param {?Element} element - the current element to be set
+   * @return {void}
+   * @public
+   */
+  set element(element) {
+    this._element = element;
+    this._tagName = element && element.tagName ? element.tagName.toLowerCase() : null;
+  }
+
+  /**
+   * Returns the name of the tag for the current element for this {@link Conversion}.
+   *
+   * The tag name will always be in lower case, when available.
+   *
+   * @return {?string} The current element's tag name.
+   * @public
+   */
+  get tagName() {
+    return this._tagName;
+  }
+
+  /**
+   * Returns the current window for this {@link Conversion}.
+   *
+   * This may not be the same window as is associated with the {@link Europa} instance as this window may be nested
+   * (e.g. a frame).
+   *
+   * @return {?Window} The current window.
+   * @public
+   */
+  get window() {
+    return this._window;
+  }
+
+  /**
+   * Sets the current window for this {@link Conversion} to <code>window</code>.
+   *
+   * This may not be the same window as is associated with the {@link Europa} instance as this window may be nested
+   * (e.g. a frame).
+   *
+   * @param {?Window} window - the window to be set
+   * @return {void}
+   * @public
+   */
+  set window(window) {
+    this._window = window;
+    this._document = window ? window.document : null;
+  }
+
+}
 
 module.exports = Conversion;

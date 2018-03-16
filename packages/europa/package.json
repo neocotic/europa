@@ -23,6 +23,9 @@
     "url": "https://github.com/NotNinja/europa.git"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
     "europa-core": "^4.0.0",
     "europa-test": "^4.0.0",
     "karma": "^2.0.0",
@@ -33,6 +36,7 @@
     "npm-run-all": "^4.1.2",
     "puppeteer": "^1.1.1",
     "rollup": "^0.56.5",
+    "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-node-resolve": "^3.2.0",
     "rollup-plugin-uglify": "^3.0.0"

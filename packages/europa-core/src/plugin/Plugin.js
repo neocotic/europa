@@ -22,16 +22,12 @@
 
 'use strict';
 
-var Nevis = require('nevis/lite');
-
 /**
  * A plugin that can tap into multiple parts in the conversion process while being specific to only a sub-set of tags.
  *
  * @public
- * @class
- * @extends Nevis
  */
-var Plugin = Nevis.extend({
+class Plugin {
 
   /**
    * Called after {@link Plugin#convert} <b>and</b> only once all children elements have been converted as well,
@@ -44,9 +40,8 @@ var Plugin = Nevis.extend({
    * @param {Object.<string, *>} context - the current context for this {@link Plugin}
    * @return {void}
    * @public
-   * @memberof Plugin#
    */
-  after: function(conversion, context) {},
+  after(conversion, context) {}
 
   /**
    * Called before any elements are converted and intended to setup this {@link Plugin} initially.
@@ -54,9 +49,8 @@ var Plugin = Nevis.extend({
    * @param {Conversion} conversion - the current {@link Conversion}
    * @return {void}
    * @public
-   * @memberof Plugin#
    */
-  afterAll: function(conversion) {},
+  afterAll(conversion) {}
 
   /**
    * Called immediately before {@link Plugin#convert} and intended for preparing this {@link Plugin} for conversion.
@@ -68,9 +62,8 @@ var Plugin = Nevis.extend({
    * @param {Object.<string, *>} context - the current context for this {@link Plugin}
    * @return {void}
    * @public
-   * @memberof Plugin#
    */
-  before: function(conversion, context) {},
+  before(conversion, context) {}
 
   /**
    * Called after all elements have been converted and intended to completing any steps for this {@link Plugin}.
@@ -78,9 +71,8 @@ var Plugin = Nevis.extend({
    * @param {Conversion} conversion - the current {@link Conversion}
    * @return {void}
    * @public
-   * @memberof Plugin#
    */
-  beforeAll: function(conversion) {},
+  beforeAll(conversion) {}
 
   /**
    * Converts the current element within the specified <code>conversion</code> which can be used to provide control over
@@ -94,23 +86,21 @@ var Plugin = Nevis.extend({
    * @return {boolean} <code>true</code> if the children of the current element should be converted; otherwise
    * <code>false</code>.
    * @public
-   * @memberof Plugin#
    */
-  convert: function(conversion, context) {
+  convert(conversion, context) {
     return true;
-  },
+  }
 
   /**
    * Returns the names of tags with which this {@link Plugin} should be registered to handle.
    *
    * @return {string[]} The names of supported tags.
    * @public
-   * @memberof Plugin#
    */
-  getTagNames: function() {
+  getTagNames() {
     return [];
   }
 
-});
+}
 
 module.exports = Plugin;

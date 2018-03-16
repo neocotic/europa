@@ -22,37 +22,35 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs the contents of nested frame.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var FramePlugin = Plugin.extend({
+class FramePlugin extends Plugin {
 
   /**
    * @override
    */
-  after: function(conversion, context) {
+  after(conversion, context) {
     conversion.window = context.previousWindow;
-  },
+  }
 
   /**
    * @override
    */
-  before: function(conversion, context) {
+  before(conversion, context) {
     context.previousWindow = conversion.window;
-  },
+  }
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
-    var window = conversion.element.contentWindow;
+  convert(conversion, context) {
+    const window = conversion.element.contentWindow;
 
     if (window) {
       conversion.window = window;
@@ -61,16 +59,16 @@ var FramePlugin = Plugin.extend({
     }
 
     return false;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [ 'frame', 'iframe' ];
   }
 
-});
+}
 
 Europa.register(new FramePlugin());
 

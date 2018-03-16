@@ -22,8 +22,6 @@
 
 'use strict';
 
-var Nevis = require('nevis/lite');
-
 /**
  * Defines an available option.
  *
@@ -34,36 +32,33 @@ var Nevis = require('nevis/lite');
  * @param {string} name - the name to be used
  * @param {*} [defaultValue] - the default value to be used
  * @public
- * @class
- * @extends Nevis
  */
-var Option = Nevis.extend(function(name, defaultValue) {
-  /**
-   * The name for this {@link Option}.
-   *
-   * @public
-   * @type {string}
-   * @memberof Option#
-   */
-  this.name = name;
+class Option {
 
-  this._defaultValue = defaultValue;
-});
+  constructor(name, defaultValue) {
+    /**
+     * The name for this {@link Option}.
+     *
+     * @public
+     * @type {string}
+     */
+    this.name = name;
 
-Object.defineProperty(Option.prototype, 'defaultValue', {
+    this._defaultValue = defaultValue;
+  }
+
   /**
    * Returns the default value for this {@link Option}.
    *
    * @return {*} The default value.
    * @public
-   * @memberof Option#
-   * @alias defaultValue
    */
-  get: function() {
-    var defaultValue = this._defaultValue;
+  get defaultValue() {
+    const defaultValue = this._defaultValue;
 
     return typeof defaultValue === 'function' ? defaultValue.call(this) : defaultValue;
   }
-});
+
+}
 
 module.exports = Option;

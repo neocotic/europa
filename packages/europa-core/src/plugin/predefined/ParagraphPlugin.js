@@ -22,31 +22,29 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs a paragraph.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var ParagraphPlugin = Plugin.extend({
+class ParagraphPlugin extends Plugin {
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
+  convert(conversion, context) {
     conversion.appendParagraph();
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [
       'address',
       'article',
@@ -61,7 +59,7 @@ var ParagraphPlugin = Plugin.extend({
     ];
   }
 
-});
+}
 
 Europa.register(new ParagraphPlugin());
 

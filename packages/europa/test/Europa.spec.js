@@ -24,16 +24,16 @@
   'use strict';
 
   EuropaTest.test({
-    Europa: Europa,
-    loadFixture: function(fixturePath, callback) {
-      var xhr = new XMLHttpRequest();
+    Europa,
+    loadFixture(fixturePath, callback) {
+      const xhr = new XMLHttpRequest();
       xhr.open('GET', fixturePath, true);
       xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status === 200) {
             callback(null, xhr.responseText);
           } else {
-            callback(new Error('Could not load fixture over XMLHttpRequest: ' + fixturePath));
+            callback(new Error(`Could not load fixture over XMLHttpRequest: ${fixturePath}`));
           }
         }
       };

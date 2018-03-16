@@ -22,7 +22,7 @@
 
 'use strict';
 
-var Europa = require('./Europa');
+const Europa = require('./Europa');
 require('./plugin/preset/default');
 
 module.exports = Europa;

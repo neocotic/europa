@@ -22,43 +22,41 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs the contents in a preformatted block.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var PreformattedPlugin = Plugin.extend({
+class PreformattedPlugin extends Plugin {
 
   /**
    * @override
    */
-  after: function(conversion, context) {
+  after(conversion, context) {
     conversion.atLeft = false;
     conversion.atParagraph = false;
     conversion.inPreformattedBlock = context.previousInPreformattedBlock;
     conversion.left = context.previousLeft;
 
     conversion.appendParagraph();
-  },
+  }
 
   /**
    * @override
    */
-  before: function(conversion, context) {
+  before(conversion, context) {
     context.previousInPreformattedBlock = conversion.inPreformattedBlock;
     context.previousLeft = conversion.left;
-  },
+  }
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
-    var value = '    ';
+  convert(conversion, context) {
+    const value = '    ';
 
     conversion.left += value;
 
@@ -69,16 +67,16 @@ var PreformattedPlugin = Plugin.extend({
     }
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [ 'pre' ];
   }
 
-});
+}
 
 Europa.register(new PreformattedPlugin());
 

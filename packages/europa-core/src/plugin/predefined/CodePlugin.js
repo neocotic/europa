@@ -22,40 +22,38 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs the contents in a code block.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var CodePlugin = Plugin.extend({
+class CodePlugin extends Plugin {
 
   /**
    * @override
    */
-  after: function(conversion, context) {
+  after(conversion, context) {
     if (!context.skipped) {
       conversion.inCodeBlock = context.previousInCodeBlock;
 
       conversion.output('`');
     }
-  },
+  }
 
   /**
    * @override
    */
-  before: function(conversion, context) {
+  before(conversion, context) {
     context.previousInCodeBlock = conversion.inCodeBlock;
-  },
+  }
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
+  convert(conversion, context) {
     if (conversion.inPreformattedBlock) {
       context.skipped = true;
     } else {
@@ -65,12 +63,12 @@ var CodePlugin = Plugin.extend({
     }
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [
       'code',
       'kbd',
@@ -78,7 +76,7 @@ var CodePlugin = Plugin.extend({
     ];
   }
 
-});
+}
 
 Europa.register(new CodePlugin());
 

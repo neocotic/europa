@@ -22,47 +22,45 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs as strong text.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var StrongPlugin = Plugin.extend({
+class StrongPlugin extends Plugin {
 
   /**
    * @override
    */
-  after: function(conversion, context) {
+  after(conversion, context) {
     conversion.output('**');
-  },
+  }
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
+  convert(conversion, context) {
     conversion.output('**');
 
     conversion.atNoWhiteSpace = true;
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [
       'b',
       'strong'
     ];
   }
 
-});
+}
 
 Europa.register(new StrongPlugin());
 

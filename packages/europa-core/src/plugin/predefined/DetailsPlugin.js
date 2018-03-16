@@ -22,8 +22,8 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs a details section.
@@ -32,16 +32,14 @@ var Plugin = require('../Plugin');
  * <code>summary</code>, if any, will be converted.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var DetailsPlugin = Plugin.extend({
+class DetailsPlugin extends Plugin {
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
-    var element = conversion.element;
+  convert(conversion, context) {
+    const { element } = conversion;
 
     conversion.appendParagraph();
 
@@ -49,20 +47,20 @@ var DetailsPlugin = Plugin.extend({
       return true;
     }
 
-    var summary = element.querySelector('summary');
+    const summary = element.querySelector('summary');
     conversion.europa.convertElement(summary, conversion);
 
     return false;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [ 'details' ];
   }
 
-});
+}
 
 Europa.register(new DetailsPlugin());
 

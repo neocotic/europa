@@ -22,38 +22,36 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs an inline line break.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var BreakPlugin = Plugin.extend({
+class BreakPlugin extends Plugin {
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
-    conversion.append('  ' + conversion.left);
+  convert(conversion, context) {
+    conversion.append(`  ${conversion.left}`);
 
     conversion.atLeft = true;
     conversion.atNoWhiteSpace = true;
 
     return false;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [ 'br' ];
   }
 
-});
+}
 
 Europa.register(new BreakPlugin());
 

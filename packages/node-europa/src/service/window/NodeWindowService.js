@@ -30,17 +30,15 @@ const WindowService = require('europa-core/src/service/window/WindowService');
  * to create a virtual window object.
  *
  * @public
- * @class
- * @extends WindowService
  */
-const NodeWindowService = WindowService.extend({
+class NodeWindowService extends WindowService {
 
   /**
    * @override
    */
   getDefaultBaseUri() {
     return `file:///${process.cwd().replace(/\\/g, '/')}`;
-  },
+  }
 
   /**
    * @override
@@ -49,7 +47,7 @@ const NodeWindowService = WindowService.extend({
     const dom = new JSDOM('', { url: baseUri });
 
     return dom.window;
-  },
+  }
 
   /**
    * @override
@@ -58,6 +56,6 @@ const NodeWindowService = WindowService.extend({
     return true;
   }
 
-});
+}
 
 module.exports = NodeWindowService;

@@ -22,10 +22,9 @@
 
 'use strict';
 
-var assert = require('chai').assert;
-var Nevis = require('nevis/lite');
+const { assert } = require('chai');
 
-var fixtures = [
+const fixtures = [
   'content',
   'lists',
   'scaffolding',
@@ -40,10 +39,8 @@ var fixtures = [
  * Mocha <b>must</b> be available in the current context when using <code>EuropaTest</code>.
  *
  * @public
- * @class
- * @extends Nevis
  */
-var EuropaTest = Nevis.extend(null, {
+class EuropaTest {
 
   /**
    * Runs the Europa Core test cases based on the <code>options</code> provided.
@@ -54,20 +51,19 @@ var EuropaTest = Nevis.extend(null, {
    * <code>europa-test</code>) to be loaded asynchronously
    * @return {void}
    * @public
-   * @static
-   * @memberof EuropaTest
    */
-  test: function(options) {
-    var europa = new options.Europa();
-    var loadFixture = options.loadFixture;
+  static test(options) {
+    const { Europa, loadFixture } = options;
+    const europa = new Europa();
 
-    describe('europa-test', function() {
-      fixtures.forEach(function(fixture) {
-        describe('fixture-' + fixture, function() {
-          var html, markdown;
+    describe('europa-test', () => {
+      fixtures.forEach((fixture) => {
+        describe(`fixture-${fixture}`, () => {
+          let html;
+          let markdown;
 
-          before('load HTML fixture', function(done) {
-            loadFixture('/fixtures/' + fixture + '.html', function(error, contents) {
+          before('load HTML fixture', (done) => {
+            loadFixture(`/fixtures/${fixture}.html`, (error, contents) => {
               if (error) {
                 done(error);
               } else {
@@ -77,8 +73,8 @@ var EuropaTest = Nevis.extend(null, {
             });
           });
 
-          before('load Markdown fixture', function(done) {
-            loadFixture('/fixtures/' + fixture + '.md', function(error, contents) {
+          before('load Markdown fixture', (done) => {
+            loadFixture(`/fixtures/${fixture}.md`, (error, contents) => {
               if (error) {
                 done(error);
               } else {
@@ -88,7 +84,7 @@ var EuropaTest = Nevis.extend(null, {
             });
           });
 
-          it('should correctly convert HTML into Markdown', function() {
+          it('should correctly convert HTML into Markdown', () => {
             assert.equal(europa.convert(html), markdown);
           });
         });
@@ -96,6 +92,6 @@ var EuropaTest = Nevis.extend(null, {
     });
   }
 
-});
+}
 
 module.exports = EuropaTest;

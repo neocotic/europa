@@ -22,25 +22,23 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
-var Utilities = require('../../util/Utilities');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
+const Utilities = require('../../util/Utilities');
 
 /**
  * A {@link Plugin} which outputs a list item. The prefix for the list item will vary depending on what type of list the
  * item is contained within.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var ListItemPlugin = Plugin.extend({
+class ListItemPlugin extends Plugin {
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
-    var value = conversion.inOrderedList ? conversion.listIndex++ + '. ' : '* ';
+  convert(conversion, context) {
+    const value = conversion.inOrderedList ? `${conversion.listIndex++}. ` : '* ';
 
     if (!conversion.atLeft) {
       conversion.append(conversion.left.replace(/[ ]{2,4}$/, '\n'));
@@ -55,16 +53,16 @@ var ListItemPlugin = Plugin.extend({
     conversion.append(Utilities.leftPad(value, (conversion.listDepth - 1) * 2));
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [ 'li' ];
   }
 
-});
+}
 
 Europa.register(new ListItemPlugin());
 
