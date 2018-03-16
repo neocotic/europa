@@ -1,0 +1,9 @@
+{
+  "extends": "notninja/es6",
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "no-invalid-this": "off"
+  }
+}

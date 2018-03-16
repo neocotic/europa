@@ -1,0 +1,9 @@
+{
+  "extends": "../../.eslintrc.json",
+  "env": {
+    "mocha": true
+  },
+  "rules": {
+    "no-invalid-this": "off"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "extends": "../.eslintrc.json",
+  "env": {
+    "mocha": true,
+    "node": false
+  },
+  "globals": {
+    "chai": false,
+    "Europa": false,
+    "EuropaTest": false
+  },
+  "rules": {
+    "callback-return": "off",
+    "no-unused-expressions": "off",
+    "strict": [
+      "error",
+      "function"
+    ]
+  }
+}
