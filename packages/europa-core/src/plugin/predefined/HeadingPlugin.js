@@ -22,40 +22,38 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs a heading of various levels.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var HeadingPlugin = Plugin.extend({
+class HeadingPlugin extends Plugin {
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
-    var level = parseInt(conversion.tagName.match(/([1-6])$/)[1], 10);
+  convert(conversion, context) {
+    const level = parseInt(conversion.tagName.match(/([1-6])$/)[1], 10);
 
     conversion.appendParagraph();
 
-    var heading = '';
-    for (var i = 0; i < level; i++) {
+    let heading = '';
+    for (let i = 0; i < level; i++) {
       heading += '#';
     }
 
-    conversion.output(heading + ' ');
+    conversion.output(`${heading} `);
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [
       'h1',
       'h2',
@@ -66,7 +64,7 @@ var HeadingPlugin = Plugin.extend({
     ];
   }
 
-});
+}
 
 Europa.register(new HeadingPlugin());
 

@@ -22,8 +22,8 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which extracts the URL from an anchor. Anchors without an <code>href</code> are treated as plain
@@ -37,63 +37,59 @@ var Plugin = require('../Plugin');
  * combinations will be indexed (e.g. <code>[foo][anchor0]</code>) and the references will be output at the very end.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var AnchorPlugin = Plugin.extend({
+class AnchorPlugin extends Plugin {
 
   /**
    * @override
    */
-  after: function(conversion, context) {
+  after(conversion, context) {
     if (context.value != null) {
-      conversion.output(']' + context.value);
+      conversion.output(`]${context.value}`);
     }
-  },
+  }
 
   /**
    * @override
    */
-  afterAll: function(conversion) {
-    var anchors = conversion.context.anchors;
+  afterAll(conversion) {
+    const { anchors } = conversion.context;
     if (!anchors.length) {
       return;
     }
 
     conversion.append('\n\n');
 
-    for (var i = 0; i < anchors.length; i++) {
-      conversion.append('[anchor' + i + ']: ' + anchors[i] + '\n');
+    for (let i = 0; i < anchors.length; i++) {
+      conversion.append(`[anchor${i}]: ${anchors[i]}\n`);
     }
-  },
+  }
 
   /**
    * @override
    */
-  beforeAll: function(conversion) {
+  beforeAll(conversion) {
     conversion.context.anchorMap = {};
     conversion.context.anchors = [];
-  },
+  }
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
-    var element = conversion.element;
-    var options = conversion.options;
-    var href = options.absolute ? element.href : element.getAttribute('href');
+  convert(conversion, context) {
+    const { element, options } = conversion;
+    const href = options.absolute ? element.href : element.getAttribute('href');
     if (!href) {
       return true;
     }
 
-    var anchorMap = conversion.context.anchorMap;
-    var anchors = conversion.context.anchors;
-    var title = element.getAttribute('title');
-    var value = title ? href + ' "' + title + '"' : href;
-    var index;
+    const { anchorMap, anchors } = conversion.context;
+    const title = element.getAttribute('title');
+    const value = title ? `${href} "${title}"` : href;
+    let index;
 
     if (options.inline) {
-      context.value = '(' + value + ')';
+      context.value = `(${value})`;
     } else {
       index = anchorMap[value];
       if (index == null) {
@@ -102,7 +98,7 @@ var AnchorPlugin = Plugin.extend({
         anchorMap[value] = index;
       }
 
-      context.value = '[anchor' + index + ']';
+      context.value = `[anchor${index}]`;
     }
 
     conversion.output('[');
@@ -110,16 +106,16 @@ var AnchorPlugin = Plugin.extend({
     conversion.atNoWhiteSpace = true;
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [ 'a' ];
   }
 
-});
+}
 
 Europa.register(new AnchorPlugin());
 

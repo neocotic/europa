@@ -145,14 +145,14 @@ The API for plugins is simple on a high level, but you'll need to get to grips w
 you can really do:
 
 ``` javascript
-var ExamplePlugin = Europa.Plugin.extend({
-  after: function(conversion, context) { /* ... */ },
-  afterAll: function(conversion) { /* ... */ },
-  before: function(conversion, context) { /* ... */ },
-  beforeAll: function(conversion) { /* ... */ },
-  convert: function(conversion, context) { /* ... */ },
-  getTagNames: function() { /* ... */ }
-});
+class ExamplePlugin extends Europa.Plugin {
+  after(conversion, context) { /* ... */ }
+  afterAll(conversion) { /* ... */ }
+  before(conversion, context) { /* ... */ }
+  beforeAll(conversion) { /* ... */ }
+  convert(conversion, context) { /* ... */ }
+  getTagNames() { /* ... */ }
+}
 
 Europa.register(new ExamplePlugin());
 ```

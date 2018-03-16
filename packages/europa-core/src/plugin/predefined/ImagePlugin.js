@@ -22,8 +22,8 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which extracts the URL from an image.
@@ -36,55 +36,51 @@ var Plugin = require('../Plugin');
  * (e.g. <code>![foo][image0]</code>) and the references will be output at the very end.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var ImagePlugin = Plugin.extend({
+class ImagePlugin extends Plugin {
 
   /**
    * @override
    */
-  afterAll: function(conversion) {
-    var images = conversion.context.images;
+  afterAll(conversion) {
+    const { images } = conversion.context;
     if (!images.length) {
       return;
     }
 
     conversion.append('\n\n');
 
-    for (var i = 0; i < images.length; i++) {
-      conversion.append('[image' + i + ']: ' + images[i] + '\n');
+    for (let i = 0; i < images.length; i++) {
+      conversion.append(`[image${i}]: ${images[i]}\n`);
     }
-  },
+  }
 
   /**
    * @override
    */
-  beforeAll: function(conversion) {
+  beforeAll(conversion) {
     conversion.context.imageMap = {};
     conversion.context.images = [];
-  },
+  }
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
-    var element = conversion.element;
-    var options = conversion.options;
-    var source = options.absolute ? element.src : element.getAttribute('src');
+  convert(conversion, context) {
+    const { element, options } = conversion;
+    const source = options.absolute ? element.src : element.getAttribute('src');
     if (!source) {
       return false;
     }
 
-    var alternativeText = element.getAttribute('alt') || '';
-    var imageMap = conversion.context.imageMap;
-    var images = conversion.context.images;
-    var title = element.getAttribute('title');
-    var value = title ? source + ' "' + title + '"' : source;
-    var index;
+    const alternativeText = element.getAttribute('alt') || '';
+    const { imageMap, images } = conversion.context;
+    const title = element.getAttribute('title');
+    let value = title ? `${source} "${title}"` : source;
+    let index;
 
     if (options.inline) {
-      value = '(' + value + ')';
+      value = `(${value})`;
     } else {
       index = imageMap[value];
       if (index == null) {
@@ -93,22 +89,22 @@ var ImagePlugin = Plugin.extend({
         imageMap[value] = index;
       }
 
-      value = '[image' + index + ']';
+      value = `[image${index}]`;
     }
 
-    conversion.output('![' + alternativeText + ']' + value);
+    conversion.output(`![${alternativeText}]${value}`);
 
     return false;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [ 'img' ];
   }
 
-});
+}
 
 Europa.register(new ImagePlugin());
 

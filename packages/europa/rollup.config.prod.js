@@ -22,6 +22,7 @@
 
 'use strict';
 
+import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
@@ -38,8 +39,15 @@ export default {
   banner: `/*! Europa v${pkg.version} | (C) ${new Date().getFullYear()} ${pkg.author.name}, !ninja | ${pkg.license} License */`,
   sourceMap: true,
   plugins: [
-    nodeResolve({ browser: true }),
+    nodeResolve(),
     commonjs(),
+    babel({
+      babelrc: false,
+      presets: [
+        [ 'env', { modules: false } ]
+      ],
+      plugins: [ 'external-helpers' ]
+    }),
     uglify({
       output: {
         comments: (node, comment) => comment.type === 'comment2' && /^\!/.test(comment.value)

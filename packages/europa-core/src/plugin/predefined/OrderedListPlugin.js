@@ -22,39 +22,37 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs an ordered list.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var OrderedListPlugin = Plugin.extend({
+class OrderedListPlugin extends Plugin {
 
   /**
    * @override
    */
-  after: function(conversion, context) {
+  after(conversion, context) {
     conversion.inOrderedList = context.previousInOrderedList;
     conversion.listIndex = context.previousListIndex;
     conversion.listDepth--;
-  },
+  }
 
   /**
    * @override
    */
-  before: function(conversion, context) {
+  before(conversion, context) {
     context.previousInOrderedList = conversion.inOrderedList;
     context.previousListIndex = conversion.listIndex;
-  },
+  }
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
+  convert(conversion, context) {
     if (conversion.listDepth === 0) {
       conversion.appendParagraph();
     }
@@ -64,16 +62,16 @@ var OrderedListPlugin = Plugin.extend({
     conversion.listDepth++;
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [ 'ol' ];
   }
 
-});
+}
 
 Europa.register(new OrderedListPlugin());
 

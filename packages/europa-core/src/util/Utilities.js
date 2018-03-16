@@ -22,42 +22,36 @@
 
 'use strict';
 
-var Nevis = require('nevis/lite');
-
 /**
  * Contains utility methods that are useful throughout the library.
  *
  * @public
- * @class
- * @extends Nevis
  */
-var Utilities = Nevis.extend(null, {
+class Utilities {
 
   /**
    * Iterates over own (not inherited) enumerable properties on the specified <code>object</code>.
    *
    * Nothing happens if <code>object</code> is <code>null</code>.
    *
-   * @param {Object} object - the object whose own properties are to be iterated over
+   * @param {?Object} object - the object whose own properties are to be iterated over
    * @param {Utilities~ForOwnCallback} callback - the function to be called with the value and key for each own property
    * on <code>object</code>
    * @param {Object} [context] - the value to use <code>this</code> when executing <code>callback</code>
    * @return {void}
    * @public
-   * @static
-   * @memberof Utilities
    */
-  forOwn: function(object, callback, context) {
+  static forOwn(object, callback, context) {
     if (!object) {
       return;
     }
 
-    for (var key in object) {
+    for (const key in object) {
       if (Utilities.hasOwn(object, key)) {
         callback.call(context, object[key], key, object);
       }
     }
-  },
+  }
 
   /**
    * Returns whether the specified <code>object</code> has a property with the specified <code>name</code> as an own
@@ -67,12 +61,10 @@ var Utilities = Nevis.extend(null, {
    * @param {string} name - the name of the property to be checked
    * @return {boolean} <code>true</code> if <code>object</code> has an own property with <code>name</code>.
    * @public
-   * @static
-   * @memberof Utilities
    */
-  hasOwn: function(object, name) {
+  static hasOwn(object, name) {
     return Object.prototype.hasOwnProperty.call(object, name);
-  },
+  }
 
   /**
    * Left pads the <code>string</code> provided with the given padding string for the specified number of
@@ -83,10 +75,8 @@ var Utilities = Nevis.extend(null, {
    * @param {string} [padding=" "] - the padding string
    * @return {string} The padded <code>string</code>.
    * @public
-   * @static
-   * @memberof Utilities
    */
-  leftPad: function(string, times, padding) {
+  static leftPad(string, times, padding) {
     if (string == null) {
       string = '';
     }
@@ -100,14 +90,14 @@ var Utilities = Nevis.extend(null, {
       return string;
     }
 
-    for (var i = 0; i < times; i++) {
+    for (let i = 0; i < times; i++) {
       string = padding + string;
     }
 
     return string;
   }
 
-});
+}
 
 module.exports = Utilities;
 

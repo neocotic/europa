@@ -24,8 +24,5 @@
     "type": "git",
     "url": "https://github.com/NotNinja/europa.git"
   },
-  "dependencies": {
-    "nevis": "^0.5.0"
-  },
   "main": "src/index.js"
 }

@@ -22,16 +22,12 @@
 
 'use strict';
 
-var Nevis = require('nevis/lite');
-
 /**
  * Defines a service contract that must be met by all implementations.
  *
  * @public
- * @class
- * @extends Nevis
  */
-var Service = Nevis.extend({
+class Service {
 
   /**
    * Returns the name of this {@link Service}.
@@ -39,10 +35,9 @@ var Service = Nevis.extend({
    * @return {string} The service name.
    * @public
    * @abstract
-   * @memberof Service#
    */
-  getName: function() {}
+  getName() {}
 
-});
+}
 
 module.exports = Service;

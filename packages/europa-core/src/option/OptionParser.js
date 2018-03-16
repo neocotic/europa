@@ -22,26 +22,23 @@
 
 'use strict';
 
-var Nevis = require('nevis/lite');
-
 /**
  * Manages multiple {@link Option} instances that are intended to be used by multiple implementations/instances.
  *
  * @param {Option[]} options - the options to be used
  * @public
- * @class
- * @extends Nevis
  */
-var OptionParser = Nevis.extend(function(options) {
-  /**
-   * The available options for this {@link OptionParser}.
-   *
-   * @public
-   * @type {Option[]}
-   * @memberof OptionParser#
-   */
-  this.options = options;
-}, {
+class OptionParser {
+
+  constructor(options) {
+    /**
+     * The available options for this {@link OptionParser}.
+     *
+     * @public
+     * @type {Option[]}
+     */
+    this.options = options;
+  }
 
   /**
    * Returns whether an option with the specified <code>name</code> is available.
@@ -50,13 +47,10 @@ var OptionParser = Nevis.extend(function(options) {
    * @return {boolean} <code>true</code> if an {@link Option} exists with <code>name</code>; otherwise
    * <code>false</code>.
    * @public
-   * @memberof OptionParser#
    */
-  exists: function(name) {
-    return this.options.some(function(option) {
-      return option.name === name;
-    });
-  },
+  exists(name) {
+    return this.options.some((option) => option.name === name);
+  }
 
   /**
    * Parses the specified <code>options</code>, extracting only properties that match valid options and applying default
@@ -65,18 +59,17 @@ var OptionParser = Nevis.extend(function(options) {
    * @param {Object} [options] - the options to be parsed
    * @return {Object.<string, *>} The parsed options.
    * @public
-   * @memberof OptionParser#
    */
-  parse: function(options) {
+  parse(options) {
     if (!options) {
       options = {};
     }
 
-    var result = {};
+    const result = {};
 
-    this.options.forEach(function(option) {
-      var name = option.name;
-      var value = options[name] != null ? options[name] : option.defaultValue;
+    this.options.forEach((option) => {
+      const { name } = option;
+      const value = options[name] != null ? options[name] : option.defaultValue;
 
       result[name] = value;
     });
@@ -84,6 +77,6 @@ var OptionParser = Nevis.extend(function(options) {
     return result;
   }
 
-});
+}
 
 module.exports = OptionParser;

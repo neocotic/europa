@@ -41,14 +41,14 @@ the DOM as the model, all that consumers need to do is define and register an im
 Most modules that use Europa Core will look something like the following:
 
 ``` javascript
-var Europa = require('europa-core');
-var WindowService = require('europa-core/src/service/window/WindowService');
+const Europa = require('europa-core');
+const WindowService = require('europa-core/src/service/window/WindowService');
 
-var ExampleWindowService = WindowService.extend({
-  getDefaultBaseUri: function() { /* ... */ },
-  getWindow: function(baseUri) { /* ... */ },
-  isCloseable: function(window) { /* ... */ }
-});
+class ExampleWindowService extends WindowService {
+  getDefaultBaseUri() { /* ... */ }
+  getWindow(baseUri) { /* ... */ }
+  isCloseable(window) { /* ... */ }
+}
 
 Europa.use(new ExampleWindowService());
 

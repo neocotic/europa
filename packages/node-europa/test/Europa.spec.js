@@ -30,7 +30,7 @@ const Europa = require('../src/Europa');
 
 EuropaTest.test({
   Europa,
-  loadFixture: (fixturePath, callback) => {
+  loadFixture(fixturePath, callback) {
     fs.readFile(path.resolve(__dirname, path.join('../node_modules/europa-test', fixturePath)), 'utf8', callback);
   }
 });

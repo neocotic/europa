@@ -22,44 +22,42 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs as quoted text.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var QuotePlugin = Plugin.extend({
+class QuotePlugin extends Plugin {
 
   /**
    * @override
    */
-  after: function(conversion, context) {
+  after(conversion, context) {
     conversion.output('"');
-  },
+  }
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
+  convert(conversion, context) {
     conversion.output('"');
 
     conversion.atNoWhiteSpace = true;
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [ 'q' ];
   }
 
-});
+}
 
 Europa.register(new QuotePlugin());
 

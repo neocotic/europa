@@ -22,29 +22,27 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which simply ensures that no children elements are converted.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var EmptyPlugin = Plugin.extend({
+class EmptyPlugin extends Plugin {
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
+  convert(conversion, context) {
     return false;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [
       'applet',
       'area',
@@ -77,7 +75,7 @@ var EmptyPlugin = Plugin.extend({
     ];
   }
 
-});
+}
 
 Europa.register(new EmptyPlugin());
 

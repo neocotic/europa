@@ -22,29 +22,27 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs a definition term as strong text.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var DefinitionTermPlugin = Plugin.extend({
+class DefinitionTermPlugin extends Plugin {
 
   /**
    * @override
    */
-  after: function(conversion, context) {
+  after(conversion, context) {
     conversion.output('**');
-  },
+  }
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
+  convert(conversion, context) {
     conversion.appendParagraph();
 
     conversion.output('**');
@@ -52,16 +50,16 @@ var DefinitionTermPlugin = Plugin.extend({
     conversion.atNoWhiteSpace = true;
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [ 'dt' ];
   }
 
-});
+}
 
 Europa.register(new DefinitionTermPlugin());
 

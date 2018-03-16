@@ -22,7 +22,7 @@
 
 'use strict';
 
-var Service = require('../Service');
+const Service = require('../Service');
 
 /**
  * A service used to retrieve the window object for converting HTML to Markdown and, optionally, to close it upon
@@ -30,10 +30,8 @@ var Service = require('../Service');
  * browser environment.
  *
  * @public
- * @class
- * @extends Service
  */
-var WindowService = Service.extend({
+class WindowService extends Service {
 
   /**
    * Closes the specified <code>window</code> but only if this {@link WindowService} is closeable.
@@ -41,13 +39,12 @@ var WindowService = Service.extend({
    * @param {Window} window - the window to be closed
    * @return {void}
    * @public
-   * @memberof WindowService#
    */
-  closeWindow: function(window) {
+  closeWindow(window) {
     if (this.isCloseable(window)) {
       window.close();
     }
-  },
+  }
 
   /**
    * Returns the default base URI for windows provided by this {@link WindowService}.
@@ -57,16 +54,15 @@ var WindowService = Service.extend({
    * @return {string} The default base URI.
    * @public
    * @abstract
-   * @memberof WindowService#
    */
-  getDefaultBaseUri: function() {},
+  getDefaultBaseUri() {}
 
   /**
    * @override
    */
-  getName: function() {
+  getName() {
     return 'window';
-  },
+  }
 
   /**
    * Returns a window to be used for converting HTML to Markdown using the base URI provided.
@@ -80,9 +76,8 @@ var WindowService = Service.extend({
    * @return {Window} The window.
    * @public
    * @abstract
-   * @memberof WindowService#
    */
-  getWindow: function(baseUri) {},
+  getWindow(baseUri) {}
 
   /**
    * Returns whether the specified <code>window</code> which was retrieved by this {@link WindowService} is closeable.
@@ -92,12 +87,11 @@ var WindowService = Service.extend({
    * @param {Window} window - the window to be checked
    * @return {boolean} <code>true</code> if <code>window</code> is closeable; otherwise <code>false</code>.
    * @public
-   * @memberof WindowService#
    */
-  isCloseable: function(window) {
+  isCloseable(window) {
     return false;
   }
 
-});
+}
 
 module.exports = WindowService;

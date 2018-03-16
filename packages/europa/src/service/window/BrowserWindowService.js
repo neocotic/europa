@@ -22,31 +22,29 @@
 
 'use strict';
 
-var WindowService = require('europa-core/src/service/window/WindowService');
+const WindowService = require('europa-core/src/service/window/WindowService');
 
 /**
  * An implementation of {@link WindowService} intended for use within a browser environment.
  *
  * @public
- * @class
- * @extends WindowService
  */
-var BrowserWindowService = WindowService.extend({
+class BrowserWindowService extends WindowService {
 
   /**
    * @override
    */
-  getDefaultBaseUri: function() {
+  getDefaultBaseUri() {
     return window.document.baseURI;
-  },
+  }
 
   /**
    * @override
    */
-  getWindow: function(baseUri) {
+  getWindow(baseUri) {
     return window;
   }
 
-});
+}
 
 module.exports = BrowserWindowService;

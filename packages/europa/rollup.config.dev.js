@@ -22,6 +22,7 @@
 
 'use strict';
 
+import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 
@@ -34,7 +35,14 @@ export default {
   },
   sourceMap: true,
   plugins: [
-    nodeResolve({ browser: true }),
-    commonjs()
+    nodeResolve(),
+    commonjs(),
+    babel({
+      babelrc: false,
+      presets: [
+        [ 'env', { modules: false } ]
+      ],
+      plugins: [ 'external-helpers' ]
+    })
   ]
 };

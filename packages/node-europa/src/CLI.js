@@ -25,7 +25,6 @@
 const fs = require('fs');
 const glob = require('glob');
 const mkdirp = require('mkdirp');
-const Nevis = require('nevis/lite');
 const path = require('path');
 const program = require('commander');
 const readline = require('readline');
@@ -41,21 +40,21 @@ const { version } = require('../package.json');
  * @param {Writable} output - the <code>Writable</code> to which the generated Markdown is to be written if no files
  * or output path is provided
  * @public
- * @class
- * @extends Nevis
  */
-const CLI = Nevis.extend(function(input, output) {
-  this._input = input;
-  this._output = output;
-  this._program = program
-    .version(version)
-    .usage('[options] [file ...]')
-    .option('-a, --absolute', 'use absolute URLs for anchors/images')
-    .option('-b, --base-uri <uri>', 'base URI for anchors/images')
-    .option('-e, --eval <html>', 'evaluate HTML string')
-    .option('-i, --inline', 'insert anchor/image URLs inline')
-    .option('-o, --output <path>', 'output directory (for files) or file (for eval/stdin)');
-}, {
+class CLI {
+
+  constructor(input, output) {
+    this._input = input;
+    this._output = output;
+    this._program = program
+      .version(version)
+      .usage('[options] [file ...]')
+      .option('-a, --absolute', 'use absolute URLs for anchors/images')
+      .option('-b, --base-uri <uri>', 'base URI for anchors/images')
+      .option('-e, --eval <html>', 'evaluate HTML string')
+      .option('-i, --inline', 'insert anchor/image URLs inline')
+      .option('-o, --output <path>', 'output directory (for files) or file (for eval/stdin)');
+  }
 
   /**
    * Parses the specified <code>args</code> and determines what is to be converted into Markdown and where the generated
@@ -64,7 +63,6 @@ const CLI = Nevis.extend(function(input, output) {
    * @param {string[]} [args=[]] - the command-line arguments to be parsed
    * @return {void}
    * @public
-   * @memberof CLI#
    */
   parse(args) {
     if (args == null) {
@@ -89,7 +87,7 @@ const CLI = Nevis.extend(function(input, output) {
     } else {
       this._readInput(europa);
     }
-  },
+  }
 
   _readFiles(files, europa) {
     if (!files.length) {
@@ -99,16 +97,16 @@ const CLI = Nevis.extend(function(input, output) {
     const output = this._program.output ? path.normalize(this._program.output) : null;
 
     files.forEach((file) => {
-      const html = fs.readFileSync(file, CLI.encoding);
+      const html = fs.readFileSync(file, 'utf8');
       const markdown = europa.convert(html);
       const targetDirectory = output || path.dirname(file);
       const targetFile = path.join(targetDirectory, `${path.basename(file, path.extname(file))}.md`);
 
       mkdirp.sync(targetDirectory);
 
-      fs.writeFileSync(targetFile, markdown, CLI.encoding);
+      fs.writeFileSync(targetFile, markdown, 'utf8');
     });
-  },
+  }
 
   _readInput(europa) {
     const buffer = [];
@@ -124,7 +122,7 @@ const CLI = Nevis.extend(function(input, output) {
         this._readString(buffer.join('\n'), europa);
       }
     });
-  },
+  }
 
   _readString(html, europa) {
     const markdown = europa.convert(html);
@@ -135,24 +133,12 @@ const CLI = Nevis.extend(function(input, output) {
 
       mkdirp.sync(output);
 
-      fs.writeFileSync(target, markdown, CLI.encoding);
+      fs.writeFileSync(target, markdown, 'utf8');
     } else {
-      this._output.end(markdown, CLI.encoding);
+      this._output.end(markdown, 'utf8');
     }
   }
 
-}, {
-
-  /**
-   * The character set encoding to be used to read/write files.
-   *
-   * @public
-   * @static
-   * @type {string}
-   * @memberof CLI
-   */
-  encoding: 'utf8'
-
-});
+}
 
 module.exports = CLI;

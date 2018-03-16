@@ -22,40 +22,38 @@
 
 'use strict';
 
-var Europa = require('../../Europa');
-var Plugin = require('../Plugin');
+const Europa = require('../../Europa');
+const Plugin = require('../Plugin');
 
 /**
  * A {@link Plugin} which outputs as emphasised text.
  *
  * @public
- * @class
- * @extends Plugin
  */
-var EmphasisPlugin = Plugin.extend({
+class EmphasisPlugin extends Plugin {
 
   /**
    * @override
    */
-  after: function(conversion, context) {
+  after(conversion, context) {
     conversion.output('_');
-  },
+  }
 
   /**
    * @override
    */
-  convert: function(conversion, context) {
+  convert(conversion, context) {
     conversion.output('_');
 
     conversion.atNoWhiteSpace = true;
 
     return true;
-  },
+  }
 
   /**
    * @override
    */
-  getTagNames: function() {
+  getTagNames() {
     return [
       'cite',
       'dfn',
@@ -66,7 +64,7 @@ var EmphasisPlugin = Plugin.extend({
     ];
   }
 
-});
+}
 
 Europa.register(new EmphasisPlugin());
 
