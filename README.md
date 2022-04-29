@@ -1,12 +1,11 @@
-![Europa](https://cdn.rawgit.com/NotNinja/europa-branding/master/assets/banner/europa/europa-banner-500x200.png)
+![Europa](https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa/europa-banner-500x200.png)
 
-[Europa](https://github.com/NotNinja/europa) is a pure JavaScript library for converting HTML into valid Markdown.
+[Europa](https://github.com/neocotic/europa) is a pure JavaScript library for converting HTML into valid Markdown.
 
-[![Demo](https://img.shields.io/badge/demo-live-brightgreen.svg?style=flat-square)](https://codepen.io/NotNinja/full/BZjRMK)
-[![Build Status](https://img.shields.io/travis/NotNinja/europa/develop.svg?style=flat-square)](https://travis-ci.org/NotNinja/europa)
-[![Dev Dependency Status](https://img.shields.io/david/dev/NotNinja/europa.svg?style=flat-square)](https://david-dm.org/NotNinja/europa?type=dev)
-[![License](https://img.shields.io/npm/l/europa.svg?style=flat-square)](https://github.com/NotNinja/europa/blob/master/LICENSE.md)
-[![Release](https://img.shields.io/npm/v/europa.svg?style=flat-square)](https://www.npmjs.com/package/europa)
+[![Demo](https://img.shields.io/badge/demo-live-brightgreen.svg?style=flat-square)](https://codepen.io/neocotic/pen/YzeKvzG)
+[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
+[![License](https://img.shields.io/npm/l/europa.svg?style=flat-square)](https://github.com/neocotic/europa/blob/master/LICENSE.md)
+[![Release](https://img.shields.io/npm/v/europa.svg?style=flat-square)](https://npmjs.com/package/europa)
 
 * [Install](#install)
 * [Examples](#examples)
@@ -32,7 +31,7 @@ If you want to simply download the file to be used in the browser you can find t
 * [Development Version](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.js) (58kb - [Source Map](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.js.map))
 * [Production Version](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.min.js) (13kb - [Source Map](https://cdnjs.cloudflare.com/ajax/libs/europa/4.0.0/europa.min.js.map))
 
-Check out [node-europa](https://github.com/NotNinja/node-europa) if you want to install it for use within
+Check out [node-europa](https://github.com/neocotic/node-europa) if you want to install it for use within
 [Node.js](https://nodejs.org).
 
 ## Examples
@@ -138,8 +137,8 @@ europa.release();
 
 // ...
 
-europa.convert('Wow! <a href="https://github.com/NotNinja/europa">Europa</a> is awesome!');
-//=> "Wow! [Europa](https://github.com/NotNinja/europa) is awesome!"
+europa.convert('Wow! <a href="https://github.com/neocotic/europa">Europa</a> is awesome!');
+//=> "Wow! [Europa](https://github.com/neocotic/europa) is awesome!"
 ```
 
 Other environments (e.g. browsers) should never have to worry about calling this method.
@@ -150,7 +149,7 @@ Europa is fully pluggable and is packed with built-in plugins in order to get fu
 enables the creation of external plugins to further extend Europa's capabilities to support extended Markdown syntax or
 even new HTML elements should they not be added to Europa quick enough for you.
 
-The predefined plugins are included in [Europa Core](https://github.com/NotNinja/europa-core) for now, however, the plan
+The predefined plugins are included in [Europa Core](https://github.com/neocotic/europa-core) for now, however, the plan
 is to externalize all of these as well, while keeping them as defaults. The hope is that this will continue to make them
 easier to maintain and make Europa more modular.
 
@@ -202,25 +201,25 @@ In theory, a preset could be made up of multiple presets.
 If you've been using an older major version and would like details on what's changed and information on how to migrate
 to the latest major release below:
 
-https://github.com/NotNinja/europa/wiki/Migrating-from-older-versions
+https://github.com/neocotic/europa/wiki/Migrating-from-older-versions
 
 ## Bugs
 
 If you have any problems with Europa or would like to see changes currently in development you can do so
-[here](https://github.com/NotNinja/europa/issues). Core features and issues are maintained separately
-[here](https://github.com/NotNinja/europa-core/issues).
+[here](https://github.com/neocotic/europa/issues). Core features and issues are maintained separately
+[here](https://github.com/neocotic/europa-core/issues).
 
 
 ## Contributors
 
 If you want to contribute, you're a legend! Information on how you can do so can be found in
-[CONTRIBUTING.md](https://github.com/NotNinja/europa/blob/master/CONTRIBUTING.md). We want your suggestions and pull
+[CONTRIBUTING.md](https://github.com/neocotic/europa/blob/master/CONTRIBUTING.md). We want your suggestions and pull
 requests!
 
-A list of Europa contributors can be found in [AUTHORS.md](https://github.com/NotNinja/europa/blob/master/AUTHORS.md).
+A list of Europa contributors can be found in [AUTHORS.md](https://github.com/neocotic/europa/blob/master/AUTHORS.md).
 
 ## License
 
-See [LICENSE.md](https://github.com/NotNinja/europa/raw/master/LICENSE.md) for more information on our MIT license.
+Copyright © 2022 neocotic
 
-[![Copyright !ninja](https://cdn.rawgit.com/NotNinja/branding/master/assets/copyright/base/not-ninja-copyright-186x25.png)](https://not.ninja)
+See [LICENSE.md](https://github.com/neocotic/europa/raw/master/LICENSE.md) for more information on our MIT license.

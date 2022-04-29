@@ -2,14 +2,13 @@
   "name": "europa",
   "version": "4.0.0",
   "description": "Library for converting HTML into valid Markdown",
-  "homepage": "https://github.com/NotNinja/europa",
+  "homepage": "https://github.com/neocotic/europa",
   "bugs": {
-    "url": "https://github.com/NotNinja/europa/issues"
+    "url": "https://github.com/neocotic/europa/issues"
   },
   "author": {
-    "name": "Alasdair Mercer",
-    "email": "mercer.alasdair@gmail.com",
-    "url": "https://not.ninja"
+    "name": "neocotic",
+    "url": "https://github.com/neocotic"
   },
   "license": "MIT",
   "keywords": [
@@ -20,7 +19,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/NotNinja/europa.git"
+    "url": "https://github.com/neocotic/europa.git"
   },
   "devDependencies": {
     "chai": "^4.0.2",
