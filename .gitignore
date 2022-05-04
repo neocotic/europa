@@ -1,2 +1,42 @@
-node_modules/
+# Compiled output
+/node_modules
+packages/*/lib
+packages/*/node_modules
+packages/*/out-tsc
+packages/*/tmp
+packages/*/typings
+
+# Logs
+logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Linting
+packages/*/.eslintcache
+
+# Tests
+packages/*/coverage
+packages/*/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

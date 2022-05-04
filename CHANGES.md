@@ -1,3 +1,18 @@
+## Version 5.0.0, 2022.05.04
+
+* Migrate all Europa repositories from [!ninja](https://github.com/NotNinja) to [neocotic](https://github.com/neocotic)
+* Migrate all Europa repositories (excl. branding) into a monorepo
+* Rewrite all Europa packages using Typescript targeting ES2017
+* Duplicate documentation across README's to avoid others from so many click-throughs
+* **europa**: Remove [Bower](https://bower.io) support
+* **europa**: Use [webpack](https://webpack.js.org) to bundle source code into UMD (and ESM - *new!*) distribution files
+* **europa**: Remove generated distribution files from version control
+* **europa-test**: Switch to [Jasmine](https://jasmine.github.io) test framework
+* **node-europa**: Upgrade `commander` to v9
+* **node-europa**: Upgrade `glob` to v8
+* **node-europa**: Upgrade `jsdom` to v19
+* **node-europa**: Upgrade `mkdirp` to v1
+
 ## Version 4.0.0, 2017.06.09
 
 * Rename library to Europa :new_moon: and move package from `html-md` to `europa`
@@ -12,18 +27,26 @@
 * Switch to container-based Travis builds for faster boot times
 * Remove `noConflict` method
 * Remove `version` field
-
-### Specific to `europa`
-
-* Change global variable to `Europa`
-* Use [Rollup](http://rollupjs.org) to bundle source code into distribution files
-* Replace `component.json` with `bower.json` for proper [Bower](https://bower.io) support
-* Add `demo.html` to allow contributors to experiment and test changes locally
-* Add live demo link to `README.md`
-* Add download links to `README.md` for browser distribution files
+* **europa**: Change global variable to `Europa`
+* **europa**: Use [Rollup](http://rollupjs.org) to bundle source code into distribution files
+* **europa**: Replace `component.json` with `bower.json` for proper [Bower](https://bower.io) support
+* **europa**: Add `demo.html` to allow contributors to experiment and test changes locally
+* **europa**: Add live demo link to `README.md`
+* **europa**: Add download links to `README.md` for browser distribution files
+* **europa-test**: Create `europa-test` framework to help test `europa-core` implementations
+* **europa-test**: Replace `nodeunit` with `mocha` and `chai`
+* **node-europa**: Create `node-europa` specifically for using Europa in Node.js
+* **node-europa**: Rename command from `htmlmd` to `europa`
+* **node-europa**: Rename `--base` option to `--base-uri`
+* **node-europa**: Remove `--debug` option
+* **node-europa**: Remove `--long-ext` option
+* **node-europa**: Remove `--print` option to simplify I/O streaming
+* **node-europa**: Remove `man` page (for now at least)
+* **node-europa**: Upgrade `jsdom` to v11 (no more problems for Windows users!)
+* **node-europa**: Require Node.js version 6 or newer to be installed to be compatible with `jsdom` v11
 
 ## Version 3.1.0, 2016.09.02
-
+˚
 * Fix support for AMD [#39](https://github.com/neocotic/europa/issues/39)
 * Correct license to GPL-2.0 [#66](https://github.com/neocotic/europa/issues/66)
 

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "node-europa/*": ["src/*"]
+    },
+    "lib": [
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "incremental": true,
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ]
+  }
+}

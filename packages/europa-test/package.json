@@ -1,0 +1,66 @@
+{
+  "name": "europa-test",
+  "version": "5.0.0",
+  "description": "Test framework for Europa Core implementations",
+  "keywords": [
+    "europa",
+    "test"
+  ],
+  "homepage": "https://github.com/neocotic/europa",
+  "bugs": {
+    "url": "https://github.com/neocotic/europa/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "neocotic",
+    "url": "https://github.com/neocotic"
+  },
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://github.com/sponsors/neocotic"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/neocotic"
+    }
+  ],
+  "main": "lib/umd/test",
+  "module": "lib/esm/test",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neocotic/europa.git",
+    "directory": "packages/europa-test"
+  },
+  "dependencies": {
+    "europa-core": "^5.0.0"
+  },
+  "peerDependencies": {
+    "jasmine": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^4.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2",
+    "rimraf": "^3.0.2",
+    "tsconfig-paths": "^4.0.0",
+    "ttypescript": "^1.5.13",
+    "typescript": "^4.6.4",
+    "typescript-transform-paths": "^3.3.1"
+  },
+  "scripts": {
+    "build": "rimraf lib && npm run build:esm && npm run build:umd",
+    "build:esm": "ttsc --p tsconfig.build.esm.json",
+    "build:umd": "ttsc --p tsconfig.build.umd.json",
+    "flint": "eslint \"src/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "echo \"No tests\""
+  }
+}

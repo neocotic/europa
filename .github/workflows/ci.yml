@@ -6,7 +6,6 @@ on:
       - main
   pull_request:
     branches:
-      - develop
       - main
 
   workflow_dispatch:
@@ -27,6 +26,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          npm run bootstrap
+      - name: Lint packages
+        run: npm run lint
       - name: Test packages
         run: npm test
