@@ -11,8 +11,12 @@
     "build": "lerna run build --stream",
     "flint": "lerna run flint --stream",
     "format": "lerna run format --stream",
+    "generate:plugin": "./packages/europa-build/bin/europa-build generate-plugin official packages --preset=default",
+    "generate:preset": "./packages/europa-build/bin/europa-build generate-preset official packages",
     "lint": "lerna run lint --stream",
+    "publish:packages": "lerna publish from-package",
     "test": "lerna run test --stream",
-    "verify": "npm run format && npm run build && npm run flint && npm test"
+    "verify": "npm run format && npm run build && npm run bootstrap && npm run flint && npm test",
+    "version:packages": "lerna version --no-git-tag-version --no-push"
   }
 }

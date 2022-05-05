@@ -21,6 +21,7 @@
  */
 
 import { Service } from 'europa-core/service/Service';
+import { ServiceName } from 'europa-core/service/ServiceName';
 
 /**
  * A service used to retrieve the window object for converting HTML to Markdown and, optionally, to close it upon
@@ -48,8 +49,8 @@ export abstract class WindowService extends Service {
    */
   abstract getDefaultBaseUri(): string;
 
-  override getName(): string {
-    return 'window';
+  override getName(): ServiceName {
+    return ServiceName.Window;
   }
 
   /**

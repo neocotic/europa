@@ -21,17 +21,17 @@
  */
 
 import { Conversion } from 'europa-core/Conversion';
-import { ElementNode } from 'europa-core/dom/ElementNode';
 import { Option } from 'europa-core/option/Option';
 import { OptionParser } from 'europa-core/option/OptionParser';
-import { Plugin } from 'europa-core/plugin/Plugin';
+import { PluginProvider } from 'europa-core/plugin/Plugin';
+import { PluginManager } from 'europa-core/plugin/PluginManager';
+import { PresetProvider } from 'europa-core/plugin/Preset';
 import { Service } from 'europa-core/service/Service';
 import { ServiceManager } from 'europa-core/service/ServiceManager';
-import { WindowService } from 'europa-core/service/window/WindowService';
-import { isVisible } from 'europa-core/util/is-visible';
+import { ServiceName } from 'europa-core/service/ServiceName';
 
 const _options = Symbol('options');
-const _plugins = Symbol('plugins');
+const _pluginManager = Symbol('pluginManager');
 const _serviceManager = Symbol('serviceManager');
 const _window = Symbol('window');
 
@@ -39,12 +39,7 @@ const _window = Symbol('window');
  * Enables configuration of an HTML to Markdown converter that supports HTML strings and DOM elements.
  */
 export class Europa {
-  /**
-   * A convenient reference to {@link Plugin} exposed on {@link Europa} for cases where Europa Core is bundled.
-   */
-  static readonly Plugin = Plugin;
-
-  private static readonly [_plugins]: Record<string, Plugin> = {};
+  private static readonly [_pluginManager] = new PluginManager();
   private static readonly [_serviceManager] = new ServiceManager();
 
   private readonly [_options]: Record<string, any>;
@@ -58,7 +53,7 @@ export class Europa {
   constructor(options?: EuropaOptions) {
     this[_options] = new OptionParser([
       new Option('absolute', false),
-      new Option('baseUri', () => Europa[_serviceManager].getService<WindowService>('window').getDefaultBaseUri()),
+      new Option('baseUri', () => Europa[_serviceManager].getService(ServiceName.Window).getDefaultBaseUri()),
       new Option('inline', false),
     ]).parse(options);
   }
@@ -86,7 +81,8 @@ export class Europa {
       root = html;
     }
 
-    const conversion = new Conversion(this, root, this[_options]);
+    const pluginManager = Europa[_pluginManager];
+    const conversion = new Conversion(this, root, this[_options], pluginManager);
     let wrapper: HTMLElement | undefined;
 
     if (!document.contains(root)) {
@@ -98,11 +94,11 @@ export class Europa {
     }
 
     try {
-      Object.values(Europa[_plugins]).forEach((plugin) => plugin.beforeAll(conversion));
+      pluginManager.invokePlugins('startConversion', conversion);
 
-      this.convertElement(root, conversion);
+      conversion.convertElement(root);
 
-      Object.values(Europa[_plugins]).forEach((plugin) => plugin.afterAll(conversion));
+      pluginManager.invokePlugins('endConversion', conversion);
     } finally {
       if (wrapper) {
         document.body.removeChild(wrapper);
@@ -111,72 +107,48 @@ export class Europa {
       }
     }
 
-    return conversion.append('').buffer.trim();
+    return conversion.end();
   }
 
   /**
-   * Converts the specified `element` and it's children into Markdown using the `conversion` provided.
+   * Invokes the specified plugin `provider` and registers the resulting plugin.
    *
-   * Nothing happens if `element` is `null` or is invisible (simplified detection used).
+   * If the plugin contains any converters, they will be associated with their corresponding tag names, overriding any
+   * previously converters associated with those tag names.
    *
-   * @param element - The element (along well as it's children) to be converted into Markdown.
-   * @param conversion - The current {@link Conversion}.
+   * If an error occurs when invoking `provider`, the plugin will not be registered.
+   *
+   * @param provider - The provider for the plugin to be registered.
+   * @throws If a problem occurs while invoking `provider`.
    */
-  convertElement(element: HTMLElement | null, conversion: Conversion) {
-    if (!element) {
-      return;
-    }
-
-    const window = this.window;
-
-    if (element.nodeType === ElementNode.Element) {
-      if (!isVisible(element, window)) {
-        return;
-      }
-
-      conversion.element = element;
-
-      const context: Record<string, any> = {};
-      const plugin = conversion.tagName ? Europa[_plugins][conversion.tagName] : null;
-      let convertChildren = true;
-
-      if (plugin) {
-        plugin.before(conversion, context);
-        convertChildren = plugin.convert(conversion, context);
-      }
-
-      if (convertChildren) {
-        for (let i = 0; i < element.childNodes.length; i++) {
-          this.convertElement(element.childNodes[i] as HTMLElement, conversion);
-        }
-      }
-
-      if (plugin) {
-        plugin.after(conversion, context);
-      }
-    } else if (element.nodeType === ElementNode.Text) {
-      const value = element.nodeValue || '';
-
-      if (conversion.inPreformattedBlock) {
-        conversion.output(value);
-      } else if (conversion.inCodeBlock) {
-        conversion.output(value.replace(/`/g, '\\`'));
-      } else {
-        conversion.output(value, true);
-      }
-    }
+  static registerPlugin(provider: PluginProvider) {
+    Europa[_pluginManager].addPlugin(provider);
   }
 
   /**
-   * Registers the specified `plugin` to be used by all {@link Europa} instances.
+   * Invokes the specified plugin `provider` and registers the resulting preset.
    *
-   * If `plugin` declares support for a tag name which already has a {@link Plugin} registered for it, `plugin` will
-   * replace the previously registered plugin, but only for conflicting tag names.
+   * This method is effectively just a shortcut for calling {@link Europa.registerPlugin} for multiple plugin providers,
+   * however, the main benefit is that it supports the concept of presets, which are a useful mechanism for bundling and
+   * distributing plugins.
    *
-   * @param plugin - The {@link Plugin} to be registered.
+   * If an error occurs when invoking `provider`, the preset and all of its plugins will not be registered.
+   *
+   * @param provider - The provider for the preset whose plugins are to be registered.
+   * @throws If a problem occurs while invoking `provider`.
    */
-  static register(plugin: Plugin) {
-    plugin.getTagNames().forEach((tag) => (Europa[_plugins][tag] = plugin));
+  static registerPreset(provider: PresetProvider) {
+    Europa[_pluginManager].addPreset(provider);
+  }
+
+  /**
+   * Registers the specified `service`.
+   *
+   * @param service - The {@link Service} to be registered.
+   * @throws If a {@link Service} has already been configured with the same name.
+   */
+  static registerService(service: Service) {
+    Europa[_serviceManager].setService(service.getName(), service);
   }
 
   /**
@@ -192,21 +164,11 @@ export class Europa {
     const window = this[_window];
 
     if (window) {
-      Europa[_serviceManager].getService<WindowService>('window').closeWindow(window);
+      Europa[_serviceManager].getService(ServiceName.Window).closeWindow(window);
       this[_window] = null;
     }
 
     return this;
-  }
-
-  /**
-   * Configures the `service` provided to be used by all {@link Europa} instances.
-   *
-   * @param service - The {@link Service} to be configured.
-   * @throws If a {@link Service} has already been configured with the same name.
-   */
-  static use(service: Service) {
-    Europa[_serviceManager].setService(service.getName(), service);
   }
 
   /**
@@ -217,15 +179,20 @@ export class Europa {
   }
 
   /**
+   * The end of line character to be used for HTML to Markdown conversion by this {@link Europa} instance.
+   */
+  get eol(): string {
+    return Europa[_serviceManager].getService(ServiceName.Charset).getEndOfLineCharacter();
+  }
+
+  /**
    * The window to be used for HTML to Markdown conversion by this {@link Europa} instance.
    */
   get window(): Window {
     let window = this[_window];
 
     if (!window) {
-      window = this[_window] = Europa[_serviceManager]
-        .getService<WindowService>('window')
-        .getWindow(this[_options].baseUri);
+      window = this[_window] = Europa[_serviceManager].getService(ServiceName.Window).getWindow(this[_options].baseUri);
     }
 
     return window;

@@ -4,7 +4,7 @@
 [Europa](https://github.com/neocotic/europa)'s HTML to Markdown conversion.
 
 [![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
-[![License](https://img.shields.io/npm/l/europa-core.svg?style=flat-square)](https://github.com/neocotic/europa/blob/main/LICENSE.md)
+[![License](https://img.shields.io/npm/l/europa-core.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/europa-core/LICENSE.md)
 [![Release](https://img.shields.io/npm/v/europa-core.svg?style=flat-square)](https://npmjs.com/package/europa-core)
 
 * [Install](#install)
@@ -30,30 +30,38 @@ that supports your desired environment. For example:
 ## API
 
 As this is the core of Europa, it contains all the HTML to Markdown conversion logic and, since it's designed to use the
-DOM as the model, all that consumers need to do is define and register an implementation of `WindowService`.
+DOM as the model, all that consumers need to do is define and register implementations of the necessary services (i.e.
+`CharsetService` and `WindowService`).
 
-Most modules that use Europa Core will look something like the following:
+A typical implementation module of Europa Core will look something like the following:
 
 ``` javascript
-import { Europa, WindowService } from 'europa-core';
+import { CharsetService, Europa, WindowService } from 'europa-core';
+
+class ExampleCharsetService extends CharsetService {
+  getEndOfLineCharacter() { /* ... */ }
+}
 
 class ExampleWindowService extends WindowService {
-  getDefaultBaseUri() { /* ... */ },
-  getWindow(baseUri) { /* ... */ },
+  getDefaultBaseUri() { /* ... */ }
+  getWindow(baseUri) { /* ... */ }
   isCloseable(window) { /* ... */ }
 }
 
+Europa.use(new ExampleCharsetService());
 Europa.use(new ExampleWindowService());
 
 export default Europa;
 ```
 
-This allows the core to control the primary API and keep it consistent across all environments. With the above in place,
-you are free to import Europa and use it as you would anywhere else.
+This allows Europa Core to control the primary API and keep it consistent across all environments. With the above in
+place, you are free to import Europa and use it as you would anywhere else.
 
-You will find the primary API documentation on [Europa](https://github.com/neocotic/europa/tree/main/packages/europa).
-All direct consumers of core should also reference this to help developers find the information easily. However, they
-are encouraged to provide environment-specific examples.
+You will find the primary API documentation on one of the official Europa Core implementation packages (e.g.
+[europa](https://github.com/neocotic/europa/tree/main/packages/europa),
+[node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa)). All Europa Core implementations
+should also reference this to help developers find the information easily. However, they are encouraged to provide
+environment-specific examples.
 
 ## Bugs
 

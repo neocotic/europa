@@ -45,6 +45,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "europa-core": "^5.0.1",
+    "europa-preset-default": "^5.0.1",
     "europa-test": "^5.0.1",
     "jasmine": "^4.1.0",
     "karma": "^6.3.19",

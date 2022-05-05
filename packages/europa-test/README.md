@@ -4,7 +4,7 @@
 [Europa Core](https://github.com/neocotic/europa/tree/main/packages/europa-core) implementations.
 
 [![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
-[![License](https://img.shields.io/npm/l/europa-test.svg?style=flat-square)](https://github.com/neocotic/europa/blob/main/LICENSE.md)
+[![License](https://img.shields.io/npm/l/europa-test.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/europa-test/LICENSE.md)
 [![Release](https://img.shields.io/npm/v/europa-test.svg?style=flat-square)](https://npmjs.com/package/europa-test)
 
 * [Install](#install)
@@ -57,7 +57,7 @@ testEuropa({
 
 ## Bugs
 
-If you have any problems with Europa or would like to see changes currently in development you can do so
+If you have any problems with Europa Test or would like to see changes currently in development you can do so
 [here](https://github.com/neocotic/europa/issues).
 
 ## Contributors

@@ -20,78 +20,79 @@
  * SOFTWARE.
  */
 
-import { Conversion } from 'europa-core/Conversion';
+import { Conversion, ElementConversionContext } from 'europa-core/Conversion';
+import { PluginApi } from 'europa-core/plugin/PluginApi';
 
 /**
- * A plugin that can tap into multiple parts in the conversion process while being specific to only a sub-set of tags.
+ * A plugin that hooks into the {@link Europa} conversion process.
+ *
+ * Any declared converters will override any previously associated tag name to converter mappings when the plugin is
+ * added to {@link Europa}.
  */
-export class Plugin {
+export interface Plugin {
   /**
-   * Called after {@link Plugin#convert} **and** only once all children elements have been converted as well, provided
-   * they weren't skipped, and intended for tidying up after the conversion.
-   *
-   * `context` can be used to receive any state for a single element conversion from {@link Plugin#before} and
-   * {@link Plugin#convert}.
-   *
-   * @param conversion - The current {@link Conversion}.
-   * @param context - The current context for this {@link Plugin}.
+   * The name of this {@link Plugin}.
    */
-  after(conversion: Conversion, context: Record<string, any>) {
-    // Do nothing by default
-  }
-
+  readonly name: string;
   /**
-   * Called before any elements are converted and intended to setup this {@link Plugin} initially.
+   * A map containing tag name to converter pairs.
+   */
+  readonly converters?: { readonly [key: string]: PluginConverter };
+  /**
+   * Called after all elements have been converted for a single input, allowing this plugin to perform any necessary
+   * clean up or tear down steps.
    *
    * @param conversion - The current {@link Conversion}.
    */
-  afterAll(conversion: Conversion) {
-    // Do nothing by default
-  }
-
+  readonly endConversion?: (conversion: Conversion) => void;
   /**
-   * Called immediately before {@link Plugin#convert} and intended for preparing this {@link Plugin} for conversion.
+   * Called before any elements are converted for a single input, allowing this plugin to perform any necessary setup
+   * steps.
    *
-   * `context` can be used to pass any state for a single element conversion to {@link Plugin#convert} and then to
-   * {@link Plugin#after}.
-   *
-   * @param conversion - The current {@link Conversion}.
-   * @param context - The current context for this {@link Plugin}.
+   * @param {Conversion} conversion - the current {@link Conversion}
    */
-  before(conversion: Conversion, context: Record<string, any>) {
-    // Do nothing by default
-  }
+  readonly startConversion?: (conversion: Conversion) => void;
+}
 
+/**
+ * Responsible for converting an individual HTML element to Markdown as defined in a plugin.
+ */
+export interface PluginConverter {
   /**
-   * Called after all elements have been converted and intended to completing any steps for this {@link Plugin}.
+   * Called at the end of the current element within the specified `conversion` and only once all children elements have
+   * been converted as well, provided they weren't skipped.
+   *
+   * `context` can be used to receive any state that may have been passed at the start of the single element conversion
+   * by this converter.
    *
    * @param conversion - The current {@link Conversion}.
+   * @param context - The current {@link ElementConversionContext}.
    */
-  beforeAll(conversion: Conversion) {
-    // Do nothing by default
-  }
-
+  readonly endTag?: (conversion: Conversion, context: ElementConversionContext) => void;
   /**
-   * Converts the current element within the specified `conversion` which can be used to provide control over the
-   * conversion and returns whether the children of the element should be converted.
+   * Called at the start of the current element within the specified `conversion` which can be used to provide control
+   * over the conversion and returns whether the children of the element should be converted.
    *
-   * `context` can be used to pass any state for a single element conversion from {@link Plugin#before} to
-   * {@link Plugin#after}.
+   * `context` can be used to pass any state for a single element conversion from start to end, limited to this
+   * converter.
    *
    * @param conversion - The current {@link Conversion}.
-   * @param context - The current context for this {@link Plugin}.
+   * @param context - The current {@link ElementConversionContext}.
    * @return `true` if the children of the current element should be converted; otherwise `false`.
    */
-  convert(conversion: Conversion, context: Record<string, any>): boolean {
-    return true;
-  }
-
-  /**
-   * Returns the names of tags with which this {@link Plugin} should be registered to handle.
-   *
-   * @return The names of supported tags.
-   */
-  getTagNames(): string[] {
-    return [];
-  }
+  readonly startTag?: (conversion: Conversion, context: ElementConversionContext) => boolean;
 }
+
+/**
+ * Provides a plugin compatible with {@link Europa}.
+ *
+ * Invoked internally by {@link PluginManager#addPlugin} in order to get the plugin and is passed an `api`, which it can
+ * choose to use or not.
+ *
+ * Any error that is thrown will bubble up and prevent the plugin from being added.
+ *
+ * @param api - The {@link PluginApi} that provides useful methods for plugin providers.
+ * @return The provided {@link Plugin}.
+ * @throws If a problem occurs while providing the plugin.
+ */
+export type PluginProvider = (api: PluginApi) => Plugin;

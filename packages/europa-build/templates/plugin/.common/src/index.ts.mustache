@@ -1,0 +1,36 @@
+{{>copyright_header}}
+
+import { Plugin, PluginApi } from 'europa-core';
+
+export default function (api: PluginApi): Plugin {
+  return {
+    name: '{{name}}',
+
+    // This method can be removed if this plugin offers no converters or expanded to support more tags, if needed
+    converters: {
+      // TODO: Rename `TAGNAME` to the HTML tag name that is desired to be converted
+      TAGNAME: {
+        // This method can be removed if this plugin does not need to hook into the start of conversion for this tag
+        startTag(conversion, context): boolean {
+          // TODO: Complete
+          return true;
+        },
+
+        // This method can be removed if this plugin does not need to hook into the end of conversion for this tag
+        endTag(conversion, context) {
+          // TODO: Complete
+        },
+      },
+    },
+
+    // This method can be removed if this plugin does not need to hook into the start of conversion
+    startConversion(conversion) {
+      // TODO: Complete
+    },
+
+    // This method can be removed if this plugin does not need to hook into the end of conversion
+    endConversion(conversion) {
+      // TODO: Complete
+    },
+  };
+}
