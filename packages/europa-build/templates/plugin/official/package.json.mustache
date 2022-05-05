@@ -1,0 +1,38 @@
+{
+  "name": "{{name}}",
+  "version": "{{version}}",
+  "description": "{{description}}",
+  "keywords": [
+    {{#keywords}}
+    "{{.}}",
+    {{/keywords}}
+    "europa-plugin"
+  ],
+  "homepage": "https://github.com/neocotic/europa",
+  "bugs": {
+    "url": "https://github.com/neocotic/europa/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "neocotic",
+    "url": "https://github.com/neocotic"
+  },
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://github.com/sponsors/neocotic"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/neocotic"
+    }
+  ],
+  "main": "lib/cjs/index",
+  "module": "lib/esm/index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neocotic/europa.git",
+    "directory": "packages/{{name}}"
+  },
+  {{>package_common}}
+}

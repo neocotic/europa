@@ -4,7 +4,7 @@
 
 [![Demo](https://img.shields.io/badge/demo-live-brightgreen.svg?style=flat-square)](https://codepen.io/neocotic/pen/YzeKvzG)
 [![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
-[![License](https://img.shields.io/npm/l/europa.svg?style=flat-square)](https://github.com/neocotic/europa/blob/main/LICENSE.md)
+[![License](https://img.shields.io/npm/l/europa.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/europa/LICENSE.md)
 [![Release](https://img.shields.io/npm/v/europa.svg?style=flat-square)](https://npmjs.com/package/europa)
 
 * [Install](#install)
@@ -24,7 +24,8 @@ Install using your preferred package manager. For example;
 $ npm install --save europa
 ```
 
-If you want to simply download the file to be used in the browser you can find them on [cdnjs](https://cdnjs.com/libraries/europa).
+If you want to simply download the file to be used in the browser you can find them on
+[cdnjs](https://cdnjs.com/libraries/europa).
 
 Check out [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa) if you want to install it for
 use within [Node.js](https://nodejs.org).
@@ -63,10 +64,10 @@ Open up `demo.html` in your browser to play around a bit.
 Simply create an instance of `Europa` and you've done most of the work. You can control many aspects of the HTML to
 Markdown conversion by passing the following options to the constructor:
 
-| Option   | Type    | Description                                                                                | Default              |
-|----------|---------|--------------------------------------------------------------------------------------------|----------------------|
-| absolute | Boolean | Whether absolute URLS should be used for anchors/images                                    | `false`              |
-| inline   | Boolean | Whether anchor/image URLs are to be inserted inline                                        | `false`              |
+| Option   | Type    | Description                                             | Default |
+|----------|---------|---------------------------------------------------------|---------|
+| absolute | Boolean | Whether absolute URLS should be used for anchors/images | `false` |
+| inline   | Boolean | Whether anchor/image URLs are to be inserted inline     | `false` |
 
 ``` javascript
 const europa = new Europa({
@@ -98,56 +99,67 @@ europa.convert(div);
 
 ## Plugins
 
-Europa is fully pluggable and is packed with built-in plugins in order to get full support for basic Markdown. It
+Europa is fully pluggable and is packed with default plugins in order to get full support for basic Markdown. It
 enables the creation of external plugins to further extend Europa's capabilities to support extended Markdown syntax or
 even new HTML elements should they not be added to Europa quick enough for you.
 
-The predefined plugins are included in [Europa Core](https://github.com/neocotic/europa/tree/main/packages/europa-core)
-for now, however, the plan is to externalize all of these as well, while keeping them as defaults. The hope is that this
-will continue to make them easier to maintain and make Europa more modular.
+Plugins are packaged independently, however, the default plugins are included in
+[europa-preset-default](https://github.com/neocotic/europa/tree/main/packages/europa-preset-default) and is bundled with
+[Europa Core](https://github.com/neocotic/europa/tree/main/packages/europa-core) so that they are available to all
+implementations with no extra effort.
 
 The API for plugins is simple on a high level, but you'll need to get to grips with the internal API to understand what
 you can really do:
 
 ``` javascript
-class ExamplePlugin extends Europa.Plugin {
-  after(conversion, context) { /* ... */ },
-  afterAll(conversion) { /* ... */ },
-  before(conversion, context) { /* ... */ },
-  beforeAll(conversion) { /* ... */ },
-  convert(conversion, context) { /* ... */ },
-  getTagNames() { /* ... */ }
-}
-
-Europa.register(new ExamplePlugin());
+Europa.registerPlugin((api) => ({
+  name: 'europa-plugin-example',
+  // Everything below is optional
+  converters: {
+    TAGNAME: {
+      startTag(conversion, context) { /* ... */ },
+      endTag(conversion, context) { /* ... */ },
+    },
+  },
+  startConversion(conversion) { /* ... */ },
+  endConversion(conversion) { /* ... */ },
+}));
 ```
 
-Your best bet is to look at how other plugins work.
+It's highly recommended to look at existing plugins to get a better understanding of how things work.
 
-All plugins should be responsible for registering themselves when loaded as to minimize the work required by you, in
-order to use them. Since multiple plugins could support the same tag(s), the load order is important as the last plugin
-loaded that declares support for a tag, will be the one that's used. Be wary of overriding tags supported by built-in
-plugins and consider whether It's something that should be part of the original plugin. If so,
-[open a pull request](#contributing)!
+Since multiple plugins could support the same tag(s), the load order is important as the last plugin loaded that
+declares support for a tag, will be the one that's used. Be wary of overriding tags supported by default plugins and
+consider whether it's something that should be part of the original plugin. If so, [open a pull request](#contributors)!
 
 A good practice for naming plugin packages is `europa-plugin-FRIENDLY_TAG_NAME`. For example; `europa-plugin-anchor` and
 not `europa-plugin-a` or `europa-plugin-link` (which could be confused with the `<link>` element). Each plugin should
-have a shared goal.
-
-The plugin implementation class -- not registered instance -- should always be exported by each plugin. This is to allow
-others to extend and take advantage of the OOP design.
+aim to support a specific Markdown feature.
 
 ### Presets
 
-Europa also has the concept of a "preset", which is essentially a bundle of plugins. In fact, all the built-in plugins
-are provided by a default preset internally.
+Europa also has the concept of a "preset", which is essentially a bundle of plugins. In fact, all the default plugins
+are provided by a default preset.
 
-A preset simply imports a collection of plugins, all of which register themselves with Europa automatically.
+A preset simply imports a collection of plugins and declares them so that they can be registered together. For example;
 
-A good practice for naming preset packages is `europa-preset-FRIENDLY_GOAL_NAME`. For example; `europa-preset-atlassian`
-could be used to register plugins that converts HTML to Atlassian Wiki Markup. Each plugin should have a shared goal.
+``` javascript
+import examplePluginProvider from 'europa-plugin-example';
 
-In theory, a preset could be made up of multiple presets.
+const pluginProviders = [
+  examplePluginProvider,
+  /* ... */
+];
+
+Europa.registerPreset((api) => ({
+  name: 'europa-preset-example',
+  plugins: pluginProviders.map((pluginProvider) => pluginProvider(api)),
+}));
+```
+
+A good practice for naming preset packages is `europa-preset-FRIENDLY_GOAL_NAME`. For example; `europa-preset-github`
+could be used to register plugins that converts HTML to GitHub-flavoured Markdown. Each preset should include plugins
+that aim to support a related Markdown feature set.
 
 ## Migrating from older versions
 

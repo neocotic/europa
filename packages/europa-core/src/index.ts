@@ -20,32 +20,16 @@
  * SOFTWARE.
  */
 
-import 'europa-core/plugin/preset/default';
-
 export * from 'europa-core/option/Option';
 export * from 'europa-core/option/OptionParser';
-export * from 'europa-core/plugin/predefined/AnchorPlugin';
-export * from 'europa-core/plugin/predefined/BlockQuotePlugin';
-export * from 'europa-core/plugin/predefined/BreakPlugin';
-export * from 'europa-core/plugin/predefined/CodePlugin';
-export * from 'europa-core/plugin/predefined/DefinitionTermPlugin';
-export * from 'europa-core/plugin/predefined/DetailsPlugin';
-export * from 'europa-core/plugin/predefined/EmphasisPlugin';
-export * from 'europa-core/plugin/predefined/EmptyPlugin';
-export * from 'europa-core/plugin/predefined/FramePlugin';
-export * from 'europa-core/plugin/predefined/HeadingPlugin';
-export * from 'europa-core/plugin/predefined/HorizontalRulePlugin';
-export * from 'europa-core/plugin/predefined/ImagePlugin';
-export * from 'europa-core/plugin/predefined/ListItemPlugin';
-export * from 'europa-core/plugin/predefined/OrderedListPlugin';
-export * from 'europa-core/plugin/predefined/ParagraphPlugin';
-export * from 'europa-core/plugin/predefined/PreformattedPlugin';
-export * from 'europa-core/plugin/predefined/QuotePlugin';
-export * from 'europa-core/plugin/predefined/StrongPlugin';
-export * from 'europa-core/plugin/predefined/UnorderedListPlugin';
 export * from 'europa-core/plugin/Plugin';
+export * from 'europa-core/plugin/PluginApi';
+export * from 'europa-core/plugin/PluginManager';
+export * from 'europa-core/plugin/Preset';
+export * from 'europa-core/service/charset/CharsetService';
 export * from 'europa-core/service/window/WindowService';
 export * from 'europa-core/service/Service';
 export * from 'europa-core/service/ServiceManager';
+export * from 'europa-core/service/ServiceName';
 export * from 'europa-core/Conversion';
 export * from 'europa-core/Europa';

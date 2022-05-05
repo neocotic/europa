@@ -1,0 +1,20 @@
+Install using your preferred package manager. For example;
+
+``` bash
+$ npm install --save {{name}}
+```
+
+Then, in order to activate this preset;
+
+``` javascript
+// Import europa-core implementation (e.g. `europa`, `node-europa`)
+import preset from '{{name}}';
+
+Europa.registerPreset(preset);
+// ...
+```
+{{#isDefault}}
+
+However, Europa Core implementations automatically register this preset by default, so you should not need to do
+anything to use this preset and all of its plugins.
+{{/isDefault}}

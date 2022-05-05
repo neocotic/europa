@@ -20,10 +20,17 @@
  * SOFTWARE.
  */
 
-import { Europa } from 'europa-core/Europa';
+import { Europa, EuropaOptions } from 'europa-core/Europa';
+import { ElementNode } from 'europa-core/dom/ElementNode';
+import { PluginManager } from 'europa-core/plugin/PluginManager';
 
 const _document = Symbol('document');
 const _element = Symbol('element');
+const _eol = Symbol('eol');
+const _europa = Symbol('europa');
+const _options = Symbol('options');
+const _pluginManager = Symbol('pluginManager');
+const _skipTagNames = Symbol('skipTagNames');
 const _tagName = Symbol('tagName');
 const _window = Symbol('window');
 
@@ -73,16 +80,6 @@ export class Conversion {
   );
 
   /**
-   * The {@link Europa} instance responsible for this {@link Conversion}.
-   */
-  readonly europa: Europa;
-
-  /**
-   * The options for this {@link Conversion}.
-   */
-  readonly options: Record<string, any>;
-
-  /**
    * Whether the buffer is at the start of the current line.
    */
   atLeft = true;
@@ -105,7 +102,7 @@ export class Conversion {
   /**
    * The context for this {@link Conversion}.
    */
-  readonly context: Record<string, any> = {};
+  readonly context: ConversionContext = {};
 
   /**
    * Whether the buffer is currently within a code block.
@@ -130,7 +127,7 @@ export class Conversion {
   /**
    * The start of the current line.
    */
-  left = '\n';
+  left: string;
 
   /**
    * The depth of nested lists.
@@ -144,7 +141,41 @@ export class Conversion {
 
   private [_document]: Document;
   private [_element]: HTMLElement;
-  private [_tagName]: string | null;
+  private readonly [_eol]: string;
+  private readonly [_europa]: Europa;
+  private readonly [_options]: ConversionOptions;
+  private readonly [_pluginManager]: PluginManager;
+  private readonly [_skipTagNames] = new Set([
+    'APPLET',
+    'AREA',
+    'AUDIO',
+    'BUTTON',
+    'CANVAS',
+    'DATALIST',
+    'EMBED',
+    'HEAD',
+    'INPUT',
+    'MAP',
+    'MENU',
+    'METER',
+    'NOFRAMES',
+    'NOSCRIPT',
+    'OBJECT',
+    'OPTGROUP',
+    'OPTION',
+    'PARAM',
+    'PROGRESS',
+    'RP',
+    'RT',
+    'RUBY',
+    'SCRIPT',
+    'SELECT',
+    'STYLE',
+    'TEXTAREA',
+    'TITLE',
+    'VIDEO',
+  ]);
+  private [_tagName]: string;
   private [_window]: Window;
 
   /**
@@ -153,14 +184,18 @@ export class Conversion {
    * @param europa - The {@link Europa} instance responsible for this conversion.
    * @param root - The root element.
    * @param options - The options to be used.
+   * @param pluginManager - The {@link PluginManager} to be used.
    */
-  constructor(europa: Europa, root: HTMLElement, options: Record<string, any>) {
-    this.europa = europa;
-    this.options = options;
+  constructor(europa: Europa, root: HTMLElement, options: ConversionOptions, pluginManager: PluginManager) {
     this[_document] = europa.document;
     this[_element] = root;
-    this[_tagName] = root.tagName?.toLowerCase() ?? null;
+    this[_eol] = europa.eol;
+    this[_europa] = europa;
+    this[_options] = options;
+    this[_pluginManager] = pluginManager;
+    this[_tagName] = root.tagName.toUpperCase();
     this[_window] = europa.window;
+    this.left = this[_eol];
   }
 
   /**
@@ -204,6 +239,84 @@ export class Conversion {
   }
 
   /**
+   * Converts the specified `element` and it's children into Markdown.
+   *
+   * Nothing happens if `element` is `null` or is invisible (simplified detection used).
+   *
+   * @param element - The element (along well as it's children) to be converted into Markdown.
+   * @return A reference to this {@link Conversion} for chaining purposes.
+   */
+  convertElement(element: HTMLElement | null): this {
+    if (!element) {
+      return this;
+    }
+
+    const pluginManager = this[_pluginManager];
+
+    if (element.nodeType === ElementNode.Element) {
+      if (!this.isVisible(element)) {
+        return this;
+      }
+
+      this.element = element;
+
+      const tagName = this.tagName;
+      if (this.skipTagNames.has(tagName)) {
+        return this;
+      }
+
+      const context: ElementConversionContext = {};
+      const convertChildren = pluginManager.hasConverter(tagName)
+        ? pluginManager.invokeConverter(tagName, 'startTag', this, context)
+        : true;
+
+      if (convertChildren) {
+        for (let i = 0; i < element.childNodes.length; i++) {
+          this.convertElement(element.childNodes[i] as HTMLElement);
+        }
+      }
+
+      pluginManager.invokeConverter(tagName, 'endTag', this, context);
+    } else if (element.nodeType === ElementNode.Text) {
+      const value = element.nodeValue || '';
+
+      if (this.inPreformattedBlock) {
+        this.output(value);
+      } else if (this.inCodeBlock) {
+        this.output(value.replace(/`/g, '\\`'));
+      } else {
+        this.output(value, true);
+      }
+    }
+
+    return this;
+  }
+
+  /**
+   * Ensures output buffer contains last output string and returns the trimmed output buffer.
+   *
+   * @return The complete output buffer.
+   */
+  end(): string {
+    return this.append('').buffer.trim();
+  }
+
+  /**
+   * Checks whether the specified `element` is currently visible within the current window of this {@link Conversion}.
+   *
+   * This is not a very sophisticated check and could easily be mistaken, but it should catch a lot of the most simple
+   * cases.
+   *
+   * @param element - The element whose visibility is to be checked.
+   * @return `true` if `element` is visible; otherwise `false`.
+   */
+  isVisible(element: Element): boolean {
+    const style = this.window.getComputedStyle(element);
+
+    return style.getPropertyValue('display') !== 'none' && style.getPropertyValue('visibility') !== 'hidden';
+  }
+
+  /**
    * Outputs the specified `str` to the buffer.
    *
    * Optionally, `str` can be "cleaned" before being output. Doing so will replace any certain special characters as
@@ -218,12 +331,14 @@ export class Conversion {
       return this;
     }
 
-    str = str.replace(/\r\n/g, '\n');
+    const eol = this.eol;
+
+    str = str.replace(/\r\n/g, eol);
 
     if (clean) {
       str = str
-        .replace(/\n([ \t]*\n)+/g, '\n')
-        .replace(/\n[ \t]+/g, '\n')
+        .replace(/\n([ \t]*\n)+/g, eol)
+        .replace(/\n[ \t]+/g, eol)
         .replace(/[ \t]+/g, ' ');
 
       Object.entries(Conversion.replacements).forEach(([key, value]) => {
@@ -235,7 +350,7 @@ export class Conversion {
       if (this.atNoWhiteSpace) {
         str = str.replace(/^[ \t\n]+/, '');
       } else if (/^[ \t]*\n/.test(str)) {
-        str = str.replace(/^[ \t\n]+/, '\n');
+        str = str.replace(/^[ \t\n]+/, eol);
       } else {
         str = str.replace(/^[ \t]+/, ' ');
       }
@@ -296,15 +411,41 @@ export class Conversion {
    */
   set element(element: HTMLElement) {
     this[_element] = element;
-    this[_tagName] = element.tagName?.toLowerCase() ?? null;
+    this[_tagName] = element.tagName.toUpperCase();
   }
 
   /**
-   * The name of the tag for the current element for this {@link Conversion}.
-   *
-   * The tag name will always be in lower case, when available.
+   * The end of line character to be used by this {@link Conversion}.
    */
-  get tagName(): string | null {
+  get eol(): string {
+    return this[_eol];
+  }
+
+  /**
+   * The {@link Europa} instance responsible for this {@link Conversion}.
+   */
+  get europa(): Europa {
+    return this[_europa];
+  }
+
+  /**
+   * The options for this {@link Conversion}.
+   */
+  get options(): ConversionOptions {
+    return { ...this[_options] };
+  }
+
+  /**
+   * The set of tag upper-case names for which conversion should be skipped for this {@link Conversion}.
+   */
+  get skipTagNames(): Set<string> {
+    return this[_skipTagNames];
+  }
+
+  /**
+   * The upper-case name of the tag for the current element for this {@link Conversion}.
+   */
+  get tagName(): string {
     return this[_tagName];
   }
 
@@ -331,3 +472,18 @@ export class Conversion {
     this[_document] = window.document;
   }
 }
+
+/**
+ * The context for a {@link Conversion}.
+ */
+export type ConversionContext = Record<string, any>;
+
+/**
+ * The options used by {@link Conversion}.
+ */
+export type ConversionOptions = EuropaOptions;
+
+/**
+ * The context for an HTML element being converted by a {@link Conversion}.
+ */
+export type ElementConversionContext = Record<string, any>;

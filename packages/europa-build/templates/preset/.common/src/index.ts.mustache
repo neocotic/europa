@@ -1,0 +1,15 @@
+{{>copyright_header}}
+
+import { PluginApi, PluginProvider, Preset } from 'europa-core';
+
+const pluginProviders: PluginProvider[] = [
+  // TODO: Add each plugin import to this array
+];
+
+export default function (api: PluginApi): Preset {
+  return {
+    name: '{{name}}',
+
+    plugins: pluginProviders.map((pluginProvider) => pluginProvider(api)),
+  };
+}

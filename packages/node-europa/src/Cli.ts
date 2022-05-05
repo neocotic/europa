@@ -24,6 +24,7 @@ import { Command, program } from 'commander';
 import { readFile, writeFile } from 'fs/promises';
 import * as glob from 'glob';
 import * as mkdirp from 'mkdirp';
+import { EOL } from 'os';
 import { basename, dirname, extname, join, normalize } from 'path';
 import { createInterface } from 'readline';
 import { Readable, Writable } from 'stream';
@@ -35,28 +36,22 @@ import Europa from 'node-europa/index';
 const findFiles = promisify(glob);
 
 const _command = Symbol('command');
-const _input = Symbol('input');
-const _output = Symbol('output');
+const _options = Symbol('options');
 
 /**
  * A command-line interface for converting HTML into Markdown.
  */
 export class Cli {
   private [_command]: CliCommand | undefined;
-  private readonly [_input]: Readable;
-  private readonly [_output]: Writable;
+  private readonly [_options]: CliOptions;
 
   /**
-   * Creates a new instance of {@link Cli}.
+   * Creates a new instance of {@link Cli} using the `options` provided.
    *
-   * @param input - The `Readable` from which to read the HTML to be converted if no files or evaluation string is
-   * provided.
-   * @param output - The `Writable` to which the generated Markdown is to be written if no files or output path is
-   * provided.
+   * @param options - The options to be used.
    */
-  constructor(input: Readable, output: Writable) {
-    this[_input] = input;
-    this[_output] = output;
+  constructor(options: CliOptions) {
+    this[_options] = options;
   }
 
   /**
@@ -69,19 +64,23 @@ export class Cli {
     const command = await this.getCommand();
     command.parse(args);
 
-    const europa = new Europa({
-      absolute: command.getOptionValue('absolute'),
-      baseUri: command.getOptionValue('baseUri') || undefined,
-      inline: command.getOptionValue('inline'),
-    });
-    const html = command.getOptionValue('eval');
+    try {
+      const europa = new Europa({
+        absolute: command.getOptionValue('absolute'),
+        baseUri: command.getOptionValue('baseUri') || undefined,
+        inline: command.getOptionValue('inline'),
+      });
+      const html = command.getOptionValue('eval');
 
-    if (html) {
-      await this.readString(command, html, europa);
-    } else if (command.args.length) {
-      await this.readFiles(command, await Cli.resolveFiles(command.args), europa);
-    } else {
-      this.readInput(command, europa);
+      if (html) {
+        await this.readString(command, html, europa);
+      } else if (command.args.length) {
+        await Cli.readFiles(command, await this.resolveFiles(command.args), europa);
+      } else {
+        this.readInput(command, europa);
+      }
+    } catch (e) {
+      this[_options].onError?.(e);
     }
   }
 
@@ -117,7 +116,7 @@ export class Cli {
     await writeFile(targetFile, markdown, 'utf8');
   }
 
-  private async readFiles(command: CliCommand, files: string[], europa: Europa): Promise<void> {
+  private static async readFiles(command: CliCommand, files: string[], europa: Europa): Promise<void> {
     if (!files.length) {
       return;
     }
@@ -132,16 +131,17 @@ export class Cli {
 
   private readInput(command: CliCommand, europa: Europa) {
     const buffer: string[] = [];
+    const { inputStream, outputStream } = this[_options];
     const reader = createInterface({
-      input: this[_input],
-      output: this[_output],
+      input: inputStream,
+      output: outputStream,
       terminal: false,
     });
 
     reader.on('line', (line) => buffer.push(line));
     reader.on('close', async () => {
       if (buffer.length) {
-        await this.readString(command, buffer.join('\n'), europa);
+        await this.readString(command, buffer.join(EOL), europa);
       }
     });
   }
@@ -158,15 +158,16 @@ export class Cli {
 
       await writeFile(target, markdown, 'utf8');
     } else {
-      this[_output].end(markdown, 'utf8');
+      this[_options].outputStream.end(markdown, 'utf8');
     }
   }
 
-  private static async resolveFiles(patterns: string[]): Promise<string[]> {
+  private async resolveFiles(patterns: string[]): Promise<string[]> {
     const files = new Set<string>();
 
     for (const pattern of patterns) {
       const results = await findFiles(pattern, {
+        cwd: this[_options].cwd,
         nodir: true,
         nosort: true,
       });
@@ -177,6 +178,28 @@ export class Cli {
     return [...files].sort();
   }
 }
+
+/**
+ * The options used by {@link Cli}.
+ */
+export type CliOptions = {
+  /**
+   * The current working directory to be used to resolve relative file paths.
+   */
+  readonly cwd: string;
+  /**
+   * The `Readable` from which to read the HTML to be converted if no files or evaluation string is provided.
+   */
+  readonly inputStream: Readable;
+  /**
+   * A handler for any errors that occur while processing a command.
+   */
+  readonly onError?: (error: unknown) => void;
+  /**
+   * The `Writable` to which the generated Markdown is to be written if no files or output path is provided.
+   */
+  readonly outputStream: Writable;
+};
 
 interface CliCommand extends Command {
   readonly absolute?: boolean;

@@ -1,0 +1,28 @@
+{
+  "name": "{{name}}",
+  "version": "{{version}}",
+  "description": "{{description}}",
+  "keywords": [
+    {{#keywords}}
+    "{{.}}",
+    {{/keywords}}
+    "europa-plugin"
+  ],
+  {{#homepageUrl}}"homepage": "{{homepageUrl}}",{{/homepageUrl}}
+  {{#bugsUrl}}"bugs": {
+    "url": "{{bugsUrl}}"
+  },{{/bugsUrl}}
+  "license": "MIT",
+  "author": {
+    {{#authorUrl}}"url": "{{authorUrl}}",{{/authorUrl}}
+    {{#authorEmail}}"email": "{{authorEmail}}",{{/authorEmail}}
+    "name": "{{authorName}}"
+  },
+  "main": "lib/cjs/index",
+  "module": "lib/esm/index",
+  "repository": {
+    "type": "git",
+    "url": "{{repositoryUrl}}"
+  },
+  {{>package_common}}
+}

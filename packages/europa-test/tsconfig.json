@@ -13,9 +13,8 @@
     "lib": [
       "DOM",
       "DOM.Iterable",
-      "ES2015"
+      "ES2017"
     ],
-    "incremental": true,
     "plugins": [
       { "transform": "typescript-transform-paths" },
       { "transform": "typescript-transform-paths", "afterDeclarations": true }

@@ -1,4 +1,7 @@
 !lib
 spec
 src
+demo.html
+karma.*
 tsconfig.*
+webpack.*

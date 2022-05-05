@@ -21,6 +21,9 @@
  */
 
 import { Service } from 'europa-core/service/Service';
+import { ServiceName } from 'europa-core/service/ServiceName';
+import { CharsetService } from 'europa-core/service/charset/CharsetService';
+import { WindowService } from 'europa-core/service/window/WindowService';
 
 const _services = Symbol('services');
 
@@ -28,16 +31,34 @@ const _services = Symbol('services');
  * A basic manager for {@link Service} implementations that are mapped to simple names.
  */
 export class ServiceManager {
-  private readonly [_services]: Record<string, Service> = {};
+  private readonly [_services]: { [name in ServiceName]?: Service } = {};
+
+  /**
+   * Returns the {@link CharsetService} implementation being managed.
+   *
+   * @param name - The name of the {@link Service} to be returned.
+   * @return The {@link CharsetService} being managed.
+   * @throws If no {@link CharsetService} is being managed with `name`.
+   */
+  getService(name: ServiceName.Charset): CharsetService;
+
+  /**
+   * Returns the {@link WindowService} implementation being managed.
+   *
+   * @param name - The name of the {@link Service} to be returned.
+   * @return The {@link WindowService} being managed.
+   * @throws If no {@link WindowService} is being managed with `name`.
+   */
+  getService(name: ServiceName.Window): WindowService;
 
   /**
    * Returns the {@link Service} being managed with the specified `name`.
    *
    * @param name - The name of the {@link Service} to be returned.
-   * @return The {@link Service} is being managed with `name`.
+   * @return The {@link Service} being managed with `name`.
    * @throws If no {@link Service} is being managed with `name`.
    */
-  getService<S extends Service>(name: string): S {
+  getService<S extends Service>(name: ServiceName): S {
     const service = this[_services][name];
     if (!service) {
       throw new Error(`Service is not being managed with name: ${name}`);
@@ -49,11 +70,11 @@ export class ServiceManager {
   /**
    * Sets the {@link Service} implementation to be managed for the specified `name` to the `service` provided.
    *
-   * @param name - The name of the {@link Service} to be managed with `name`.
+   * @param name - The name of the {@link Service} to be managed.
    * @param service - The {@link Service} implementation to be managed.
    * @throws If a {@link Service} is already being managed with the same `name`.
    */
-  setService(name: string, service: Service) {
+  setService(name: ServiceName, service: Service) {
     if (this[_services][name]) {
       throw new Error(`Service is already managed with name: ${name}`);
     }

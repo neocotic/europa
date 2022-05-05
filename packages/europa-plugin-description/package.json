@@ -1,0 +1,53 @@
+{
+  "name": "europa-plugin-description",
+  "version": "5.0.1",
+  "description": "Europa plugin to convert HTML description list tags to Markdown",
+  "keywords": [
+    "description",
+    "list",
+    "europa-plugin"
+  ],
+  "homepage": "https://github.com/neocotic/europa",
+  "bugs": {
+    "url": "https://github.com/neocotic/europa/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "neocotic",
+    "url": "https://github.com/neocotic"
+  },
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://github.com/sponsors/neocotic"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/neocotic"
+    }
+  ],
+  "main": "lib/cjs/index",
+  "module": "lib/esm/index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neocotic/europa.git",
+    "directory": "packages/europa-plugin-description"
+  },
+  "peerDependencies": {
+    "europa-core": "^5.0.1"
+  },
+  "devDependencies": {
+    "europa-build": "^5.0.1",
+    "europa-core": "^5.0.1"
+  },
+  "scripts": {
+    "build": "europa-build run-script build",
+    "flint": "europa-build run-script flint",
+    "format": "europa-build run-script format",
+    "lint": "europa-build run-script lint",
+    "test": "europa-build run-script test"
+  },
+  "engines": {
+    "node": "^12.20.0 || >=14"
+  }
+}

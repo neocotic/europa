@@ -20,6 +20,8 @@
  * SOFTWARE.
  */
 
+import { ServiceName } from 'europa-core/service/ServiceName';
+
 /**
  * Defines a service contract that must be met by all implementations.
  */
@@ -29,5 +31,5 @@ export abstract class Service {
    *
    * @return The service name.
    */
-  abstract getName(): string;
+  abstract getName(): ServiceName;
 }

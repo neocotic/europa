@@ -24,5 +24,10 @@
 
 const { Cli } = require('../lib/cjs/Cli');
 
-const cli = new Cli(process.stdin, process.stdout);
+const cli = new Cli({
+  cwd: process.cwd(),
+  inputStream: process.stdin,
+  onError: () => process.exit(1),
+  outputStream: process.stdout,
+});
 cli.parse(process.argv).catch(console.error);
