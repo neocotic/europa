@@ -3,7 +3,6 @@
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "removeComments": true,
-    "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": true,
     "target": "es2017",
