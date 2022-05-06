@@ -216,4 +216,5 @@ A list of Europa contributors can be found in [AUTHORS.md](https://github.com/ne
 
 Copyright © 2022 neocotic
 
-See [LICENSE.md](https://github.com/neocotic/europa/raw/main/LICENSE.md) for more information on our MIT license.
+See [LICENSE.md](https://github.com/neocotic/europa/raw/main/packages/node-europa/LICENSE.md) for more information on
+our MIT license.
