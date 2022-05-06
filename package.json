@@ -13,6 +13,6 @@
     "format": "lerna run format --stream",
     "lint": "lerna run lint --stream",
     "test": "lerna run test --stream",
-    "verify": "npm run format && npm run flint && npm run build && npm test"
+    "verify": "npm run format && npm run build && npm run flint && npm test"
   }
 }
