@@ -1,6 +1,6 @@
 {
   "name": "europa",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Library for converting HTML into valid Markdown",
   "keywords": [
     "html",
@@ -44,8 +44,8 @@
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "europa-core": "^5.0.0",
-    "europa-test": "^5.0.0",
+    "europa-core": "^5.0.1",
+    "europa-test": "^5.0.1",
     "jasmine": "^4.1.0",
     "karma": "^6.3.19",
     "karma-cli": "^2.0.0",

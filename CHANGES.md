@@ -1,3 +1,11 @@
+## Version 5.0.1, 2022.05.06
+
+* Remove copyright header from build files
+* Correct tsconfig files
+* Fix verify run-script to ensure packages compile before being linted
+* Add license file to each individual package
+* **node-europa**: Fix broken distribution and CLI
+
 ## Version 5.0.0, 2022.05.04
 
 * Migrate all Europa repositories from [!ninja](https://github.com/NotNinja) to [neocotic](https://github.com/neocotic)
