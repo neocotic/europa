@@ -1,6 +1,6 @@
 {
   "name": "europa-core",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Europa core engine for converting HTML into valid Markdown",
   "keywords": [
     "html",

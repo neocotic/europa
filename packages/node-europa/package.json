@@ -1,6 +1,6 @@
 {
   "name": "node-europa",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Node.js module for converting HTML into valid Markdown via Europa",
   "keywords": [
     "html",
@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "commander": "^9.2.0",
-    "europa-core": "^5.0.0",
+    "europa-core": "^5.0.1",
     "glob": "^8.0.1",
     "jsdom": "^19.0.0",
     "mkdirp": "^1.0.4",
@@ -58,7 +58,7 @@
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "europa-test": "^5.0.0",
+    "europa-test": "^5.0.1",
     "jasmine": "^4.1.0",
     "jasmine-spec-reporter": "^7.0.0",
     "prettier": "^2.6.2",

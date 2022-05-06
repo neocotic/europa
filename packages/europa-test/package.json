@@ -1,6 +1,6 @@
 {
   "name": "europa-test",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Test framework for Europa Core implementations",
   "keywords": [
     "europa",
@@ -33,7 +33,7 @@
     "directory": "packages/europa-test"
   },
   "dependencies": {
-    "europa-core": "^5.0.0"
+    "europa-core": "^5.0.1"
   },
   "peerDependencies": {
     "jasmine": "^4.1.0"
