@@ -42,7 +42,8 @@
     "europa-core": "^5.0.0",
     "glob": "^8.0.1",
     "jsdom": "^19.0.0",
-    "mkdirp": "^1.0.4"
+    "mkdirp": "^1.0.4",
+    "read-pkg-up": "^7.0.1"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",

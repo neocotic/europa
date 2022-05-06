@@ -21,16 +21,18 @@
  */
 
 import { Command, program } from 'commander';
-import { readFileSync, writeFileSync } from 'fs';
-import { sync as globSync } from 'glob';
-import { sync as mkdirpSync } from 'mkdirp';
+import { readFile, writeFile } from 'fs/promises';
+import * as glob from 'glob';
+import * as mkdirp from 'mkdirp';
 import { basename, dirname, extname, join, normalize } from 'path';
 import { createInterface } from 'readline';
 import { Readable, Writable } from 'stream';
+import { promisify } from 'util';
 
+import { PackageInfo } from 'node-europa/PackageInfo';
 import Europa from 'node-europa/index';
 
-import { version } from '../package.json';
+const findFiles = promisify(glob);
 
 const _command = Symbol('command');
 const _input = Symbol('input');
@@ -40,12 +42,7 @@ const _output = Symbol('output');
  * A command-line interface for converting HTML into Markdown.
  */
 export class Cli {
-  /**
-   * The character set encoding to be used to read/write files.
-   */
-  static readonly encoding = 'utf8';
-
-  private readonly [_command]: CliCommand;
+  private [_command]: CliCommand | undefined;
   private readonly [_input]: Readable;
   private readonly [_output]: Writable;
 
@@ -60,14 +57,6 @@ export class Cli {
   constructor(input: Readable, output: Writable) {
     this[_input] = input;
     this[_output] = output;
-    this[_command] = program
-      .version(version)
-      .usage('[options] [file ...]')
-      .option('-a, --absolute', 'use absolute URLs for anchors/images')
-      .option('-b, --base-uri <uri>', 'base URI for anchors/images')
-      .option('-e, --eval <html>', 'evaluate HTML string')
-      .option('-i, --inline', 'insert anchor/image URLs inline')
-      .option('-o, --output <path>', 'output directory (for files) or file (for eval/stdin)');
   }
 
   /**
@@ -76,52 +65,72 @@ export class Cli {
    *
    * @param [args=[]] - The command-line arguments to be parsed.
    */
-  parse(args: string[] = []) {
-    if (args == null) {
-      args = [];
-    }
-
-    this[_command].parse(args);
+  async parse(args: string[] = []): Promise<void> {
+    const command = await this.getCommand();
+    command.parse(args);
 
     const europa = new Europa({
-      absolute: this[_command].absolute,
-      baseUri: this[_command].baseUri || undefined,
-      inline: this[_command].inline,
+      absolute: command.getOptionValue('absolute'),
+      baseUri: command.getOptionValue('baseUri') || undefined,
+      inline: command.getOptionValue('inline'),
     });
-    const html = this[_command].eval;
+    const html = command.getOptionValue('eval');
 
     if (html) {
-      this.readString(html, europa);
-    } else if (this[_command].args.length) {
-      this.readFiles(Cli.resolveFiles(this[_command].args), europa);
+      await this.readString(command, html, europa);
+    } else if (command.args.length) {
+      await this.readFiles(command, await Cli.resolveFiles(command.args), europa);
     } else {
-      this.readInput(europa);
+      this.readInput(command, europa);
     }
   }
 
-  private static readFile(file: string, output: string | null, europa: Europa) {
-    const html = readFileSync(file, Cli.encoding);
+  private async getCommand(): Promise<CliCommand> {
+    const cachedCommand = this[_command];
+    if (cachedCommand) {
+      return cachedCommand;
+    }
+
+    const packageInfo = await PackageInfo.getSingleton();
+    const command = program
+      .version(packageInfo.json.version)
+      .usage('[options] [file ...]')
+      .option('-a, --absolute', 'use absolute URLs for anchors/images')
+      .option('-b, --base-uri <uri>', 'base URI for anchors/images')
+      .option('-e, --eval <html>', 'evaluate HTML string')
+      .option('-i, --inline', 'insert anchor/image URLs inline')
+      .option('-o, --output <path>', 'output directory (for files) or file (for eval/stdin)');
+
+    this[_command] = command;
+
+    return command;
+  }
+
+  private static async readFile(file: string, output: string | null, europa: Europa): Promise<void> {
+    const html = await readFile(file, 'utf8');
     const markdown = europa.convert(html);
     const targetDirectory = output || dirname(file);
     const targetFile = join(targetDirectory, `${basename(file, extname(file))}.md`);
 
-    mkdirpSync(targetDirectory);
+    await mkdirp(targetDirectory);
 
-    writeFileSync(targetFile, markdown, Cli.encoding);
+    await writeFile(targetFile, markdown, 'utf8');
   }
 
-  private readFiles(files: string[], europa: Europa) {
+  private async readFiles(command: CliCommand, files: string[], europa: Europa): Promise<void> {
     if (!files.length) {
       return;
     }
 
-    const { output } = this[_command];
+    const output = command.getOptionValue('output');
     const normalizedOutput = output ? normalize(output) : null;
 
-    files.forEach((file) => Cli.readFile(file, normalizedOutput, europa));
+    for (const file of files) {
+      await Cli.readFile(file, normalizedOutput, europa);
+    }
   }
 
-  private readInput(europa: Europa) {
+  private readInput(command: CliCommand, europa: Europa) {
     const buffer: string[] = [];
     const reader = createInterface({
       input: this[_input],
@@ -130,40 +139,40 @@ export class Cli {
     });
 
     reader.on('line', (line) => buffer.push(line));
-    reader.on('close', () => {
+    reader.on('close', async () => {
       if (buffer.length) {
-        this.readString(buffer.join('\n'), europa);
+        await this.readString(command, buffer.join('\n'), europa);
       }
     });
   }
 
-  private readString(html: string, europa: Europa) {
+  private async readString(command: CliCommand, html: string, europa: Europa): Promise<void> {
     const markdown = europa.convert(html);
-    const { output } = this[_command];
+    const output = command.getOptionValue('output');
 
     if (output) {
       const target = normalize(output);
       const normalizedOutput = dirname(target);
 
-      mkdirpSync(normalizedOutput);
+      await mkdirp(normalizedOutput);
 
-      writeFileSync(target, markdown, Cli.encoding);
+      await writeFile(target, markdown, 'utf8');
     } else {
-      this[_output].end(markdown, Cli.encoding);
+      this[_output].end(markdown, 'utf8');
     }
   }
 
-  private static resolveFiles(patterns: string[]): string[] {
+  private static async resolveFiles(patterns: string[]): Promise<string[]> {
     const files = new Set<string>();
 
-    patterns.forEach((pattern) => {
-      const results = globSync(pattern, {
+    for (const pattern of patterns) {
+      const results = await findFiles(pattern, {
         nodir: true,
         nosort: true,
       });
 
       results.forEach((result) => files.add(result));
-    });
+    }
 
     return [...files].sort();
   }

@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const Cli = require('../lib/cjs/Cli');
+const { Cli } = require('../lib/cjs/Cli');
 
 const cli = new Cli(process.stdin, process.stdout);
-cli.parse(process.argv);
+cli.parse(process.argv).catch(console.error);
