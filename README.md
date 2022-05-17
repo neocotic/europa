@@ -1,4 +1,4 @@
-![Europa](https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa/europa-banner-500x200.png)
+![Europa](https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-500x200.png)
 
 [![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
 [![License](https://img.shields.io/github/license/neocotic/europa.svg?style=flat-square)](https://github.com/neocotic/europa/blob/main/LICENSE.md)

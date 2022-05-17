@@ -1,4 +1,4 @@
-![Europa Core](https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa-core/europa-core-banner-742x200.png)
+![Europa Core](https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa-core/europa-core-banner-742x200.png)
 
 [Europa Core](https://github.com/neocotic/europa/tree/main/packages/europa-core) is the core engine for
 [Europa](https://github.com/neocotic/europa)'s HTML to Markdown conversion.

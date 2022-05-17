@@ -1,4 +1,4 @@
-![Europa Node](https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/node-europa/node-europa-banner-754x200.png)
+![Europa Node](https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-754x200.png)
 
 [Europa Node](https://github.com/neocotic/europa/tree/main/packages/node-europa) is a [Node.js](https://nodejs.org)
 module for converting HTML into valid Markdown.

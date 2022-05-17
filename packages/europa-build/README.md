@@ -1,4 +1,4 @@
-![Europa Build](https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa-build/europa-build-banner-738x200.png)
+![Europa Build](https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa-build/europa-build-banner-738x200.png)
 
 [Europa Build](https://github.com/neocotic/europa/tree/main/packages/europa-build) is a tool for generating and
 maintaining [Europa](https://github.com/neocotic/europa) plugin and preset packages.

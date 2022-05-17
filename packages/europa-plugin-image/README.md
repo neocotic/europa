@@ -47,8 +47,8 @@ The following HTML tags are converted by this plugin:
 HTML:
 
 ``` html
-<img src="https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa/europa-banner-250x100.png">
-<img src="https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/node-europa/node-europa-banner-377x100.png" alt="Europa Node">
+<img src="https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-250x100.png">
+<img src="https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-377x100.png" alt="Europa Node">
 ```
 
 Markdown:
@@ -57,8 +57,8 @@ Markdown:
 ![][image0]
 ![Europa Node][image1]
 
-[image0]: https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa/europa-banner-250x100.png
-[image1]: https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/node-europa/node-europa-banner-377x100.png
+[image0]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-250x100.png
+[image1]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-377x100.png
 ```
 
 ### Absolute Option Enabled
@@ -74,8 +74,8 @@ const europa = new Europa({ absolute: true });
 HTML:
 
 ``` html
-<img src="//cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa/europa-banner-250x100.png">
-<img src="//cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/node-europa/node-europa-banner-377x100.png" alt="Europa Node">
+<img src="//raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-250x100.png">
+<img src="//raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-377x100.png" alt="Europa Node">
 ```
 
 Markdown:
@@ -84,8 +84,8 @@ Markdown:
 ![][image0]
 ![Europa Node][image1]
 
-[image0]: https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa/europa-banner-250x100.png
-[image1]: https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/node-europa/node-europa-banner-377x100.png
+[image0]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-250x100.png
+[image1]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-377x100.png
 ```
 
 ### Inline Option Enabled
@@ -99,15 +99,15 @@ const europa = new Europa({ inline: true });
 HTML:
 
 ``` html
-<img src="https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa/europa-banner-250x100.png">
-<img src="https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/node-europa/node-europa-banner-377x100.png" alt="Europa Node">
+<img src="https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-250x100.png">
+<img src="https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-377x100.png" alt="Europa Node">
 ```
 
 Markdown:
 
 ``` markdown
-![](https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa/europa-banner-250x100.png)
-![Europa Node](https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/node-europa/node-europa-banner-377x100.png)
+![](https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-250x100.png)
+![Europa Node](https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-377x100.png)
 ```
 
 ## Bugs
