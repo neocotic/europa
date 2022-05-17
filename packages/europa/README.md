@@ -1,4 +1,4 @@
-![Europa](https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa/europa-banner-500x200.png)
+![Europa](https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-500x200.png)
 
 [Europa](https://github.com/neocotic/europa) is a pure JavaScript library for converting HTML into valid Markdown.
 

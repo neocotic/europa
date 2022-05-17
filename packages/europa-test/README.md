@@ -1,4 +1,4 @@
-![Europa Test](https://cdn.rawgit.com/neocotic/europa-branding/master/assets/banner/europa-test/europa-test-banner-710x200.png)
+![Europa Test](https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa-test/europa-test-banner-710x200.png)
 
 [Europa Test](https://github.com/neocotic/europa/tree/main/packages/europa-test) is a framework for testing
 [Europa Core](https://github.com/neocotic/europa/tree/main/packages/europa-core) implementations.
