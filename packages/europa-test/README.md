@@ -3,7 +3,7 @@
 [Europa Test](https://github.com/neocotic/europa/tree/main/packages/europa-test) is a framework for testing
 [Europa Core](https://github.com/neocotic/europa/tree/main/packages/europa-core) implementations.
 
-[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
+[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/main?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
 [![License](https://img.shields.io/npm/l/europa-test.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/europa-test/LICENSE.md)
 [![Release](https://img.shields.io/npm/v/europa-test.svg?style=flat-square)](https://npmjs.com/package/europa-test)
 

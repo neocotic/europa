@@ -3,7 +3,7 @@
 [Europa Build](https://github.com/neocotic/europa/tree/main/packages/europa-build) is a tool for generating and
 maintaining [Europa](https://github.com/neocotic/europa) plugin and preset packages.
 
-[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
+[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/main?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
 [![License](https://img.shields.io/npm/l/europa-build.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/europa-build/LICENSE.md)
 [![Release](https://img.shields.io/npm/v/europa-build.svg?style=flat-square)](https://npmjs.com/package/europa-build)
 

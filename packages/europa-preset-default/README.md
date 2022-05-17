@@ -2,7 +2,7 @@
 
 The default [Europa](https://github.com/neocotic/europa) preset.
 
-[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
+[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/main?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
 [![License](https://img.shields.io/npm/l/europa-preset-default.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/europa-preset-default/LICENSE.md)
 [![Release](https://img.shields.io/npm/v/europa-preset-default.svg?style=flat-square)](https://npmjs.com/package/europa-preset-default)
 
