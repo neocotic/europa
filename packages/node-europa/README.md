@@ -3,7 +3,7 @@
 [Europa Node](https://github.com/neocotic/europa/tree/main/packages/node-europa) is a [Node.js](https://nodejs.org)
 module for converting HTML into valid Markdown.
 
-[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
+[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/main?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
 [![License](https://img.shields.io/npm/l/node-europa.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/node-europa/LICENSE.md)
 [![Release](https://img.shields.io/npm/v/node-europa.svg?style=flat-square)](https://npmjs.com/package/node-europa)
 

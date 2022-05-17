@@ -2,7 +2,7 @@
 
 A [Europa](https://github.com/neocotic/europa) plugin to convert HTML tags to Markdown horizontal rules.
 
-[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
+[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/main?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
 [![License](https://img.shields.io/npm/l/europa-plugin-horizontal-rule.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/europa-plugin-horizontal-rule/LICENSE.md)
 [![Release](https://img.shields.io/npm/v/europa-plugin-horizontal-rule.svg?style=flat-square)](https://npmjs.com/package/europa-plugin-horizontal-rule)
 

@@ -3,7 +3,7 @@
 [Europa Core](https://github.com/neocotic/europa/tree/main/packages/europa-core) is the core engine for
 [Europa](https://github.com/neocotic/europa)'s HTML to Markdown conversion.
 
-[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/develop?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
+[![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/main?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
 [![License](https://img.shields.io/npm/l/europa-core.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/europa-core/LICENSE.md)
 [![Release](https://img.shields.io/npm/v/europa-core.svg?style=flat-square)](https://npmjs.com/package/europa-core)
 
