@@ -49,7 +49,7 @@ export default function (): Plugin {
           } else {
             index = imageMap[value];
             if (index == null) {
-              index = images.push(value) - 1;
+              index = images.push(value);
 
               imageMap[value] = index;
             }
@@ -80,7 +80,7 @@ export default function (): Plugin {
       conversion.append(`${conversion.eol}${conversion.eol}`);
 
       for (let i = 0; i < images.length; i++) {
-        conversion.append(`[image${i}]: ${images[i]}${conversion.eol}`);
+        conversion.append(`[image${i + 1}]: ${images[i]}${conversion.eol}`);
       }
     },
   };

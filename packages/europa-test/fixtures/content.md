@@ -50,34 +50,40 @@ label
 output
 figure
 figcaption
-![img][image0]
-![][image1]
-anchor
-anchor
-[anchor][anchor0]
-[anchor][anchor1]
-[anchor][anchor1]
-[anchor][anchor2]
-[anchor][anchor0]
-[anchor][anchor3]
-[anchor][anchor4]
-[anchor][anchor5]
-[anchor][anchor3]
-[][anchor6]
-[][anchor7]
-[**_bold-italic-anchor_**][anchor0]
-[![img][image0]anchor][anchor0]
+![image with alt 1][image1]
+![image with alt 1 (duplicate)][image1]
+![image with alt 1][image2]
+![][image3]
+![][image4]
+link with no href
+link with title but no href
+[link with href 1][link1]
+[link with href 1 and title 1][link2]
+[link with href 1 and title 1 (duplicate)][link2]
+[link with href 1 and title 2][link3]
+[link with href 1 (duplicate)][link1]
+[link with href 2][link4]
+[link with href 2 and title 1][link5]
+[link with href 2 and title 2][link6]
+[link with href 2 (duplicate)][link4]
+[][link7]
+[][link8]
+[**_link with href 1 and bold italic content_**][link1]
+[![image in link][image5]link with href 1 and image content][link1]
 
 
-[anchor0]: mock1
-[anchor1]: mock1 "mock1"
-[anchor2]: mock1 "mock2"
-[anchor3]: mock2
-[anchor4]: mock2 "mock1"
-[anchor5]: mock2 "mock2"
-[anchor6]: http://europa.mock
-[anchor7]: http://europa.mock "mock"
+[image1]: image-with-alt-1.png
+[image2]: image-with-alt-1-and-title-1.png "image with title 1"
+[image3]: image-with-title-1.png "image with title 1"
+[image4]: http://europa.mock/image.png
+[image5]: image-in-link.png
 
 
-[image0]: mock.png
-[image1]: http://europa.mock/mock.png
+[link1]: mock1
+[link2]: mock1 "mock1"
+[link3]: mock1 "mock2"
+[link4]: mock2
+[link5]: mock2 "mock1"
+[link6]: mock2 "mock2"
+[link7]: http://europa.mock
+[link8]: http://europa.mock "mock"

@@ -23,7 +23,7 @@
 import { Plugin } from 'europa-core';
 
 export default function (): Plugin {
-  const pluginName = 'europa-plugin-anchor';
+  const pluginName = 'europa-plugin-link';
 
   return {
     name: pluginName,
@@ -38,7 +38,7 @@ export default function (): Plugin {
             return true;
           }
 
-          const { anchorMap, anchors } = conversion.context[pluginName] as AnchorPluginContext;
+          const { linkMap, links } = conversion.context[pluginName] as LinkPluginContext;
           const title = element.getAttribute('title');
           const value = title ? `${href} "${title}"` : href;
           let index;
@@ -46,14 +46,14 @@ export default function (): Plugin {
           if (inline) {
             context.value = `(${value})`;
           } else {
-            index = anchorMap[value];
+            index = linkMap[value];
             if (index == null) {
-              index = anchors.push(value) - 1;
+              index = links.push(value);
 
-              anchorMap[value] = index;
+              linkMap[value] = index;
             }
 
-            context.value = `[anchor${index}]`;
+            context.value = `[link${index}]`;
           }
 
           conversion.output('[');
@@ -73,27 +73,27 @@ export default function (): Plugin {
 
     startConversion(conversion) {
       conversion.context[pluginName] = {
-        anchorMap: {},
-        anchors: [],
+        linkMap: {},
+        links: [],
       };
     },
 
     endConversion(conversion) {
-      const { anchors } = conversion.context[pluginName] as AnchorPluginContext;
-      if (!anchors.length) {
+      const { links } = conversion.context[pluginName] as LinkPluginContext;
+      if (!links.length) {
         return;
       }
 
       conversion.append(`${conversion.eol}${conversion.eol}`);
 
-      for (let i = 0; i < anchors.length; i++) {
-        conversion.append(`[anchor${i}]: ${anchors[i]}${conversion.eol}`);
+      for (let i = 0; i < links.length; i++) {
+        conversion.append(`[link${i + 1}]: ${links[i]}${conversion.eol}`);
       }
     },
   };
 }
 
-type AnchorPluginContext = {
-  readonly anchorMap: Record<string, number>;
-  readonly anchors: string[];
+type LinkPluginContext = {
+  readonly linkMap: Record<string, number>;
+  readonly links: string[];
 };

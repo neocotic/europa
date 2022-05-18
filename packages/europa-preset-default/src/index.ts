@@ -21,7 +21,6 @@
  */
 
 import { PluginApi, PluginProvider, Preset } from 'europa-core';
-import anchorPluginProvider from 'europa-plugin-anchor';
 import boldPluginProvider from 'europa-plugin-bold';
 import codePluginProvider from 'europa-plugin-code';
 import descriptionPluginProvider from 'europa-plugin-description';
@@ -32,13 +31,13 @@ import horizontalRulePluginProvider from 'europa-plugin-horizontal-rule';
 import imagePluginProvider from 'europa-plugin-image';
 import italicPluginProvider from 'europa-plugin-italic';
 import lineBreakPluginProvider from 'europa-plugin-line-break';
+import linkPluginProvider from 'europa-plugin-link';
 import listPluginProvider from 'europa-plugin-list';
 import paragraphPluginProvider from 'europa-plugin-paragraph';
 import preformattedPluginProvider from 'europa-plugin-preformatted';
 import quotePluginProvider from 'europa-plugin-quote';
 
 const pluginProviders: PluginProvider[] = [
-  anchorPluginProvider,
   boldPluginProvider,
   codePluginProvider,
   descriptionPluginProvider,
@@ -49,6 +48,7 @@ const pluginProviders: PluginProvider[] = [
   imagePluginProvider,
   italicPluginProvider,
   lineBreakPluginProvider,
+  linkPluginProvider,
   listPluginProvider,
   paragraphPluginProvider,
   preformattedPluginProvider,

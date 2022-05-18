@@ -58,11 +58,11 @@ app.listen(3000);
 Simply create an instance of `Europa` and you've done most of the work. You can control many aspects of the HTML to
 Markdown conversion by passing the following options to the constructor:
 
-| Option   | Type    | Description                                             | Default                   |
-|----------|---------|---------------------------------------------------------|---------------------------|
-| absolute | Boolean | Whether absolute URLS should be used for anchors/images | `false`                   |
-| baseUri  | String  | The base URI for the window                             | `file://${process.cwd()}` |
-| inline   | Boolean | Whether anchor/image URLs are to be inserted inline     | `false`                   |
+| Option   | Type    | Description                                           | Default                   |
+|----------|---------|-------------------------------------------------------|---------------------------|
+| absolute | Boolean | Whether absolute URLS should be used for links/images | `false`                   |
+| baseUri  | String  | The base URI for the window                           | `file://${process.cwd()}` |
+| inline   | Boolean | Whether link/image URLs are to be inserted inline     | `false`                   |
 
 ``` javascript
 const europa = new Europa({
@@ -160,9 +160,9 @@ Since multiple plugins could support the same tag(s), the load order is importan
 declares support for a tag, will be the one that's used. Be wary of overriding tags supported by default plugins and
 consider whether it's something that should be part of the original plugin. If so, [open a pull request](#contributors)!
 
-A good practice for naming plugin packages is `europa-plugin-FRIENDLY_TAG_NAME`. For example; `europa-plugin-anchor` and
-not `europa-plugin-a` or `europa-plugin-link` (which could be confused with the `<link>` element). Each plugin should
-aim to support a specific Markdown feature.
+A good practice for naming plugin packages is `europa-plugin-<markdown-feature>`. For example; `europa-plugin-link` and
+not `europa-plugin-a`, and `europa-plugin-quote` and not `europa-plugin-q`. Each plugin should aim to support a specific
+Markdown feature.
 
 ### Presets
 
@@ -185,9 +185,9 @@ Europa.registerPreset((api) => ({
 }));
 ```
 
-A good practice for naming preset packages is `europa-preset-FRIENDLY_GOAL_NAME`. For example; `europa-preset-github`
-could be used to register plugins that converts HTML to GitHub-flavoured Markdown. Each preset should include plugins
-that aim to support a related Markdown feature set.
+A good practice for naming preset packages is `europa-preset-<markdown-feature-set>`. For example;
+`europa-preset-github` could be used to register plugins that converts HTML to GitHub-flavoured Markdown. Each preset
+should include plugins that aim to support a related Markdown feature set.
 
 ## CLI
 
@@ -197,10 +197,10 @@ that aim to support a related Markdown feature set.
 
       -h, --help            output usage information
       -V, --version         output the version number
-      -a, --absolute        use absolute URLs for anchors/images
-      -b, --base-uri <uri>  base URI for anchors/images
+      -a, --absolute        use absolute URLs for links/images
+      -b, --base-uri <uri>  base URI for links/images
       -e, --eval <html>     evaluate HTML string
-      -i, --inline          insert anchor/image URLs inline
+      -i, --inline          insert link/image URLs inline
       -o, --output <path>   output directory (for files) or file (for eval/stdin)
 
 ## Migrating from older versions

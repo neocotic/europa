@@ -33,7 +33,6 @@
     "directory": "packages/europa-preset-default"
   },
   "dependencies": {
-    "europa-plugin-anchor": "^5.0.1",
     "europa-plugin-bold": "^5.0.1",
     "europa-plugin-code": "^5.0.1",
     "europa-plugin-description": "^5.0.1",
@@ -44,6 +43,7 @@
     "europa-plugin-image": "^5.0.1",
     "europa-plugin-italic": "^5.0.1",
     "europa-plugin-line-break": "^5.0.1",
+    "europa-plugin-link": "^5.0.1",
     "europa-plugin-list": "^5.0.1",
     "europa-plugin-paragraph": "^5.0.1",
     "europa-plugin-preformatted": "^5.0.1",
