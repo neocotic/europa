@@ -22,7 +22,7 @@
 
 import { Europa, EuropaOptions } from 'europa-core';
 
-const fixtures = ['content', 'lists', 'scaffolding', 'tables', 'unformatted-lists', 'visibility'];
+import fixtures from 'europa-test/test-fixtures';
 
 /**
  * Creates a full test suite for a `europa-core` implementation package using the `options` provided.
@@ -30,22 +30,23 @@ const fixtures = ['content', 'lists', 'scaffolding', 'tables', 'unformatted-list
  * @param options - The options to be used.
  */
 export default function (options: TestOptions) {
-  const europa = new options.Europa();
-  const loadFixture = options.loadFixture;
+  const { loadFixture, packageName } = options;
 
-  describe(`europa-test: ${options.packageName}`, () => {
-    afterAll(() => {
-      europa.release();
-    });
-
+  describe(`europa-test: ${packageName}`, () => {
     fixtures.forEach((fixture) => {
-      describe(`Converting fixture 'fixtures/${fixture}'`, () => {
-        let html: string | undefined;
-        let markdown: string | undefined;
+      describe(`Converting fixture '${fixture.name}'`, () => {
+        let html: string;
+        let markdown: string;
+        let europa: Europa;
 
         beforeAll(async () => {
-          html = await loadFixture(`fixtures/${fixture}.html`);
-          markdown = await loadFixture(`fixtures/${fixture}.md`);
+          html = await loadFixture(`fixtures/${fixture.name}.html`);
+          markdown = await loadFixture(`fixtures/${fixture.name}.md`);
+          europa = new options.Europa(fixture.options);
+        });
+
+        afterAll(() => {
+          europa.release();
         });
 
         it('should correctly convert HTML into Markdown', () => {

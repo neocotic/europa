@@ -29,9 +29,10 @@ export default function (): Plugin {
     converters: {
       IMG: {
         startTag(conversion) {
+          const absolute = conversion.getOption('absolute');
+          const inline = conversion.getOption('inline');
           const element = conversion.element as HTMLImageElement;
-          const options = conversion.options;
-          const source = options.absolute ? element.src : element.getAttribute('src');
+          const source = absolute ? element.src : element.getAttribute('src');
           if (!source) {
             return false;
           }
@@ -40,7 +41,7 @@ export default function (): Plugin {
           const title = element.getAttribute('title');
           let value = title ? `${source} "${title}"` : source;
 
-          if (options.inline) {
+          if (inline) {
             value = `(${value})`;
           } else {
             const reference = conversion.addReference('image', value);

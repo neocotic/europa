@@ -21,8 +21,7 @@
  */
 
 import { Conversion } from 'europa-core/Conversion';
-import { Option } from 'europa-core/option/Option';
-import { OptionParser } from 'europa-core/option/OptionParser';
+import { EuropaOptionsParser } from 'europa-core/EuropaOptionsParser';
 import { PluginProvider } from 'europa-core/plugin/Plugin';
 import { PluginManager } from 'europa-core/plugin/PluginManager';
 import { PresetProvider } from 'europa-core/plugin/Preset';
@@ -42,7 +41,7 @@ export class Europa {
   private static readonly [_pluginManager] = new PluginManager();
   private static readonly [_serviceManager] = new ServiceManager();
 
-  private readonly [_options]: Record<string, any>;
+  private readonly [_options]: Required<EuropaOptions>;
   private [_window]: Window | null = null;
 
   /**
@@ -51,11 +50,9 @@ export class Europa {
    * @param [options] - The options to be used.
    */
   constructor(options?: EuropaOptions) {
-    this[_options] = new OptionParser([
-      new Option('absolute', false),
-      new Option('baseUri', () => Europa[_serviceManager].getService(ServiceName.Window).getDefaultBaseUri()),
-      new Option('inline', false),
-    ]).parse(options);
+    this[_options] = new EuropaOptionsParser({
+      windowService: Europa[_serviceManager].getService(ServiceName.Window),
+    }).parse(options);
   }
 
   /**
@@ -82,7 +79,11 @@ export class Europa {
     }
 
     const pluginManager = Europa[_pluginManager];
-    const conversion = new Conversion(this, root, this[_options], pluginManager);
+    const conversion = new Conversion({
+      europa: this,
+      root,
+      pluginManager,
+    });
     let wrapper: HTMLElement | undefined;
 
     if (!document.contains(root)) {
@@ -108,6 +109,16 @@ export class Europa {
     }
 
     return conversion.end();
+  }
+
+  /**
+   * Returns the value of the option with the specified `name`.
+   *
+   * @param name - The name of the option whose value is to be returned.
+   * @return The value of the named option.
+   */
+  getOption<N extends keyof EuropaOptions>(name: N): Required<EuropaOptions>[N] {
+    return this[_options][name];
   }
 
   /**
@@ -186,6 +197,13 @@ export class Europa {
   }
 
   /**
+   * The options being used by this {@link Europa} instance.
+   */
+  get options(): Required<EuropaOptions> {
+    return { ...this[_options] };
+  }
+
+  /**
    * The window to be used for HTML to Markdown conversion by this {@link Europa} instance.
    */
   get window(): Window {
@@ -204,7 +222,7 @@ export class Europa {
  */
 export type EuropaOptions = {
   /**
-   * Whether absolute URLS should be used for anchors/images.
+   * Whether absolute URLS should be used for links/images.
    */
   readonly absolute?: boolean;
   /**
@@ -212,7 +230,7 @@ export type EuropaOptions = {
    */
   readonly baseUri?: string;
   /**
-   * Whether anchor/image URLs are to be inserted inline.
+   * Whether link/image URLs are to be inserted inline.
    */
   readonly inline?: boolean;
 };

@@ -29,7 +29,8 @@ export default function (): Plugin {
     converters: {
       A: {
         startTag(conversion, context): boolean {
-          const { absolute, inline } = conversion.options;
+          const absolute = conversion.getOption('absolute');
+          const inline = conversion.getOption('inline');
           const element = conversion.element as HTMLAnchorElement;
           const href = absolute ? element.href : element.getAttribute('href');
           if (!href) {

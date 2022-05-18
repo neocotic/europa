@@ -28,7 +28,6 @@ const _document = Symbol('document');
 const _element = Symbol('element');
 const _eol = Symbol('eol');
 const _europa = Symbol('europa');
-const _options = Symbol('options');
 const _pluginManager = Symbol('pluginManager');
 const _referenceCache = Symbol('referenceCache');
 const _references = Symbol('references');
@@ -145,7 +144,6 @@ export class Conversion {
   private [_element]: HTMLElement;
   private readonly [_eol]: string;
   private readonly [_europa]: Europa;
-  private readonly [_options]: ConversionOptions;
   private readonly [_pluginManager]: PluginManager;
   private readonly [_referenceCache]: ConversionReferenceCache = {
     all: {},
@@ -186,19 +184,17 @@ export class Conversion {
   private [_window]: Window;
 
   /**
-   * Creates a new instance of {@link Conversion}.
+   * Creates a new instance of {@link Conversion} using the `options` provided.
    *
-   * @param europa - The {@link Europa} instance responsible for this conversion.
-   * @param root - The root element.
    * @param options - The options to be used.
-   * @param pluginManager - The {@link PluginManager} to be used.
    */
-  constructor(europa: Europa, root: HTMLElement, options: ConversionOptions, pluginManager: PluginManager) {
+  constructor(options: ConversionOptions) {
+    const { europa, pluginManager, root } = options;
+
     this[_document] = europa.document;
     this[_element] = root;
     this[_eol] = europa.eol;
     this[_europa] = europa;
-    this[_options] = options;
     this[_pluginManager] = pluginManager;
     this[_tagName] = root.tagName.toUpperCase();
     this[_window] = europa.window;
@@ -220,7 +216,7 @@ export class Conversion {
    * @throws If the `inline` option is enabled.
    */
   addReference(key: string, value: string): string {
-    if (this[_options].inline) {
+    if (this.getOption('inline')) {
       throw new Error('Cannot add reference when "inline" option is enabled');
     }
 
@@ -360,6 +356,17 @@ export class Conversion {
   }
 
   /**
+   * Returns the value of the option for the {@link Europa} instance responsible for this {@link Conversion} with the
+   * specified `name`.
+   *
+   * @param name - The name of the option whose value is to be returned.
+   * @return The value of the named option.
+   */
+  getOption<N extends keyof EuropaOptions>(name: N): Required<EuropaOptions>[N] {
+    return this[_europa].getOption(name);
+  }
+
+  /**
    * Checks whether the specified `element` is currently visible within the current window of this {@link Conversion}.
    *
    * This is not a very sophisticated check and could easily be mistaken, but it should catch a lot of the most simple
@@ -487,10 +494,10 @@ export class Conversion {
   }
 
   /**
-   * The options for this {@link Conversion}.
+   * The options for the {@link Europa} instance responsible for this {@link Conversion}.
    */
-  get options(): ConversionOptions {
-    return { ...this[_options] };
+  get options(): Required<EuropaOptions> {
+    return this[_europa].options;
   }
 
   /**
@@ -539,7 +546,20 @@ export type ConversionContext = Record<string, any>;
 /**
  * The options used by {@link Conversion}.
  */
-export type ConversionOptions = EuropaOptions;
+export type ConversionOptions = {
+  /**
+   * The {@link Europa} instance responsible for the {@link Conversion}.
+   */
+  readonly europa: Europa;
+  /**
+   * The {@link PluginManager} to be used to invoke plugin converters.
+   */
+  readonly pluginManager: PluginManager;
+  /**
+   * The root element.
+   */
+  readonly root: HTMLElement;
+};
 
 /**
  * A reference to be included at the end of the converted Markdown.

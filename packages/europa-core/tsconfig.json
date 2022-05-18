@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "removeComments": true,
     "moduleResolution": "node",
     "strict": true,
     "target": "es2017",
