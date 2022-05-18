@@ -16,7 +16,7 @@
     "lint": "lerna run lint --stream",
     "publish:packages": "lerna publish from-package",
     "test": "lerna run test --stream",
-    "verify": "npm run format && npm run build && npm run bootstrap && npm run flint && npm test",
+    "verify": "npm run format && npm run build && npm run bootstrap && npm run lint && npm test",
     "version:packages": "lerna version --no-git-tag-version --no-push"
   }
 }

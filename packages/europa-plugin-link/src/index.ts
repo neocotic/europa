@@ -23,10 +23,8 @@
 import { Plugin } from 'europa-core';
 
 export default function (): Plugin {
-  const pluginName = 'europa-plugin-link';
-
   return {
-    name: pluginName,
+    name: 'europa-plugin-link',
 
     converters: {
       A: {
@@ -38,22 +36,15 @@ export default function (): Plugin {
             return true;
           }
 
-          const { linkMap, links } = conversion.context[pluginName] as LinkPluginContext;
           const title = element.getAttribute('title');
           const value = title ? `${href} "${title}"` : href;
-          let index;
 
           if (inline) {
             context.value = `(${value})`;
           } else {
-            index = linkMap[value];
-            if (index == null) {
-              index = links.push(value);
+            const reference = conversion.addReference('link', value);
 
-              linkMap[value] = index;
-            }
-
-            context.value = `[link${index}]`;
+            context.value = `[${reference}]`;
           }
 
           conversion.output('[');
@@ -70,30 +61,5 @@ export default function (): Plugin {
         },
       },
     },
-
-    startConversion(conversion) {
-      conversion.context[pluginName] = {
-        linkMap: {},
-        links: [],
-      };
-    },
-
-    endConversion(conversion) {
-      const { links } = conversion.context[pluginName] as LinkPluginContext;
-      if (!links.length) {
-        return;
-      }
-
-      conversion.append(`${conversion.eol}${conversion.eol}`);
-
-      for (let i = 0; i < links.length; i++) {
-        conversion.append(`[link${i + 1}]: ${links[i]}${conversion.eol}`);
-      }
-    },
   };
 }
-
-type LinkPluginContext = {
-  readonly linkMap: Record<string, number>;
-  readonly links: string[];
-};

@@ -23,10 +23,8 @@
 import { Plugin } from 'europa-core';
 
 export default function (): Plugin {
-  const pluginName = 'europa-plugin-image';
-
   return {
-    name: pluginName,
+    name: 'europa-plugin-image',
 
     converters: {
       IMG: {
@@ -39,22 +37,15 @@ export default function (): Plugin {
           }
 
           const alternativeText = element.getAttribute('alt') || '';
-          const { imageMap, images } = conversion.context[pluginName] as ImagePluginContext;
           const title = element.getAttribute('title');
           let value = title ? `${source} "${title}"` : source;
-          let index;
 
           if (options.inline) {
             value = `(${value})`;
           } else {
-            index = imageMap[value];
-            if (index == null) {
-              index = images.push(value);
+            const reference = conversion.addReference('image', value);
 
-              imageMap[value] = index;
-            }
-
-            value = `[image${index}]`;
+            value = `[${reference}]`;
           }
 
           conversion.output(`![${alternativeText}]${value}`);
@@ -63,30 +54,5 @@ export default function (): Plugin {
         },
       },
     },
-
-    startConversion(conversion) {
-      conversion.context[pluginName] = {
-        imageMap: {},
-        images: [],
-      };
-    },
-
-    endConversion(conversion) {
-      const { images } = conversion.context[pluginName] as ImagePluginContext;
-      if (!images.length) {
-        return;
-      }
-
-      conversion.append(`${conversion.eol}${conversion.eol}`);
-
-      for (let i = 0; i < images.length; i++) {
-        conversion.append(`[image${i + 1}]: ${images[i]}${conversion.eol}`);
-      }
-    },
   };
 }
-
-type ImagePluginContext = {
-  readonly imageMap: Record<string, number>;
-  readonly images: string[];
-};

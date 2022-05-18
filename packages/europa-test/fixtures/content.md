@@ -77,13 +77,11 @@ link with title but no href
 [image3]: image-with-title-1.png "image with title 1"
 [image4]: http://europa.mock/image.png
 [image5]: image-in-link.png
-
-
-[link1]: mock1
-[link2]: mock1 "mock1"
-[link3]: mock1 "mock2"
-[link4]: mock2
-[link5]: mock2 "mock1"
-[link6]: mock2 "mock2"
+[link1]: path/1
+[link2]: path/1 "link with title 1"
+[link3]: path/1 "link with title 2"
+[link4]: path/2
+[link5]: path/2 "link with title 1"
+[link6]: path/2 "link with title 2"
 [link7]: http://europa.mock
-[link8]: http://europa.mock "mock"
+[link8]: http://europa.mock "link with title 1"
