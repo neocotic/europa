@@ -94,10 +94,10 @@ export class Cli {
     const command = program
       .version(packageInfo.json.version)
       .usage('[options] [file ...]')
-      .option('-a, --absolute', 'use absolute URLs for anchors/images')
-      .option('-b, --base-uri <uri>', 'base URI for anchors/images')
+      .option('-a, --absolute', 'use absolute URLs for links/images')
+      .option('-b, --base-uri <uri>', 'base URI for links/images')
       .option('-e, --eval <html>', 'evaluate HTML string')
-      .option('-i, --inline', 'insert anchor/image URLs inline')
+      .option('-i, --inline', 'insert link/image URLs inline')
       .option('-o, --output <path>', 'output directory (for files) or file (for eval/stdin)');
 
     this[_command] = command;

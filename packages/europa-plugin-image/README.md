@@ -54,11 +54,11 @@ HTML:
 Markdown:
 
 ``` markdown
-![][image0]
-![Europa Node][image1]
+![][image1]
+![Europa Node][image2]
 
-[image0]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-250x100.png
-[image1]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-377x100.png
+[image1]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-250x100.png
+[image2]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-377x100.png
 ```
 
 ### Absolute Option Enabled
@@ -81,11 +81,11 @@ HTML:
 Markdown:
 
 ``` markdown
-![][image0]
-![Europa Node][image1]
+![][image1]
+![Europa Node][image2]
 
-[image0]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-250x100.png
-[image1]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-377x100.png
+[image1]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-250x100.png
+[image2]: https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-377x100.png
 ```
 
 ### Inline Option Enabled

@@ -64,10 +64,10 @@ Open up `demo.html` in your browser to play around a bit.
 Simply create an instance of `Europa` and you've done most of the work. You can control many aspects of the HTML to
 Markdown conversion by passing the following options to the constructor:
 
-| Option   | Type    | Description                                             | Default |
-|----------|---------|---------------------------------------------------------|---------|
-| absolute | Boolean | Whether absolute URLS should be used for anchors/images | `false` |
-| inline   | Boolean | Whether anchor/image URLs are to be inserted inline     | `false` |
+| Option   | Type    | Description                                           | Default |
+|----------|---------|-------------------------------------------------------|---------|
+| absolute | Boolean | Whether absolute URLS should be used for links/images | `false` |
+| inline   | Boolean | Whether link/image URLs are to be inserted inline     | `false` |
 
 ``` javascript
 const europa = new Europa({
@@ -132,9 +132,9 @@ Since multiple plugins could support the same tag(s), the load order is importan
 declares support for a tag, will be the one that's used. Be wary of overriding tags supported by default plugins and
 consider whether it's something that should be part of the original plugin. If so, [open a pull request](#contributors)!
 
-A good practice for naming plugin packages is `europa-plugin-FRIENDLY_TAG_NAME`. For example; `europa-plugin-anchor` and
-not `europa-plugin-a` or `europa-plugin-link` (which could be confused with the `<link>` element). Each plugin should
-aim to support a specific Markdown feature.
+A good practice for naming plugin packages is `europa-plugin-<markdown-feature>`. For example; `europa-plugin-link` and
+not `europa-plugin-a`, and `europa-plugin-quote` and not `europa-plugin-q`. Each plugin should aim to support a specific
+Markdown feature.
 
 ### Presets
 
@@ -157,9 +157,9 @@ Europa.registerPreset((api) => ({
 }));
 ```
 
-A good practice for naming preset packages is `europa-preset-FRIENDLY_GOAL_NAME`. For example; `europa-preset-github`
-could be used to register plugins that converts HTML to GitHub-flavoured Markdown. Each preset should include plugins
-that aim to support a related Markdown feature set.
+A good practice for naming preset packages is `europa-preset-<markdown-feature-set>`. For example;
+`europa-preset-github` could be used to register plugins that converts HTML to GitHub-flavoured Markdown. Each preset
+should include plugins that aim to support a related Markdown feature set.
 
 ## Migrating from older versions
 

@@ -1,10 +1,10 @@
-# europa-plugin-anchor
+# europa-plugin-link
 
 A [Europa](https://github.com/neocotic/europa) plugin to convert HTML tags to Markdown links.
 
 [![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/main?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
-[![License](https://img.shields.io/npm/l/europa-plugin-anchor.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/europa-plugin-anchor/LICENSE.md)
-[![Release](https://img.shields.io/npm/v/europa-plugin-anchor.svg?style=flat-square)](https://npmjs.com/package/europa-plugin-anchor)
+[![License](https://img.shields.io/npm/l/europa-plugin-link.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/europa-plugin-link/LICENSE.md)
+[![Release](https://img.shields.io/npm/v/europa-plugin-link.svg?style=flat-square)](https://npmjs.com/package/europa-plugin-link)
 
 * [Install](#install)
 * [Converted Tags](#converted-tags)
@@ -18,14 +18,14 @@ A [Europa](https://github.com/neocotic/europa) plugin to convert HTML tags to Ma
 Install using your preferred package manager. For example;
 
 ``` bash
-$ npm install --save europa-plugin-anchor
+$ npm install --save europa-plugin-link
 ```
 
 Then, in order to activate this plugin;
 
 ``` javascript
 // Import europa-core implementation (e.g. `europa`, `node-europa`)
-import plugin from 'europa-plugin-anchor';
+import plugin from 'europa-plugin-link';
 
 Europa.registerPlugin(plugin);
 // ...
@@ -48,17 +48,17 @@ HTML:
 
 ``` html
 <a href="https://github.com/neocotic/europa">Europa</a>
-<a href="https://github.com/neocotic/europa/tree/main/packages/europa-plugin-anchor" title="europa-plugin-anchor">Europa Plugin</a>
+<a href="https://github.com/neocotic/europa/tree/main/packages/europa-plugin-link" title="europa-plugin-link">Plugin</a>
 ```
 
 Markdown:
 
 ``` markdown
-[Europa][anchor0]
-[Europa Plugin][anchor1]
+[Europa][link1]
+[Plugin][link2]
 
-[anchor0]: https://github.com/neocotic/europa
-[anchor1]: https://github.com/neocotic/europa/tree/main/packages/europa-plugin-anchor "europa-plugin-anchor"
+[link1]: https://github.com/neocotic/europa
+[link2]: https://github.com/neocotic/europa/tree/main/packages/europa-plugin-link "europa-plugin-link"
 ```
 
 ### Absolute Option Enabled
@@ -75,17 +75,17 @@ HTML:
 
 ``` html
 <a href="./">Europa</a>
-<a href="./packages/europa-plugin-anchor" title="europa-plugin-anchor">Europa Plugin</a>
+<a href="./packages/europa-plugin-link" title="europa-plugin-link">Plugin</a>
 ```
 
 Markdown:
 
 ``` markdown
-[Europa][anchor0]
-[Europa Plugin][anchor1]
+[Europa][link1]
+[Plugin][link2]
 
-[anchor0]: https://github.com/neocotic/europa
-[anchor1]: https://github.com/neocotic/europa/tree/main/packages/europa-plugin-anchor "europa-plugin-anchor"
+[link1]: https://github.com/neocotic/europa
+[link2]: https://github.com/neocotic/europa/tree/main/packages/europa-plugin-link "europa-plugin-link"
 ```
 
 ### Inline Option Enabled
@@ -100,14 +100,14 @@ HTML:
 
 ``` html
 <a href="https://github.com/neocotic/europa">Europa</a>
-<a href="https://github.com/neocotic/europa/tree/main/packages/europa-plugin-anchor" title="europa-plugin-anchor">Europa Plugin</a>
+<a href="https://github.com/neocotic/europa/tree/main/packages/europa-plugin-link" title="europa-plugin-link">Plugin</a>
 ```
 
 Markdown:
 
 ``` markdown
 [Europa](https://github.com/neocotic/europa)
-[Europa Plugin](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-anchor "europa-plugin-anchor")
+[Plugin](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-link "europa-plugin-link")
 ```
 
 ## Bugs
@@ -127,5 +127,5 @@ A list of Europa contributors can be found in [AUTHORS.md](https://github.com/ne
 
 Copyright © 2022 neocotic
 
-See [LICENSE.md](https://github.com/neocotic/europa/raw/main/packages/europa-plugin-anchor/LICENSE.md) for more information on
+See [LICENSE.md](https://github.com/neocotic/europa/raw/main/packages/europa-plugin-link/LICENSE.md) for more information on
 our MIT license.

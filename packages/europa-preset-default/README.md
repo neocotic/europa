@@ -37,7 +37,6 @@ anything to use this preset and all of its plugins.
 
 The following [Europa](https://github.com/neocotic/europa) plugins are included in this preset:
 
-* [europa-plugin-anchor](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-anchor)
 * [europa-plugin-bold](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-bold)
 * [europa-plugin-code](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-code)
 * [europa-plugin-description](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-description)
@@ -48,6 +47,7 @@ The following [Europa](https://github.com/neocotic/europa) plugins are included 
 * [europa-plugin-image](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-image)
 * [europa-plugin-italic](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-italic)
 * [europa-plugin-line-break](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-line-break)
+* [europa-plugin-link](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-link)
 * [europa-plugin-list](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-list)
 * [europa-plugin-paragraph](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-paragraph)
 * [europa-plugin-preformatted](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-preformatted)

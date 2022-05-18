@@ -1,5 +1,5 @@
 {
-  "name": "europa-plugin-anchor",
+  "name": "europa-plugin-link",
   "version": "5.0.1",
   "description": "Europa plugin to convert HTML tags to Markdown links",
   "keywords": [
@@ -32,7 +32,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/neocotic/europa.git",
-    "directory": "packages/europa-plugin-anchor"
+    "directory": "packages/europa-plugin-link"
   },
   "peerDependencies": {
     "europa-core": "^5.0.1"
