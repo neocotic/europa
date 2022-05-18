@@ -3,6 +3,7 @@
   "version": "5.0.1",
   "description": "Library for converting HTML into valid Markdown",
   "keywords": [
+    "europa",
     "html",
     "markdown",
     "convert",
@@ -74,9 +75,9 @@
     "build": "npm run build:esm && npm run build:umd",
     "build:esm": "rimraf lib/esm && webpack --config webpack.esm.config.js",
     "build:umd": "rimraf lib/umd && webpack --config webpack.umd.config.js",
-    "flint": "eslint \"src/**/*.ts\" --fix",
+    "flint": "eslint \"src/**/*.ts\" \"spec/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" \"spec/**/*.ts\"",
     "test": "karma start karma.conf.js"
   }
 }

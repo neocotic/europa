@@ -11,7 +11,6 @@
 * [Examples](#examples)
 * [API](#api)
 * [Plugins](#plugins)
-* [Migrating from older versions](#migrating-from-older-versions)
 * [Bugs](#bugs)
 * [Contributors](#contributors)
 * [License](#license)
@@ -27,8 +26,9 @@ $ npm install --save europa
 If you want to simply download the file to be used in the browser you can find them on
 [cdnjs](https://cdnjs.com/libraries/europa).
 
-Check out [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa) if you want to install it for
-use within [Node.js](https://nodejs.org).
+Check out [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa) or
+[europa-cli](https://github.com/neocotic/europa/tree/main/packages/europa-cli) if you want to install it for use within
+[Node.js](https://nodejs.org) or as a CLI respectively.
 
 ## Examples
 
@@ -160,13 +160,6 @@ Europa.registerPreset((api) => ({
 A good practice for naming preset packages is `europa-preset-<markdown-feature-set>`. For example;
 `europa-preset-github` could be used to register plugins that converts HTML to GitHub-flavoured Markdown. Each preset
 should include plugins that aim to support a related Markdown feature set.
-
-## Migrating from older versions
-
-If you've been using an older major version and would like details on what's changed and information on how to migrate
-to the latest major release below:
-
-https://github.com/neocotic/europa/wiki/Migrating-from-older-versions
 
 ## Bugs
 

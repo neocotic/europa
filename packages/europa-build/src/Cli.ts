@@ -62,7 +62,7 @@ export class Cli {
   /**
    * Parses the specified `args` and executes the relevant sub-command.
    *
-   * @param [args=[]] - The command-line arguments to be parsed. Defaults to those passed to the Node.js process.
+   * @param [args] - The command-line arguments to be parsed. Defaults to those passed to the Node.js process.
    */
   async parse(args: string[] = process.argv): Promise<void> {
     const command = await this.getCommand();

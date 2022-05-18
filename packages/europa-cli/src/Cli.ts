@@ -24,43 +24,52 @@ import { Command, program } from 'commander';
 import { readFile, writeFile } from 'fs/promises';
 import * as glob from 'glob';
 import * as mkdirp from 'mkdirp';
+import Europa from 'node-europa';
 import { EOL } from 'os';
 import { basename, dirname, extname, join, normalize } from 'path';
 import { createInterface } from 'readline';
 import { Readable, Writable } from 'stream';
 import { promisify } from 'util';
 
-import { PackageInfo } from 'node-europa/PackageInfo';
-import Europa from 'node-europa/index';
+import { PackageInfo } from 'europa-cli/PackageInfo';
 
 const findFiles = promisify(glob);
 
 const _command = Symbol('command');
-const _options = Symbol('options');
+const _cwd = Symbol('cwd');
+const _inputStream = Symbol('inputStream');
+const _onError = Symbol('onError');
+const _outputStream = Symbol('outputStream');
 
 /**
  * A command-line interface for converting HTML into Markdown.
  */
 export class Cli {
   private [_command]: CliCommand | undefined;
-  private readonly [_options]: CliOptions;
+  private readonly [_cwd]: string;
+  private readonly [_inputStream]: Readable;
+  private readonly [_onError]: ((error: unknown) => void) | undefined;
+  private readonly [_outputStream]: Writable;
 
   /**
    * Creates a new instance of {@link Cli} using the `options` provided.
    *
-   * @param options - The options to be used.
+   * @param [options] - The options to be used.
    */
-  constructor(options: CliOptions) {
-    this[_options] = options;
+  constructor(options: CliOptions = {}) {
+    this[_cwd] = options.cwd ?? process.cwd();
+    this[_inputStream] = options.inputStream ?? process.stdin;
+    this[_onError] = options.onError;
+    this[_outputStream] = options.outputStream ?? process.stdout;
   }
 
   /**
    * Parses the specified `args` and determines what is to be converted into Markdown and where the generated Markdown
    * is to be output.
    *
-   * @param [args=[]] - The command-line arguments to be parsed.
+   * @param [args] - The command-line arguments to be parsed. Defaults to those passed to the Node.js process.
    */
-  async parse(args: string[] = []): Promise<void> {
+  async parse(args: string[] = process.argv): Promise<void> {
     const command = await this.getCommand();
     command.parse(args);
 
@@ -80,7 +89,7 @@ export class Cli {
         this.readInput(command, europa);
       }
     } catch (e) {
-      this[_options].onError?.(e);
+      this[_onError]?.(e);
     }
   }
 
@@ -131,7 +140,8 @@ export class Cli {
 
   private readInput(command: CliCommand, europa: Europa) {
     const buffer: string[] = [];
-    const { inputStream, outputStream } = this[_options];
+    const inputStream = this[_inputStream];
+    const outputStream = this[_outputStream];
     const reader = createInterface({
       input: inputStream,
       output: outputStream,
@@ -158,7 +168,7 @@ export class Cli {
 
       await writeFile(target, markdown, 'utf8');
     } else {
-      this[_options].outputStream.end(markdown, 'utf8');
+      this[_outputStream].end(markdown, 'utf8');
     }
   }
 
@@ -167,7 +177,7 @@ export class Cli {
 
     for (const pattern of patterns) {
       const results = await findFiles(pattern, {
-        cwd: this[_options].cwd,
+        cwd: this[_cwd],
         nodir: true,
         nosort: true,
       });
@@ -184,21 +194,23 @@ export class Cli {
  */
 export type CliOptions = {
   /**
-   * The current working directory to be used to resolve relative file paths.
+   * The current working directory to be used to resolve relative file paths. Defaults to the current working directory.
    */
-  readonly cwd: string;
+  readonly cwd?: string;
   /**
-   * The `Readable` from which to read the HTML to be converted if no files or evaluation string is provided.
+   * The `Readable` from which to read the HTML to be converted if no files or evaluation string is provided. Defaults
+   * to the standard input stream.
    */
-  readonly inputStream: Readable;
+  readonly inputStream?: Readable;
   /**
    * A handler for any errors that occur while processing a command.
    */
   readonly onError?: (error: unknown) => void;
   /**
-   * The `Writable` to which the generated Markdown is to be written if no files or output path is provided.
+   * The `Writable` to which the generated Markdown is to be written if no files or output path is provided. Defaults to
+   * the standard output stream.
    */
-  readonly outputStream: Writable;
+  readonly outputStream?: Writable;
 };
 
 interface CliCommand extends Command {

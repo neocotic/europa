@@ -1,9 +1,10 @@
 {
-  "name": "europa-core",
+  "name": "europa-cli",
   "version": "5.0.1",
-  "description": "Europa core engine for converting HTML into valid Markdown",
+  "description": "CLI for converting HTML into valid Markdown via Europa",
   "keywords": [
     "europa",
+    "cli",
     "html",
     "markdown",
     "convert",
@@ -30,12 +31,26 @@
   ],
   "main": "lib/cjs/index",
   "module": "lib/esm/index",
+  "bin": {
+    "europa": "bin/europa"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/neocotic/europa.git",
-    "directory": "packages/europa-core"
+    "directory": "packages/europa-cli"
+  },
+  "dependencies": {
+    "commander": "^9.2.0",
+    "glob": "^8.0.1",
+    "mkdirp": "^1.0.4",
+    "node-europa": "^5.0.1",
+    "read-pkg-up": "^7.0.1"
   },
   "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/jsdom": "^16.2.14",
+    "@types/mkdirp": "^1.0.2",
+    "@types/node": "^17.0.31",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
     "eslint": "^8.14.0",
@@ -58,5 +73,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\"",
     "test": "echo \"No tests\""
+  },
+  "engines": {
+    "node": "^12.20.0 || >=14"
   }
 }
