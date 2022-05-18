@@ -30,6 +30,8 @@ const _eol = Symbol('eol');
 const _europa = Symbol('europa');
 const _options = Symbol('options');
 const _pluginManager = Symbol('pluginManager');
+const _referenceCache = Symbol('referenceCache');
+const _references = Symbol('references');
 const _skipTagNames = Symbol('skipTagNames');
 const _tagName = Symbol('tagName');
 const _window = Symbol('window');
@@ -145,6 +147,11 @@ export class Conversion {
   private readonly [_europa]: Europa;
   private readonly [_options]: ConversionOptions;
   private readonly [_pluginManager]: PluginManager;
+  private readonly [_referenceCache]: ConversionReferenceCache = {
+    all: {},
+    last: {},
+  };
+  private readonly [_references]: ConversionReference[] = [];
   private readonly [_skipTagNames] = new Set([
     'APPLET',
     'AREA',
@@ -196,6 +203,40 @@ export class Conversion {
     this[_tagName] = root.tagName.toUpperCase();
     this[_window] = europa.window;
     this.left = this[_eol];
+  }
+
+  /**
+   * Adds a reference to this {@link Conversion} using the `key` and `value` provided.
+   *
+   * A numeric ID is associated with `value` and is included in the returned reference. If a reference already exists
+   * for the given `key` and `value` then this ID will be the same as the existing reference in order to avoid
+   * duplications. Otherwise, the ID will be the next number in the sequence for `key`.
+   *
+   * At the end of the conversion, the reference will be appended to the output string.
+   *
+   * @param key - The key (prefix) for the reference.
+   * @param value - The value for the reference.
+   * @return The reference.
+   * @throws If the `inline` option is enabled.
+   */
+  addReference(key: string, value: string): string {
+    if (this[_options].inline) {
+      throw new Error('Cannot add reference when "inline" option is enabled');
+    }
+
+    const cache = this[_referenceCache];
+    const cacheKey = `${key}:${value}`;
+    let id = cache.all[cacheKey];
+
+    if (id == null) {
+      id = cache.last[key] ? cache.last[key] + 1 : 1;
+
+      this[_references].push({ id, key, value });
+
+      cache.all[cacheKey] = cache.last[key] = id;
+    }
+
+    return `${key}${id}`;
   }
 
   /**
@@ -293,11 +334,28 @@ export class Conversion {
   }
 
   /**
-   * Ensures output buffer contains last output string and returns the trimmed output buffer.
+   * Ensures any recorded references are generated and that output buffer contains last output string before returning
+   * the trimmed output buffer.
    *
    * @return The complete output buffer.
    */
   end(): string {
+    if (this[_references].length) {
+      const { eol } = this;
+
+      this.append(eol.repeat(2));
+
+      this[_references]
+        .sort((a, b) => {
+          if (a.key < b.key) return -1;
+          if (a.key > b.key) return 1;
+          if (a.id < b.id) return -1;
+          if (a.id > b.id) return 1;
+          return 0;
+        })
+        .forEach((reference) => this.append(`[${reference.key}${reference.id}]: ${reference.value}${eol}`));
+    }
+
     return this.append('').buffer.trim();
   }
 
@@ -482,6 +540,46 @@ export type ConversionContext = Record<string, any>;
  * The options used by {@link Conversion}.
  */
 export type ConversionOptions = EuropaOptions;
+
+/**
+ * A reference to be included at the end of the converted Markdown.
+ */
+export type ConversionReference = {
+  /**
+   * The numeric ID of this {@link ConversionReference}.
+   *
+   * This is unique across all references with the same key.
+   */
+  readonly id: number;
+  /**
+   * The key of this {@link ConversionReference}.
+   */
+  readonly key: string;
+  /**
+   * The value of this {@link ConversionReference}.
+   *
+   * This is unique across all references with the same key.
+   */
+  readonly value: string;
+};
+
+/**
+ * Contains cached information for all references recorded for a {@link Conversion}.
+ *
+ * This is used to ensure uniqueness of {@link ConversionReference} numeric IDs and values, while also aiding in the
+ * generation of the former.
+ */
+export type ConversionReferenceCache = {
+  /**
+   * A mapping of cache keys (containing both the key and value of a {@link ConversionReference}) to their corresponding
+   * numeric IDs, if previously recorded.
+   */
+  readonly all: Record<string, number>;
+  /**
+   * A mapping of {@link ConversionReference} keys to their last recorded numeric ID, if any.
+   */
+  readonly last: Record<string, number>;
+};
 
 /**
  * The context for an HTML element being converted by a {@link Conversion}.
