@@ -27,16 +27,18 @@ export default function (): Plugin {
     startTag(conversion) {
       const level = parseInt(conversion.tagName.match(/([1-6])$/)![1], 10);
 
-      conversion.appendParagraph();
-
       let headerPrefix = '';
       for (let i = 0; i < level; i++) {
         headerPrefix += '#';
       }
 
-      conversion.output(`${headerPrefix} `);
+      conversion.appendParagraph().output(`${headerPrefix} `);
 
       return true;
+    },
+
+    endTag(conversion) {
+      conversion.appendParagraph();
     },
   };
 
