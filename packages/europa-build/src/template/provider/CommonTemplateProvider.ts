@@ -27,7 +27,7 @@ import { TemplateGenerator } from 'europa-build/template/TemplateGenerator';
 import { TemplateCliOption, TemplateContext, TemplateProvider } from 'europa-build/template/provider/TemplateProvider';
 import { TemplateProviderType } from 'europa-build/template/provider/TemplateProviderType';
 
-const _parentLogger = Symbol('parentLogger');
+const _parentLogger = Symbol();
 
 /**
  * An abstract {@link TemplateProvider} that provides common logic that is useful for the majority of implementations.

@@ -35,11 +35,11 @@ import { PackageInfo } from 'europa-cli/PackageInfo';
 
 const findFiles = promisify(glob);
 
-const _command = Symbol('command');
-const _cwd = Symbol('cwd');
-const _inputStream = Symbol('inputStream');
-const _onError = Symbol('onError');
-const _outputStream = Symbol('outputStream');
+const _command = Symbol();
+const _cwd = Symbol();
+const _inputStream = Symbol();
+const _onError = Symbol();
+const _outputStream = Symbol();
 
 /**
  * A command-line interface for converting HTML into Markdown.

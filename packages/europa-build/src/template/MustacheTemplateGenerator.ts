@@ -32,9 +32,9 @@ import { PackageInfo } from 'europa-build/PackageInfo';
 import { TemplateGenerator } from 'europa-build/template/TemplateGenerator';
 import { TemplateContext, TemplateProvider } from 'europa-build/template/provider/TemplateProvider';
 
-const _logger = Symbol('logger');
-const _partials = Symbol('partials');
-const _provider = Symbol('provider');
+const _logger = Symbol();
+const _partials = Symbol();
+const _provider = Symbol();
 
 /**
  * A {@link TemplateGenerator} implementation that uses Mustache to render templates.

@@ -25,7 +25,7 @@ import { ServiceName } from 'europa-core/service/ServiceName';
 import { CharsetService } from 'europa-core/service/charset/CharsetService';
 import { WindowService } from 'europa-core/service/window/WindowService';
 
-const _services = Symbol('services');
+const _services = Symbol();
 
 /**
  * A basic manager for {@link Service} implementations that are mapped to simple names.

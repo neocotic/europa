@@ -31,11 +31,11 @@ import { TemplateManager } from 'europa-build/template/TemplateManager';
 import { TemplateCliOption, TemplateContext, TemplateProvider } from 'europa-build/template/provider/TemplateProvider';
 import { TemplateProviderType } from 'europa-build/template/provider/TemplateProviderType';
 
-const _cwd = Symbol('cwd');
-const _command = Symbol('command');
-const _logger = Symbol('logger');
-const _onError = Symbol('onError');
-const _outputStream = Symbol('outputStream');
+const _cwd = Symbol();
+const _command = Symbol();
+const _logger = Symbol();
+const _onError = Symbol();
+const _outputStream = Symbol();
 
 /**
  * A command-line interface for generating and maintaining Europa plugins and presets.

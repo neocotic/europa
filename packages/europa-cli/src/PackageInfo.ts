@@ -23,7 +23,7 @@
 import { dirname } from 'path';
 import * as readPkgUp from 'read-pkg-up';
 
-const _singleton = Symbol('singleton');
+const _singleton = Symbol();
 
 /**
  * Contains information relating to this npm package, including its installation location.

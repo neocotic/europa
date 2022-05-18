@@ -24,16 +24,16 @@ import { Europa, EuropaOptions } from 'europa-core/Europa';
 import { ElementNode } from 'europa-core/dom/ElementNode';
 import { PluginManager } from 'europa-core/plugin/PluginManager';
 
-const _document = Symbol('document');
-const _element = Symbol('element');
-const _eol = Symbol('eol');
-const _europa = Symbol('europa');
-const _pluginManager = Symbol('pluginManager');
-const _referenceCache = Symbol('referenceCache');
-const _references = Symbol('references');
-const _skipTagNames = Symbol('skipTagNames');
-const _tagName = Symbol('tagName');
-const _window = Symbol('window');
+const _document = Symbol();
+const _element = Symbol();
+const _eol = Symbol();
+const _europa = Symbol();
+const _pluginManager = Symbol();
+const _referenceCache = Symbol();
+const _references = Symbol();
+const _skipTagNames = Symbol();
+const _tagName = Symbol();
+const _window = Symbol();
 
 /**
  * Contains contextual information for a single conversion process.
