@@ -26,8 +26,6 @@ export default function (api: PluginApi): Plugin {
   const boldConverter = api.createBoldConverter();
 
   return {
-    name: 'europa-plugin-bold',
-
     converters: {
       B: boldConverter,
       STRONG: boldConverter,

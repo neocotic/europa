@@ -41,8 +41,6 @@ export default function (): Plugin {
   };
 
   return {
-    name: 'europa-plugin-header',
-
     converters: {
       H1: headingConverter,
       H2: headingConverter,

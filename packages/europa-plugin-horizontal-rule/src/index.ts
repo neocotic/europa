@@ -24,8 +24,6 @@ import { Plugin } from 'europa-core';
 
 export default function (): Plugin {
   return {
-    name: 'europa-plugin-horizontal-rule',
-
     converters: {
       HR: {
         startTag(conversion) {

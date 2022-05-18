@@ -113,8 +113,7 @@ you can really do:
 
 ``` javascript
 Europa.registerPlugin((api) => ({
-  name: 'europa-plugin-example',
-  // Everything below is optional
+  // All fields and methods are optional
   converters: {
     TAGNAME: {
       startTag(conversion, context) { /* ... */ },
@@ -152,7 +151,6 @@ const pluginProviders = [
 ];
 
 Europa.registerPreset((api) => ({
-  name: 'europa-preset-example',
   plugins: pluginProviders.map((pluginProvider) => pluginProvider(api)),
 }));
 ```

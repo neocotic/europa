@@ -24,8 +24,6 @@ import { Plugin } from 'europa-core';
 
 export default function (): Plugin {
   return {
-    name: 'europa-plugin-preformatted',
-
     converters: {
       PRE: {
         startTag(conversion, context) {

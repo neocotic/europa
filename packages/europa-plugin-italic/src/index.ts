@@ -26,8 +26,6 @@ export default function (api: PluginApi): Plugin {
   const italicConverter = api.createItalicConverter();
 
   return {
-    name: 'europa-plugin-italic',
-
     converters: {
       CITE: italicConverter,
       DFN: italicConverter,
