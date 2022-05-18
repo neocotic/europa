@@ -24,8 +24,6 @@ import { Plugin, PluginApi } from 'europa-core';
 
 export default function (api: PluginApi): Plugin {
   return {
-    name: 'europa-plugin-description',
-
     converters: {
       DD: api.createBlockQuoteConverter(),
       DT: {

@@ -31,10 +31,6 @@ import { PluginApi } from 'europa-core/plugin/PluginApi';
  */
 export interface Plugin {
   /**
-   * The name of this {@link Plugin}.
-   */
-  readonly name: string;
-  /**
    * A map containing tag name to converter pairs.
    */
   readonly converters?: { readonly [key: string]: PluginConverter };

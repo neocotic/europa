@@ -24,8 +24,6 @@ import { Plugin, PluginApi, PluginConverter } from 'europa-core';
 
 export default function (api: PluginApi): Plugin {
   return {
-    name: 'europa-plugin-list',
-
     converters: {
       LI: {
         startTag(conversion) {

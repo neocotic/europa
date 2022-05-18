@@ -48,8 +48,6 @@ export default function (): Plugin {
   };
 
   return {
-    name: 'europa-plugin-code',
-
     converters: {
       CODE: codeConverter,
       KBD: codeConverter,

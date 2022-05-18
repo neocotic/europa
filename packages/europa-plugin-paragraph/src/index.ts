@@ -32,8 +32,6 @@ export default function (): Plugin {
   };
 
   return {
-    name: 'europa-plugin-paragraph',
-
     converters: {
       ADDRESS: paragraphConverter,
       ARTICLE: paragraphConverter,

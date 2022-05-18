@@ -8,8 +8,6 @@ const pluginProviders: PluginProvider[] = [
 
 export default function (api: PluginApi): Preset {
   return {
-    name: '{{name}}',
-
     plugins: pluginProviders.map((pluginProvider) => pluginProvider(api)),
   };
 }

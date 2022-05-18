@@ -57,8 +57,6 @@ const pluginProviders: PluginProvider[] = [
 
 export default function (api: PluginApi): Preset {
   return {
-    name: 'europa-preset-default',
-
     plugins: pluginProviders.map((pluginProvider) => pluginProvider(api)),
   };
 }

@@ -28,10 +28,6 @@ import { PluginApi } from 'europa-core/plugin/PluginApi';
  */
 export interface Preset {
   /**
-   * The name of this plugin preset.
-   */
-  readonly name: string;
-  /**
    * The plugins that belong to this preset.
    */
   readonly plugins?: Plugin[];

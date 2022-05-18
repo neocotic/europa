@@ -44,8 +44,6 @@ export default function (): Plugin {
   };
 
   return {
-    name: 'europa-plugin-frame',
-
     converters: {
       FRAME: frameConverter,
       IFRAME: frameConverter,
