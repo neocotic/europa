@@ -30,8 +30,8 @@ import { LintScriptProvider } from 'europa-build/script/provider/LintScriptProvi
 import { ScriptProvider } from 'europa-build/script/provider/ScriptProvider';
 import { TestScriptProvider } from 'europa-build/script/provider/TestScriptProvider';
 
-const _logger = Symbol('logger');
-const _providers = Symbol('providers');
+const _logger = Symbol();
+const _providers = Symbol();
 
 /**
  * A runner for scripts that relate to generated plugin and preset packages.

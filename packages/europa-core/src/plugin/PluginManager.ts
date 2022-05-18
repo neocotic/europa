@@ -25,10 +25,10 @@ import { Plugin, PluginConverter, PluginProvider } from 'europa-core/plugin/Plug
 import { PluginApi } from 'europa-core/plugin/PluginApi';
 import { PresetProvider } from 'europa-core/plugin/Preset';
 
-const _addProvidedPlugin = Symbol('addProvidedPlugin');
-const _api = Symbol('api');
-const _converters = Symbol('converters');
-const _plugins = Symbol('plugins');
+const _addProvidedPlugin = Symbol();
+const _api = Symbol();
+const _converters = Symbol();
+const _plugins = Symbol();
 
 /**
  * A basic manager for plugins and presets (collections of plugins) that can be hooked into {@link Europa}.

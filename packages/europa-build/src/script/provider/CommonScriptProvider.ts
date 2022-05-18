@@ -28,7 +28,7 @@ import { Logger } from 'winston';
 import { PackageInfo } from 'europa-build/PackageInfo';
 import { ScriptProvider } from 'europa-build/script/provider/ScriptProvider';
 
-const _logger = Symbol('logger');
+const _logger = Symbol();
 
 /**
  * An abstract {@link ScriptProvider} that provides common logic across the majority of implementations.

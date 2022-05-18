@@ -23,7 +23,7 @@
 import { EuropaOptions } from 'europa-core/Europa';
 import { WindowService } from 'europa-core/service/window/WindowService';
 
-const _windowService = Symbol('windowService');
+const _windowService = Symbol();
 
 /**
  * A parser for {@link EuropaOptions} that provides null safety and supports default value resolution.

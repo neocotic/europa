@@ -30,8 +30,8 @@ import { OfficialPluginTemplateProvider } from 'europa-build/template/provider/p
 import { ContribPresetTemplateProvider } from 'europa-build/template/provider/preset/ContribPresetTemplateProvider';
 import { OfficialPresetTemplateProvider } from 'europa-build/template/provider/preset/OfficialPresetTemplateProvider';
 
-const _logger = Symbol('logger');
-const _providers = Symbol('providers');
+const _logger = Symbol();
+const _providers = Symbol();
 
 /**
  * A basic manager for template providers that are mapped to their general names and types.

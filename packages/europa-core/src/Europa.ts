@@ -29,10 +29,10 @@ import { Service } from 'europa-core/service/Service';
 import { ServiceManager } from 'europa-core/service/ServiceManager';
 import { ServiceName } from 'europa-core/service/ServiceName';
 
-const _options = Symbol('options');
-const _pluginManager = Symbol('pluginManager');
-const _serviceManager = Symbol('serviceManager');
-const _window = Symbol('window');
+const _options = Symbol();
+const _pluginManager = Symbol();
+const _serviceManager = Symbol();
+const _window = Symbol();
 
 /**
  * Enables configuration of an HTML to Markdown converter that supports HTML strings and DOM elements.
