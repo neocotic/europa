@@ -20,36 +20,44 @@
  * SOFTWARE.
  */
 
-const _defaultValue = Symbol('defaultValue');
+import { EuropaOptions } from 'europa-core';
+
+const fixtures: readonly TestFixture[] = [
+  {
+    name: 'content',
+  },
+  {
+    name: 'lists',
+  },
+  {
+    name: 'scaffolding',
+  },
+  {
+    name: 'tables',
+  },
+  {
+    name: 'unformatted-lists',
+  },
+  {
+    name: 'visibility',
+  },
+];
+
+export default fixtures;
 
 /**
- * Defines an available option.
+ * Describes an individual test fixture.
  */
-export class Option {
-  private readonly [_defaultValue]: any;
-
+export type TestFixture = {
   /**
-   * Creates an instance of `Option` using the `name` provided.
+   * The name of the test fixture.
    *
-   * If `defaultValue` is a function, it will be called if/when needed and the return value will be used as the default
-   * value. If the default value is to be a function itself, then `defaultValue` must return that function.
-   *
-   * @param name - The name to be used.
-   * @param [defaultValue] - The default value to be used.
+   * This will also correlate with a pair of files (one `.html` and another `.md`) within the `fixtures` directory of
+   * the `europa-test` package.
    */
-  constructor(
-    /** The name for this {@link Option}. */
-    readonly name: string,
-    defaultValue: any,
-  ) {
-    this[_defaultValue] = defaultValue;
-  }
-
+  readonly name: string;
   /**
-   * The default value for this {@link Option}.
+   * Any options to be passed to the {@link Europa} constructor.
    */
-  get defaultValue(): any {
-    const defaultValue = this[_defaultValue];
-    return typeof defaultValue === 'function' ? defaultValue.call(this) : defaultValue;
-  }
-}
+  readonly options?: EuropaOptions;
+};

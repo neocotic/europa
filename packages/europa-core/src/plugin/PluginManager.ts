@@ -25,6 +25,7 @@ import { Plugin, PluginConverter, PluginProvider } from 'europa-core/plugin/Plug
 import { PluginApi } from 'europa-core/plugin/PluginApi';
 import { PresetProvider } from 'europa-core/plugin/Preset';
 
+const _addProvidedPlugin = Symbol('addProvidedPlugin');
 const _api = Symbol('api');
 const _converters = Symbol('converters');
 const _plugins = Symbol('plugins');
@@ -52,7 +53,7 @@ export class PluginManager {
   addPlugin(provider: PluginProvider): this {
     const plugin = provider(this[_api]);
 
-    this.addProvidedPlugin(plugin);
+    this[_addProvidedPlugin](plugin);
 
     return this;
   }
@@ -73,7 +74,7 @@ export class PluginManager {
    */
   addPreset(provider: PresetProvider): this {
     const preset = provider(this[_api]);
-    preset.plugins?.forEach((plugin) => this.addProvidedPlugin(plugin));
+    preset.plugins?.forEach((plugin) => this[_addProvidedPlugin](plugin));
 
     return this;
   }
@@ -135,7 +136,7 @@ export class PluginManager {
     });
   }
 
-  private addProvidedPlugin(plugin: Plugin) {
+  private [_addProvidedPlugin](plugin: Plugin) {
     if (plugin.converters) {
       Object.entries(plugin.converters).forEach(([tagName, converter]) => {
         this[_converters][tagName.toUpperCase()] = converter;

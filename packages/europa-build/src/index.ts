@@ -33,3 +33,4 @@ export * from 'europa-build/template/provider/preset/ContribPresetTemplateProvid
 export * from 'europa-build/template/provider/preset/OfficialPresetTemplateProvider';
 export * from 'europa-build/template/provider/TemplateProviderType';
 export * from 'europa-build/template/TemplateManager';
+export * from 'europa-build/Cli';

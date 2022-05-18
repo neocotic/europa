@@ -20,16 +20,11 @@
  * SOFTWARE.
  */
 
-export * from 'europa-core/option/Option';
-export * from 'europa-core/option/OptionParser';
 export * from 'europa-core/plugin/Plugin';
 export * from 'europa-core/plugin/PluginApi';
-export * from 'europa-core/plugin/PluginManager';
 export * from 'europa-core/plugin/Preset';
 export * from 'europa-core/service/charset/CharsetService';
 export * from 'europa-core/service/window/WindowService';
 export * from 'europa-core/service/Service';
-export * from 'europa-core/service/ServiceManager';
 export * from 'europa-core/service/ServiceName';
-export * from 'europa-core/Conversion';
 export * from 'europa-core/Europa';
