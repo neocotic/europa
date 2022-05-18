@@ -57,7 +57,7 @@ export class PackageInfo {
 
     const result = await readPkgUp({ cwd: __dirname });
     if (!result) {
-      throw new Error('Failed to read "europa-plugin-cli" package.json file');
+      throw new Error('Failed to read "europa-cli" package.json file');
     }
 
     const packageInfo = new PackageInfo(dirname(result.path), result.path, result.packageJson);

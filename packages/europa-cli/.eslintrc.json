@@ -6,7 +6,7 @@
   },
   "plugins": ["@typescript-eslint/eslint-plugin", "import", "prettier"],
   "settings": {
-    "import/internal-regex": "^europa/",
+    "import/internal-regex": "^europa-cli/",
     "import/parsers": {
       "@typescript-eslint/parser": [".ts"]
     },
@@ -17,9 +17,8 @@
   "extends": ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "plugin:import/errors"],
   "root": true,
   "env": {
-    "browser": true
+    "node": true
   },
-  "ignorePatterns": ["karma.config.js", "webpack.*.config.js"],
   "rules": {
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
@@ -36,7 +35,7 @@
         "groups": [["builtin", "external"], "internal", "parent", "sibling", "index"],
         "pathGroups": [
           {
-            "pattern": "europa/**",
+            "pattern": "europa-cli/**",
             "group": "internal",
             "position": "after"
           }

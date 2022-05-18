@@ -10,7 +10,6 @@ module for converting HTML into valid Markdown.
 * [Install](#install)
 * [Examples](#examples)
 * [API](#api)
-* [CLI](#cli)
 * [Bugs](#bugs)
 * [Contributors](#contributors)
 * [License](#license)
@@ -25,15 +24,9 @@ $ npm install --save node-europa
 
 You'll need to have at least [Node.js](https://nodejs.org) 12.22.0 or newer.
 
-If you want to use the command line interface, you'll most likely want to install it globally so that you can run
-`europa` from anywhere:
-
-``` bash
-$ npm install --global node-europa
-```
-
-Check out [europa](https://github.com/neocotic/europa/tree/main/packages/europa) if you want to install it for use
-within the browser.
+Check out [europa](https://github.com/neocotic/europa/tree/main/packages/europa) or
+[europa-cli](https://github.com/neocotic/europa/tree/main/packages/europa-cli) if you want to install it for use within
+the browser or as a CLI respectively.
 
 ## Examples
 
@@ -188,27 +181,6 @@ Europa.registerPreset((api) => ({
 A good practice for naming preset packages is `europa-preset-<markdown-feature-set>`. For example;
 `europa-preset-github` could be used to register plugins that converts HTML to GitHub-flavoured Markdown. Each preset
 should include plugins that aim to support a related Markdown feature set.
-
-## CLI
-
-    Usage: europa [options] [file ...]
-
-    Options:
-
-      -h, --help            output usage information
-      -V, --version         output the version number
-      -a, --absolute        use absolute URLs for links/images
-      -b, --base-uri <uri>  base URI for links/images
-      -e, --eval <html>     evaluate HTML string
-      -i, --inline          insert link/image URLs inline
-      -o, --output <path>   output directory (for files) or file (for eval/stdin)
-
-## Migrating from older versions
-
-If you've been using an older major version and would like details on what's changed and information on how to migrate
-to the latest major release below:
-
-https://github.com/neocotic/europa/wiki/Migrating-from-older-versions
 
 ## Bugs
 

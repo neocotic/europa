@@ -8,6 +8,7 @@ This monorepo contains the following packages:
 
 * [europa](https://github.com/neocotic/europa/tree/main/packages/europa)
 * [europa-build](https://github.com/neocotic/europa/tree/main/packages/europa-build)
+* [europa-cli](https://github.com/neocotic/europa/tree/main/packages/europa-cli)
 * [europa-core](https://github.com/neocotic/europa/tree/main/packages/europa-core)
 * [europa-plugin-bold](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-bold)
 * [europa-plugin-code](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-code)
@@ -29,7 +30,9 @@ This monorepo contains the following packages:
 * [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa)
 
 The `europa` and `node-europa` packages are the most important as those are used to convert HTML into valid Markdown in
-the browser and [Node.js](https://nodejs.org) environments respectively. A CLI is also provided by the latter package.
+the browser and [Node.js](https://nodejs.org) environments respectively.
+
+The `europa-cli` package provides a useful CLI.
 
 ## Bugs
 
