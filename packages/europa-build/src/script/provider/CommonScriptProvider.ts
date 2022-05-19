@@ -37,7 +37,7 @@ export abstract class CommonScriptProvider implements ScriptProvider {
   private readonly [_logger]: Logger;
 
   /**
-   * Creates a {@link CommonScriptProvider} using the `options` provided.
+   * Creates an instance of {@link CommonScriptProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

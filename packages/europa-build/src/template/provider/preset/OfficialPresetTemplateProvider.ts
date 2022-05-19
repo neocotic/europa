@@ -32,7 +32,7 @@ import {
  */
 export class OfficialPresetTemplateProvider extends CommonPresetTemplateProvider<CommonPresetTemplateContext> {
   /**
-   * Creates an {@link OfficialPresetTemplateProvider} using the `options` provided.
+   * Creates an instance of {@link OfficialPresetTemplateProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

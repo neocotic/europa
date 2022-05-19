@@ -24,7 +24,7 @@ import { Plugin } from 'europa-core/plugin/Plugin';
 import { PluginApi } from 'europa-core/plugin/PluginApi';
 
 /**
- * A collection of plugins that hook into the {@link Europa} conversion process.
+ * A collection of plugins that hook into the {@link EuropaCore} conversion process.
  */
 export interface Preset {
   /**
@@ -34,7 +34,7 @@ export interface Preset {
 }
 
 /**
- * Provider a plugin preset compatible with {@link Europa}.
+ * Provider a plugin preset compatible with {@link EuropaCore}.
  *
  * Invoked internally by {@link PluginManager#addPreset} in order to get the preset and is passed an `api`, which it can
  * choose to use or not, although typically this will be passed to plugin providers to build its list of plugins.

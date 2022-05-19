@@ -20,14 +20,10 @@
  * SOFTWARE.
  */
 
-import { Europa } from 'europa-core';
 import defaultPresetProvider from 'europa-preset-default';
 
-import { NodeCharsetService } from 'node-europa/service/charset/NodeCharsetService';
-import { NodeWindowService } from 'node-europa/service/window/NodeWindowService';
+import { Europa } from 'node-europa/Europa';
 
 Europa.registerPreset(defaultPresetProvider);
-Europa.registerService(new NodeCharsetService());
-Europa.registerService(new NodeWindowService());
 
 export default Europa;

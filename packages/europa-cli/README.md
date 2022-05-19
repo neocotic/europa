@@ -36,7 +36,17 @@ within the browser or [Node.js](https://nodejs.org) respectively.
 
 ## Examples
 
-TODO: Examples
+Convert HTML from `STDIN` into Markdown:
+
+``` bash
+$ europa < index.html
+```
+
+Convert an HTML file into a Markdown file in another directory:
+
+``` bash
+$ europa index.html --output docs
+```
 
 ## CLI
 
@@ -46,10 +56,10 @@ TODO: Examples
 
       -h, --help            output usage information
       -V, --version         output the version number
-      -a, --absolute        use absolute URLs for links/images
-      -b, --base-uri <uri>  base URI for links/images
+      -a, --absolute        use absolute URLs for elements (e.g. anchors, images)
+      -b, --base-uri <uri>  base URI for elements (e.g. anchors, images)
       -e, --eval <html>     evaluate HTML string
-      -i, --inline          insert link/image URLs inline
+      -i, --inline          insert URLs for elements (e.g. anchors, images) inline
       -o, --output <path>   output directory (for files) or file (for eval/stdin)
 
 ## Bugs

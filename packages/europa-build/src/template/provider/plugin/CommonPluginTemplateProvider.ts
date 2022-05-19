@@ -35,7 +35,7 @@ export abstract class CommonPluginTemplateProvider<
   C extends CommonPluginTemplateContext,
 > extends CommonTemplateProvider<C, CommonPluginTemplateContext> {
   /**
-   * Creates a {@link CommonPluginTemplateProvider} using the `options` provided.
+   * Creates an instance of {@link CommonPluginTemplateProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

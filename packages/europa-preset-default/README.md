@@ -22,7 +22,7 @@ $ npm install --save europa-preset-default
 
 Then, in order to activate this preset;
 
-``` javascript
+``` typescript
 // Import europa-core implementation (e.g. `europa`, `node-europa`)
 import preset from 'europa-preset-default';
 
@@ -41,7 +41,6 @@ The following [Europa](https://github.com/neocotic/europa) plugins are included 
 * [europa-plugin-code](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-code)
 * [europa-plugin-description](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-description)
 * [europa-plugin-details](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-details)
-* [europa-plugin-frame](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-frame)
 * [europa-plugin-header](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-header)
 * [europa-plugin-horizontal-rule](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-horizontal-rule)
 * [europa-plugin-image](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-image)

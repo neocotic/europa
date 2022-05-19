@@ -20,11 +20,14 @@
  * SOFTWARE.
  */
 
+export * from 'europa-core/environment/dom/Dom';
+export * from 'europa-core/environment/dom/DomElement';
+export * from 'europa-core/environment/dom/DomNode';
+export * from 'europa-core/environment/dom/DomParentNode';
+export * from 'europa-core/environment/dom/DomRoot';
+export * from 'europa-core/environment/Environment';
 export * from 'europa-core/plugin/Plugin';
 export * from 'europa-core/plugin/PluginApi';
 export * from 'europa-core/plugin/Preset';
-export * from 'europa-core/service/charset/CharsetService';
-export * from 'europa-core/service/window/WindowService';
-export * from 'europa-core/service/Service';
-export * from 'europa-core/service/ServiceName';
-export * from 'europa-core/Europa';
+export * from 'europa-core/EuropaCore';
+export * from 'europa-core/EuropaOptions';

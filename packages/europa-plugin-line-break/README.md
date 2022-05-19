@@ -23,7 +23,7 @@ $ npm install --save europa-plugin-line-break
 
 Then, in order to activate this plugin;
 
-``` javascript
+``` typescript
 // Import europa-core implementation (e.g. `europa`, `node-europa`)
 import plugin from 'europa-plugin-line-break';
 

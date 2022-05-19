@@ -64,31 +64,33 @@ Open up `demo.html` in your browser to play around a bit.
 Simply create an instance of `Europa` and you've done most of the work. You can control many aspects of the HTML to
 Markdown conversion by passing the following options to the constructor:
 
-| Option   | Type    | Description                                           | Default |
-|----------|---------|-------------------------------------------------------|---------|
-| absolute | Boolean | Whether absolute URLS should be used for links/images | `false` |
-| inline   | Boolean | Whether link/image URLs are to be inserted inline     | `false` |
+| Option   | Type    | Description                                                                         | Default            |
+|----------|---------|-------------------------------------------------------------------------------------|--------------------|
+| absolute | Boolean | Whether absolute URLs should be used for elements (e.g. anchors, images)            | `false`            |
+| baseUri  | String  | The base URI used to resolve relative URLs used for elements (e.g. anchors, images) | `document.baseURI` |
+| inline   | Boolean | Whether URLs for elements (e.g. anchors, images) are to be inserted inline          | `false`            |
 
-``` javascript
+``` typescript
 const europa = new Europa({
   absolute: true,
+  baseUri: 'https://example.com',
   inline: true
 });
 ```
 
-### `convert(html)`
+### `convert(input)`
 
-Converts the specified `html` into Markdown.
+Converts the specified `input` into Markdown.
 
-`html` can either be an HTML string or a DOM element whose HTML contents are to be converted into Markdown.
+`input` can either be an HTML string or DOM node(s) to be converted into Markdown.
 
-``` javascript
+``` typescript
 const europa = new Europa();
 
-europa.convert('<blockquote>This <i>is</i> great!</blockquote>');
-//=> "> This *is* great!"
+europa.convert('<blockquote><b>Europa</b> is great!</blockquote>');
+//=> "> **Europa** is great!"
 europa.convert(document.querySelector('.lead'));
-//=> "We ♥ **Europa**!"
+//=> "_Everyone_ ♥ **Europa**!"
 
 const div = document.createElement('div');
 div.innerHTML = 'Please keep my <span style="display: none">treasure</span> secret safe...';
@@ -111,18 +113,24 @@ implementations with no extra effort.
 The API for plugins is simple on a high level, but you'll need to get to grips with the internal API to understand what
 you can really do:
 
-``` javascript
-Europa.registerPlugin((api) => ({
+``` typescript
+import Europa from 'europa';
+import { Plugin, PluginApi } from 'europa-core';
+
+const examplePluginProvider = (api: PluginApi): Plugin => ({
   // All fields and methods are optional
   converters: {
     TAGNAME: {
-      startTag(conversion, context) { /* ... */ },
+      startTag(conversion, context): boolean { /* ... */ },
       endTag(conversion, context) { /* ... */ },
     },
   },
+  convertText(value, conversion): boolean { /* ... */ },
   startConversion(conversion) { /* ... */ },
   endConversion(conversion) { /* ... */ },
-}));
+});
+
+Europa.registerPlugin(examplePluginProvider);
 ```
 
 It's highly recommended to look at existing plugins to get a better understanding of how things work.
@@ -135,6 +143,9 @@ A good practice for naming plugin packages is `europa-plugin-<markdown-feature>`
 not `europa-plugin-a`, and `europa-plugin-quote` and not `europa-plugin-q`. Each plugin should aim to support a specific
 Markdown feature.
 
+Take a look at [Europa Build](https://github.com/neocotic/europa/tree/main/packages/europa-build) to quickly generate a
+Europa plugin package.
+
 ### Presets
 
 Europa also has the concept of a "preset", which is essentially a bundle of plugins. In fact, all the default plugins
@@ -142,22 +153,30 @@ are provided by a default preset.
 
 A preset simply imports a collection of plugins and declares them so that they can be registered together. For example;
 
-``` javascript
+``` typescript
+import Europa from 'europa';
+import { PluginApi, PluginProvider, Preset } from 'europa-core';
 import examplePluginProvider from 'europa-plugin-example';
 
-const pluginProviders = [
+const pluginProviders: PluginProvider[] = [
   examplePluginProvider,
-  /* ... */
+  // ...
 ];
 
-Europa.registerPreset((api) => ({
+const examplePresetProvider = (api: PluginApi): Preset => ({
+  // All fields and methods are optional
   plugins: pluginProviders.map((pluginProvider) => pluginProvider(api)),
-}));
+});
+
+Europa.registerPreset(examplePresetProvider);
 ```
 
 A good practice for naming preset packages is `europa-preset-<markdown-feature-set>`. For example;
 `europa-preset-github` could be used to register plugins that converts HTML to GitHub-flavoured Markdown. Each preset
 should include plugins that aim to support a related Markdown feature set.
+
+Take a look at [Europa Build](https://github.com/neocotic/europa/tree/main/packages/europa-build) to quickly generate a
+Europa preset package.
 
 ## Bugs
 

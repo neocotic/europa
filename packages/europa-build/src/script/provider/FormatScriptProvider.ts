@@ -31,7 +31,7 @@ import {
  */
 export class FormatScriptProvider extends CommandScriptProvider {
   /**
-   * Creates a {@link FormatScriptProvider} using the `options` provided.
+   * Creates an instance of {@link FormatScriptProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

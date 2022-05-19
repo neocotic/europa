@@ -20,14 +20,14 @@
  * SOFTWARE.
  */
 
-import testEuropa from 'europa-test';
+import { test } from 'europa-test';
 
 import Europa from 'europa/index';
 
-testEuropa({
-  Europa,
-  loadFixture: async (path) => {
-    const response = await fetch(`/base/node_modules/europa-test/${path}`);
+test<Europa, Node, Element>({
+  createEuropa: (options) => new Europa(options),
+  loadFixtureFile: async (path) => {
+    const response = await fetch(`/base/${path}`);
 
     if (!response.ok) {
       throw new Error(`Failed to load '${path}' test fixture: ${response.statusText}`);

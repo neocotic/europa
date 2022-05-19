@@ -32,7 +32,7 @@ import {
  */
 export class OfficialPluginTemplateProvider extends CommonPluginTemplateProvider<CommonPluginTemplateContext> {
   /**
-   * Creates an {@link OfficialPluginTemplateProvider} using the `options` provided.
+   * Creates an instance of {@link OfficialPluginTemplateProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

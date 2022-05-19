@@ -65,15 +65,15 @@ export class PluginApi {
    */
   createBoldConverter(): PluginConverter {
     return {
-      startTag(conversion, context): boolean {
+      startTag(conversion): boolean {
         conversion.output('**');
 
-        conversion.atNoWhiteSpace = true;
+        conversion.atNoWhitespace = true;
 
         return true;
       },
 
-      endTag(conversion, context) {
+      endTag(conversion) {
         conversion.output('**');
       },
     };
@@ -86,37 +86,17 @@ export class PluginApi {
    */
   createItalicConverter(): PluginConverter {
     return {
-      startTag(conversion, context): boolean {
+      startTag(conversion): boolean {
         conversion.output('_');
 
-        conversion.atNoWhiteSpace = true;
+        conversion.atNoWhitespace = true;
 
         return true;
       },
 
-      endTag(conversion, context) {
+      endTag(conversion) {
         conversion.output('_');
       },
     };
-  }
-
-  /**
-   * Left pads the `str` provided with the given padding string for the specified number of `times`.
-   *
-   * @param [str=""] - The string to be padded.
-   * @param [times=0] - The number of times to pad `str`.
-   * @param [padding=" "] - The padding string.
-   * @return The padded `str`.
-   */
-  leftPad(str = '', times = 0, padding = ' '): string {
-    if (!padding) {
-      return str;
-    }
-
-    for (let i = 0; i < times; i++) {
-      str = padding + str;
-    }
-
-    return str;
   }
 }

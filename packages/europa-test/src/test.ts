@@ -20,60 +20,109 @@
  * SOFTWARE.
  */
 
-import { Europa, EuropaOptions } from 'europa-core';
+import { EuropaCore, EuropaOptions } from 'europa-core';
 
-import fixtures from 'europa-test/test-fixtures';
+import { BundledTestFixture, FileTestFixture, TestFixture } from 'europa-test/TestFixture';
+import { bundledFixtures } from 'europa-test/bundled-fixtures';
 
 /**
  * Creates a full test suite for a `europa-core` implementation package using the `options` provided.
  *
  * @param options - The options to be used.
  */
-export default function (options: TestOptions) {
-  const { loadFixture, packageName } = options;
+export function test<T extends EuropaCore<N, E>, N, E extends N>(options: TestOptions<T, N, E>) {
+  const { createEuropa, extraFixtures, loadFixtureFile, packageName } = options;
+  const fixtures = getFixtures<N>(extraFixtures);
 
   describe(`europa-test: ${packageName}`, () => {
     fixtures.forEach((fixture) => {
-      describe(`Converting fixture '${fixture.name}'`, () => {
-        let html: string;
-        let markdown: string;
-        let europa: Europa;
+      describe(fixture.description, () => {
+        let input: N | N[] | string;
+        let europa: T;
+        let expected: string;
 
         beforeAll(async () => {
-          html = await loadFixture(`fixtures/${fixture.name}.html`);
-          markdown = await loadFixture(`fixtures/${fixture.name}.md`);
-          europa = new options.Europa(fixture.options);
+          europa = createEuropa(fixture.options);
+
+          if (isFileFixture(fixture)) {
+            const bundled = isBundledFixture(fixture);
+
+            input = await loadFixtureFile(`${fixture.baseFilePath}.html`, bundled);
+            expected = await loadFixtureFile(`${fixture.baseFilePath}.md`, bundled);
+          } else {
+            input = fixture.input;
+            expected = fixture.expected;
+          }
         });
 
-        afterAll(() => {
-          europa.release();
-        });
+        it(`should correctly convert ${getInputType(fixture)} into Markdown`, () => {
+          expect(input).toBeDefined();
+          expect(expected).toBeDefined();
 
-        it('should correctly convert HTML into Markdown', () => {
-          expect(html).toBeDefined();
-          expect(markdown).toBeDefined();
-
-          expect(europa.convert(html)).toBe(markdown!);
+          expect(europa.convert(input)).toBe(expected);
         });
       });
     });
   });
 }
 
+function getFixtures<N>(extras?: TestFixture<N>[]): Fixture<N>[] {
+  const fixtures: TestFixture<N>[] = [...bundledFixtures];
+  if (extras) {
+    fixtures.push(...extras);
+  }
+
+  return fixtures;
+}
+
+function getInputType(fixture: Fixture<any>): string {
+  return isFileFixture(fixture) || typeof fixture.input === 'string' ? 'HTML' : 'DOM';
+}
+
+function isBundledFixture(fixture: Fixture<any>): fixture is BundledTestFixture {
+  return 'bundled' in fixture && fixture.bundled;
+}
+
+function isFileFixture(fixture: Fixture<any>): fixture is FileTestFixture {
+  return 'baseFilePath' in fixture;
+}
+
 /**
  * The options used by `europa-test`.
  */
-export type TestOptions = {
+export type TestOptions<T extends EuropaCore<N, E>, N, E extends N> = {
   /**
-   * The {@link Europa} constructor to be tested.
+   * The function to be used to create an instance of the {@link EuropaCore} implementation to be tested using the
+   * `options` provided.
+   *
+   * @param [options] - The options to be used.
+   * @return An instance of the {@link EuropaCore} implementation.
    */
-  readonly Europa: { new (options?: EuropaOptions): Europa };
+  readonly createEuropa: (options?: EuropaOptions) => T;
   /**
-   * The function to be used to load the contents of a `europa-test` fixture file at the path provided.
+   * Any additional test fixtures that are only of interest to a specific implementation of {@link EuropaCore}.
+   *
+   * Typically, it is recommended that test fixtures are implementation agnostic, and it's preferred to contribute to
+   * the bundled test fixtures over building an implementation-specific test suite.
    */
-  readonly loadFixture: (path: string) => Promise<string>;
+  readonly extraFixtures?: TestFixture<N>[];
+  /**
+   * The function to be used to load the contents of a test fixture file.
+   *
+   * If `bundled` is `true`; `path` will target a file bundled within `europa-test` itself and should be conform to the
+   * pattern: `node_modules/europa-test/fixtures/*.(html|md)`. Otherwise, `path` will be whatever was provided as the
+   * fixtures `baseFilePath` with either `.html` or `.md` appended to it.
+   *
+   * @param path - The path of the fixture file whose contents are to be loaded.
+   * @param bundled - `true` if the fixture file is bundled within `europa-test`; otherwise `false`.
+   * @return The contents of the test fixture file.
+   * @throws If unable to read the test fixture file.
+   */
+  readonly loadFixtureFile: (path: string, bundled: boolean) => Promise<string>;
   /**
    * The name of the `europa-core` implementation package being tested.
    */
   readonly packageName: string;
 };
+
+type Fixture<N> = BundledTestFixture | TestFixture<N>;

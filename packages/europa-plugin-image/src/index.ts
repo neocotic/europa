@@ -29,15 +29,16 @@ export default function (): Plugin {
         startTag(conversion) {
           const absolute = conversion.getOption('absolute');
           const inline = conversion.getOption('inline');
-          const element = conversion.element as HTMLImageElement;
-          const source = absolute ? element.src : element.getAttribute('src');
+          const { element } = conversion;
+          const source = element.attr('src');
           if (!source) {
             return false;
           }
 
-          const alternativeText = element.getAttribute('alt') || '';
-          const title = element.getAttribute('title');
-          let value = title ? `${source} "${title}"` : source;
+          const alternativeText = element.attr('alt') || '';
+          const title = element.attr('title');
+          const url = absolute ? conversion.resolveUrl(source) : source;
+          let value = title ? `${url} "${title}"` : url;
 
           if (inline) {
             value = `(${value})`;

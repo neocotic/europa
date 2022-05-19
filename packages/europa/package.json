@@ -46,6 +46,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "europa-core": "^5.0.1",
+    "europa-environment-browser": "^5.0.1",
     "europa-preset-default": "^5.0.1",
     "europa-test": "^5.0.1",
     "jasmine": "^4.1.0",
@@ -79,5 +80,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" \"spec/**/*.ts\"",
     "test": "karma start karma.conf.js"
+  },
+  "engines": {
+    "node": "^12.20.0 || >=14"
   }
 }

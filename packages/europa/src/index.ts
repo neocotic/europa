@@ -20,14 +20,10 @@
  * SOFTWARE.
  */
 
-import { Europa } from 'europa-core';
 import defaultPresetProvider from 'europa-preset-default';
 
-import { BrowserCharsetService } from 'europa/service/charset/BrowserCharsetService';
-import { BrowserWindowService } from 'europa/service/window/BrowserWindowService';
+import { Europa } from 'europa/Europa';
 
 Europa.registerPreset(defaultPresetProvider);
-Europa.registerService(new BrowserCharsetService());
-Europa.registerService(new BrowserWindowService());
 
 export default Europa;

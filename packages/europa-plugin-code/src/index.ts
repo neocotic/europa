@@ -53,5 +53,15 @@ export default function (): Plugin {
       KBD: codeConverter,
       SAMP: codeConverter,
     },
+
+    convertText(value, conversion): boolean {
+      if (conversion.inCodeBlock) {
+        conversion.output(value.replace(/`/g, '\\`'));
+
+        return true;
+      }
+
+      return false;
+    },
   };
 }

@@ -20,23 +20,33 @@
  * SOFTWARE.
  */
 
-import { Conversion, ElementConversionContext } from 'europa-core/Conversion';
-import { Plugin, PluginConverter, PluginProvider } from 'europa-core/plugin/Plugin';
+import { Conversion, ConversionElementContext } from 'europa-core/Conversion';
+import {
+  Plugin,
+  PluginConverter,
+  PluginConverterHook,
+  PluginHook,
+  PluginProvider,
+  PluginTextConverter,
+} from 'europa-core/plugin/Plugin';
 import { PluginApi } from 'europa-core/plugin/PluginApi';
 import { PresetProvider } from 'europa-core/plugin/Preset';
 
 const _addProvidedPlugin = Symbol();
 const _api = Symbol();
 const _converters = Symbol();
+const _getTextConverters = Symbol();
 const _plugins = Symbol();
+const _textConverters = Symbol();
 
 /**
- * A basic manager for plugins and presets (collections of plugins) that can be hooked into {@link Europa}.
+ * A basic manager for plugins and presets (collections of plugins) that can be hooked into {@link EuropaCore}.
  */
 export class PluginManager {
   private readonly [_api] = new PluginApi();
   private readonly [_converters]: Record<string, PluginConverter> = {};
   private readonly [_plugins]: Plugin[] = [];
+  private [_textConverters]: PluginTextConverter[] | null = null;
 
   /**
    * Invokes the specified plugin `provider` and adds the resulting plugin to this {@link PluginManager}.
@@ -80,60 +90,92 @@ export class PluginManager {
   }
 
   /**
-   * Returns whether this {@link PluginManager} contains a converter for the specified `tagName`.
+   * Returns whether this {@link PluginManager} contains a converter for the specified `tagName` and that the converter
+   * has a hook with the name provided.
    *
    * @param tagName - The name of the tag to be checked.
-   * @return `true` if it has a converter for `tagName`; otherwise `false`.
+   * @param hookName - The name of the hook to be checked.
+   * @return `true` if a converter for `tagName` exists and has the named hook; otherwise `false`.
    */
-  hasConverter(tagName: string): boolean {
-    return !!this[_converters][tagName];
+  hasConverterHook(tagName: string, hookName: PluginConverterHook): boolean {
+    const converter = this[_converters][tagName];
+
+    return typeof converter?.[hookName] === 'function';
   }
 
   /**
-   * Invokes the method with the specified name on with the `conversion` and `context` provided on the converter for the
+   * Invokes the hook with the specified name on with the `conversion` and `context` provided on the converter for the
    * given `tagName` within this {@link PluginManager}.
    *
-   * This method will return `undefined` if there is no converter for `tagName` or that converter does not have the
-   * method. Otherwise, it will return the result of invoking the method.
+   * If there is no converter for `tagName` or the converter does not have the named hook, nothing happens and one of
+   * the following values will be returned based on `hookName`:
    *
-   * @param tagName - The name of the tag whose converter (if any) the method is to be invoked on.
-   * @param methodName - The name of the method to be invoked.
+   * | Hook Name  | Return Value |
+   * | ---------- | ------------ |
+   * | `endTag`   | `undefined`  |
+   * | `startTag` | `false`      |
+   *
+   * Otherwise, it will return the result of invoking the named hook. For this reason it is highly recommended that,
+   * if the return value is important, {@link PluginManager#hasConverterHook} is called with the same `tagName` and
+   * `hookName` combination to check whether the converter hook exists before calling
+   * {@link PluginManager#invokeConverterHook}.
+   *
+   * @param tagName - The name of the tag whose converter (if any) the named hook is to be invoked on.
+   * @param hookName - The name of the hook to be invoked.
    * @param conversion - The current {@link Conversion}.
-   * @param context - The current {@link ElementConversionContext}.
-   * @return The result of calling the method or `undefined` if there is no converter for `tagName` or it did not have
-   * the method.
+   * @param context - The context for the current element within the {@link Conversion}.
+   * @return The result of calling the hook or a default value based on `hookName` (see above table) if there is no
+   * converter for `tagName` or the converter does not have the named hook.
    */
-  invokeConverter<K extends keyof PluginConverter>(
+  invokeConverterHook(
     tagName: string,
-    methodName: K,
+    hookName: PluginConverterHook,
     conversion: Conversion,
-    context: ElementConversionContext,
+    context: ConversionElementContext,
   ): boolean | void {
-    const converter = this[_converters][tagName];
-    const method = converter?.[methodName];
-    if (typeof method !== 'function') {
-      return;
+    const hook = this[_converters][tagName]?.[hookName];
+    if (typeof hook !== 'function') {
+      return hookName === 'startTag' ? false : undefined;
     }
 
-    return method(conversion, context);
+    return hook(conversion, context);
   }
 
   /**
-   * Invokes the method with the specified name with the `conversion` provided on each of the plugins within this
+   * Invokes the hook with the specified name with the `conversion` provided on each of the plugins within this
    * {@link PluginManager}.
    *
-   * Plugins that do not have the method are skipped and any return values are ignored by this method.
+   * Any plugins that do not have the named hook are skipped.
    *
-   * @param methodName - The name of the method to be invoked.
+   * @param hookName - The name of the hook to be invoked.
    * @param conversion - The current {@link Conversion}.
    */
-  invokePlugins<K extends keyof Plugin>(methodName: K, conversion: Conversion) {
+  invokeHook(hookName: PluginHook, conversion: Conversion) {
     this[_plugins].forEach((plugin) => {
-      const method = plugin[methodName];
-      if (typeof method === 'function') {
-        method(conversion);
+      const hook = plugin[hookName];
+      if (typeof hook === 'function') {
+        hook(conversion);
       }
     });
+  }
+
+  /**
+   * Invokes a special hook on all plugins within this {@link PluginManager} that allows plugins to conditionally
+   * perform an alternative conversion of the specified `value` which has been taken from a text node being converted by
+   * the given `conversion`.
+   *
+   * This relies entirely on plugins ensuring that, if they perform any alternative conversion of the specified `value`,
+   * that their hook returns `true` in order to prevent `conversion` from also processing `value` which would result in
+   * duplication and would likely have other unexpected and unwanted side effects.
+   *
+   * @param value - The text value to potentially be converted.
+   * @param conversion - The current {@link Conversion}.
+   * @return `true` if `value` has been converted by a plugin; otherwise `false`.
+   */
+  invokeTextConverterHook(value: string, conversion: Conversion): boolean {
+    const textConverters = this[_getTextConverters]();
+
+    return textConverters.some((textConverter) => textConverter(value, conversion));
   }
 
   private [_addProvidedPlugin](plugin: Plugin) {
@@ -142,7 +184,29 @@ export class PluginManager {
         this[_converters][tagName.toUpperCase()] = converter;
       });
     }
+    if (typeof plugin.convertText === 'function') {
+      this[_textConverters] = null;
+    }
 
     this[_plugins].push(plugin);
+  }
+
+  private [_getTextConverters](): PluginTextConverter[] {
+    const cachedTextConverters = this[_textConverters];
+    if (cachedTextConverters) {
+      return cachedTextConverters;
+    }
+
+    const textConverters: PluginTextConverter[] = [];
+
+    this[_plugins].forEach((plugin) => {
+      if (typeof plugin.convertText === 'function') {
+        textConverters.push(plugin.convertText);
+      }
+    });
+
+    this[_textConverters] = textConverters;
+
+    return textConverters;
   }
 }

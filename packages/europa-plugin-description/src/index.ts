@@ -32,7 +32,7 @@ export default function (api: PluginApi): Plugin {
 
           conversion.output('**');
 
-          conversion.atNoWhiteSpace = true;
+          conversion.atNoWhitespace = true;
 
           return true;
         },

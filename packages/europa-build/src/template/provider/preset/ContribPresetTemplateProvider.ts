@@ -32,7 +32,7 @@ import {
  */
 export class ContribPresetTemplateProvider extends CommonPresetTemplateProvider<ContribPresetTemplateContext> {
   /**
-   * Creates a {@link ContribPresetTemplateProvider} using the `options` provided.
+   * Creates an instance of {@link ContribPresetTemplateProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

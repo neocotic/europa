@@ -48,7 +48,7 @@ export class Cli {
   private readonly [_outputStream]: Writable | undefined;
 
   /**
-   * Creates a new instance of {@link Cli} using the `options` provided.
+   * Creates an instance of {@link Cli} using the `options` provided.
    *
    * @param [options] - The options to be used.
    */

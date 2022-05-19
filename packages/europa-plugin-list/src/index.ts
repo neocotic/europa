@@ -20,9 +20,9 @@
  * SOFTWARE.
  */
 
-import { Plugin, PluginApi, PluginConverter } from 'europa-core';
+import { Plugin, PluginConverter } from 'europa-core';
 
-export default function (api: PluginApi): Plugin {
+export default function (): Plugin {
   return {
     converters: {
       LI: {
@@ -33,13 +33,13 @@ export default function (api: PluginApi): Plugin {
             conversion.append(conversion.left.replace(/ {2,4}$/, conversion.eol));
 
             conversion.atLeft = true;
-            conversion.atNoWhiteSpace = true;
+            conversion.atNoWhitespace = true;
             conversion.atParagraph = true;
           } else if (conversion.last) {
             conversion.last = conversion.last.replace(/ {2,4}$/, conversion.eol);
           }
 
-          conversion.append(api.leftPad(value, (conversion.listDepth - 1) * 2));
+          conversion.append(leftPad(value, (conversion.listDepth - 1) * 2));
 
           return true;
         },
@@ -73,4 +73,16 @@ function createListConverter(ordered: boolean): PluginConverter {
       conversion.listDepth--;
     },
   };
+}
+
+function leftPad(str = '', times = 0, padding = ' '): string {
+  if (!padding) {
+    return str;
+  }
+
+  for (let i = 0; i < times; i++) {
+    str = padding + str;
+  }
+
+  return str;
 }

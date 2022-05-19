@@ -58,5 +58,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\"",
     "test": "echo \"No tests\""
+  },
+  "engines": {
+    "node": "^12.20.0 || >=14"
   }
 }

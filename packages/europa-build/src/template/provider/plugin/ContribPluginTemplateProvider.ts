@@ -32,7 +32,7 @@ import {
  */
 export class ContribPluginTemplateProvider extends CommonPluginTemplateProvider<ContribPluginTemplateContext> {
   /**
-   * Creates a {@link ContribPluginTemplateProvider} using the `options` provided.
+   * Creates an instance of {@link ContribPluginTemplateProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

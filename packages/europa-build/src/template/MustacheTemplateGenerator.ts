@@ -45,7 +45,7 @@ export class MustacheTemplateGenerator<C extends TemplateContext> implements Tem
   private readonly [_provider]: TemplateProvider<C>;
 
   /**
-   * Creates a {@link MustacheTemplateGenerator} using the `options` provided.
+   * Creates an instance of {@link MustacheTemplateGenerator} using the `options` provided.
    *
    * @param options - The options to be used.
    */

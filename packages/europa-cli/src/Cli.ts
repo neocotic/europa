@@ -52,7 +52,7 @@ export class Cli {
   private readonly [_outputStream]: Writable;
 
   /**
-   * Creates a new instance of {@link Cli} using the `options` provided.
+   * Creates an instance of {@link Cli} using the `options` provided.
    *
    * @param [options] - The options to be used.
    */
@@ -103,10 +103,10 @@ export class Cli {
     const command = program
       .version(packageInfo.json.version)
       .usage('[options] [file ...]')
-      .option('-a, --absolute', 'use absolute URLs for links/images')
-      .option('-b, --base-uri <uri>', 'base URI for links/images')
+      .option('-a, --absolute', 'use absolute URLs for elements (e.g. anchors, images)')
+      .option('-b, --base-uri <uri>', 'base URI for elements (e.g. anchors, images)')
       .option('-e, --eval <html>', 'evaluate HTML string')
-      .option('-i, --inline', 'insert link/image URLs inline')
+      .option('-i, --inline', 'insert URLs for elements (e.g. anchors, images) inline')
       .option('-o, --output <path>', 'output directory (for files) or file (for eval/stdin)');
 
     this[_command] = command;

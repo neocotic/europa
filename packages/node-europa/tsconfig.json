@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
     "declaration": true,
     "moduleResolution": "node",
     "strict": true,
@@ -11,8 +10,6 @@
       "node-europa/*": ["src/*"]
     },
     "lib": [
-      "DOM",
-      "DOM.Iterable",
       "ES2017"
     ],
     "plugins": [

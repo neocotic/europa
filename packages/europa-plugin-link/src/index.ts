@@ -29,14 +29,15 @@ export default function (): Plugin {
         startTag(conversion, context): boolean {
           const absolute = conversion.getOption('absolute');
           const inline = conversion.getOption('inline');
-          const element = conversion.element as HTMLAnchorElement;
-          const href = absolute ? element.href : element.getAttribute('href');
+          const { element } = conversion;
+          const href = element.attr('href');
           if (!href) {
             return true;
           }
 
-          const title = element.getAttribute('title');
-          const value = title ? `${href} "${title}"` : href;
+          const title = element.attr('title');
+          const url = absolute ? conversion.resolveUrl(href) : href;
+          const value = title ? `${url} "${title}"` : url;
 
           if (inline) {
             context.value = `(${value})`;
@@ -48,7 +49,7 @@ export default function (): Plugin {
 
           conversion.output('[');
 
-          conversion.atNoWhiteSpace = true;
+          conversion.atNoWhitespace = true;
 
           return true;
         },

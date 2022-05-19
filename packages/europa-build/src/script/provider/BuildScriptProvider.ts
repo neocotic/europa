@@ -31,7 +31,7 @@ import {
  */
 export class BuildScriptProvider extends CommandScriptProvider {
   /**
-   * Creates a {@link BuildScriptProvider} using the `options` provided.
+   * Creates an instance of {@link BuildScriptProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

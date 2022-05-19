@@ -30,7 +30,7 @@ export default function (): Plugin {
           conversion.append(`  ${conversion.left}`);
 
           conversion.atLeft = true;
-          conversion.atNoWhiteSpace = true;
+          conversion.atNoWhitespace = true;
 
           return false;
         },

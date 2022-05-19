@@ -20,16 +20,16 @@
  * SOFTWARE.
  */
 
-import { EuropaOptions } from 'europa-core/Europa';
-import { WindowService } from 'europa-core/service/window/WindowService';
+import { EuropaOptions } from 'europa-core/EuropaOptions';
+import { Environment } from 'europa-core/environment/Environment';
 
-const _windowService = Symbol();
+const _environment = Symbol();
 
 /**
  * A parser for {@link EuropaOptions} that provides null safety and supports default value resolution.
  */
 export class EuropaOptionsParser {
-  private readonly [_windowService]: WindowService;
+  private readonly [_environment]: Environment<any, any>;
 
   /**
    * Creates an instance of {@link EuropaOptionsParser} using the `options` provided.
@@ -37,7 +37,7 @@ export class EuropaOptionsParser {
    * @param options - The options to be used.
    */
   constructor(options: EuropaOptionsParserOptions) {
-    this[_windowService] = options.windowService;
+    this[_environment] = options.environment;
   }
 
   /**
@@ -47,7 +47,7 @@ export class EuropaOptionsParser {
    * @param options - The options to be parsed.
    * @return The parsed options.
    */
-  parse(options: EuropaOptions | null | undefined): Required<EuropaOptions> {
+  parse(options: EuropaOptions | undefined): Required<EuropaOptions> {
     function setOption<N extends keyof MutableEuropaOptions>(
       options: MutableEuropaOptions,
       name: N,
@@ -58,7 +58,7 @@ export class EuropaOptionsParser {
 
     const definitions: EuropaOptionDefinitions = {
       absolute: false,
-      baseUri: () => this[_windowService].getDefaultBaseUri(),
+      baseUri: () => this[_environment].getDefaultBaseUri(),
       inline: false,
     };
 
@@ -78,9 +78,9 @@ export class EuropaOptionsParser {
  */
 export type EuropaOptionsParserOptions = {
   /**
-   * The {@link WindowService} to be used to derive the default base URI, if needed.
+   * The {@link Environment} to be used to provide the default base URI, if needed.
    */
-  readonly windowService: WindowService;
+  readonly environment: Environment<any, any>;
 };
 
 type EuropaOptionDefinitions = {
