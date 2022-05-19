@@ -25,8 +25,8 @@
       "url": "https://www.patreon.com/neocotic"
     }
   ],
-  "main": "lib/umd/test",
-  "module": "lib/esm/test",
+  "main": "lib/umd/index",
+  "module": "lib/esm/index",
   "repository": {
     "type": "git",
     "url": "https://github.com/neocotic/europa.git",
@@ -47,6 +47,7 @@
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "jasmine": "^4.1.0",
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "tsconfig-paths": "^4.0.0",
@@ -62,5 +63,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\"",
     "test": "echo \"No tests\""
+  },
+  "engines": {
+    "node": "^12.20.0 || >=14"
   }
 }

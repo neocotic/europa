@@ -30,32 +30,42 @@ that supports your desired environment. For example:
 ## API
 
 As this is the core of Europa, it contains all the HTML to Markdown conversion logic and, since it's designed to use the
-DOM as the model, all that consumers need to do is define and register implementations of the necessary services (i.e.
-`CharsetService` and `WindowService`).
+DOM as the model, all implementations need to do is provide an `Environment`. Although, it's typically recommended that
+they also ensure that
+[europa-preset-default](https://github.com/neocotic/europa/tree/main/packages/europa-preset-default) is also registered.
 
 A typical implementation module of Europa Core will look something like the following:
 
-``` javascript
-import { CharsetService, Europa, WindowService } from 'europa-core';
+``` typescript
+import { Dom, Environment, EuropaCore, EuropaOptions } from 'europa-core';
+import defaultPresetProvider from 'europa-preset-default';
 
-class ExampleCharsetService extends CharsetService {
-  getEndOfLineCharacter() { /* ... */ }
+class ExampleEnvironment implements Environment<any, any> {
+  getDefaultBaseUri(): string { /* ... */ }
+
+  getDom(): Dom<any, any, any> { /* ... */ }
+
+  getEndOfLineCharacter(): string { /* ... */ }
+
+  resolveUrl(baseUri: string, url: string): string { /* ... */ }
 }
 
-class ExampleWindowService extends WindowService {
-  getDefaultBaseUri() { /* ... */ }
-  getWindow(baseUri) { /* ... */ }
-  isCloseable(window) { /* ... */ }
+const environment = new ExampleEnvironment();
+
+class Europa extends EuropaCore<any, any> {
+  constructor(options?: EuropaOptions) {
+    super({ environment, options });
+  }
 }
 
-Europa.use(new ExampleCharsetService());
-Europa.use(new ExampleWindowService());
+Europa.registerPreset(defaultPresetProvider);
 
 export default Europa;
 ```
 
 This allows Europa Core to control the primary API and keep it consistent across all environments. With the above in
-place, you are free to import Europa and use it as you would anywhere else.
+place, you are free to import Europa and use it as you would anywhere else. The bulk of the complexity typically lies
+within implementing the `Dom`.
 
 You will find the primary API documentation on one of the official Europa Core implementation packages (e.g.
 [europa](https://github.com/neocotic/europa/tree/main/packages/europa),

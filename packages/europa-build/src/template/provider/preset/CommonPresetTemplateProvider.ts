@@ -35,7 +35,7 @@ export abstract class CommonPresetTemplateProvider<
   C extends CommonPresetTemplateContext,
 > extends CommonTemplateProvider<C, CommonPresetTemplateContext> {
   /**
-   * Creates a {@link CommonPresetTemplateProvider} using the `options` provided.
+   * Creates an instance of {@link CommonPresetTemplateProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

@@ -27,16 +27,15 @@ export default function (): Plugin {
     converters: {
       DETAILS: {
         startTag(conversion, context): boolean {
-          const element = conversion.element as HTMLDetailsElement;
+          const { element } = conversion;
 
           conversion.appendParagraph();
 
-          if (element.hasAttribute('open')) {
+          if (element.hasAttr('open')) {
             return true;
           }
 
-          const summary = element.querySelector('summary');
-          conversion.convertElement(summary);
+          conversion.convertNode(element.find('summary'));
 
           return false;
         },

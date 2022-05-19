@@ -41,7 +41,7 @@ export class ScriptRunner {
   private readonly [_providers]: ScriptProvider[];
 
   /**
-   * Creates a {@link ScriptRunner} using the `options` provided.
+   * Creates an instance of {@link ScriptRunner} using the `options` provided.
    *
    * @param [options] - The options to be used.
    */

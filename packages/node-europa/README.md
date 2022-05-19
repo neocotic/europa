@@ -3,6 +3,8 @@
 [Europa Node](https://github.com/neocotic/europa/tree/main/packages/node-europa) is a [Node.js](https://nodejs.org)
 module for converting HTML into valid Markdown.
 
+[cheerio](https://cheerio.js.org) is used to parse HTML input without the need for complexity. 
+
 [![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/main?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
 [![License](https://img.shields.io/npm/l/node-europa.svg?style=flat-square)](https://github.com/neocotic/europa/raw/main/packages/node-europa/LICENSE.md)
 [![Release](https://img.shields.io/npm/v/node-europa.svg?style=flat-square)](https://npmjs.com/package/node-europa)
@@ -30,7 +32,7 @@ the browser or as a CLI respectively.
 
 ## Examples
 
-``` javascript
+``` typescript
 const Europa = require('node-europa');
 const express = require('express');
 
@@ -51,13 +53,13 @@ app.listen(3000);
 Simply create an instance of `Europa` and you've done most of the work. You can control many aspects of the HTML to
 Markdown conversion by passing the following options to the constructor:
 
-| Option   | Type    | Description                                           | Default                   |
-|----------|---------|-------------------------------------------------------|---------------------------|
-| absolute | Boolean | Whether absolute URLS should be used for links/images | `false`                   |
-| baseUri  | String  | The base URI for the window                           | `file://${process.cwd()}` |
-| inline   | Boolean | Whether link/image URLs are to be inserted inline     | `false`                   |
+| Option   | Type    | Description                                                                         | Default                   |
+|----------|---------|-------------------------------------------------------------------------------------|---------------------------|
+| absolute | Boolean | Whether absolute URLs should be used for elements (e.g. anchors, images)            | `false`                   |
+| baseUri  | String  | The base URI used to resolve relative URLs used for elements (e.g. anchors, images) | `file://${process.cwd()}` |
+| inline   | Boolean | Whether URLs for elements (e.g. anchors, images) are to be inserted inline          | `false`                   |
 
-``` javascript
+``` typescript
 const europa = new Europa({
   absolute: true,
   baseUri: 'https://example.com',
@@ -65,57 +67,25 @@ const europa = new Europa({
 });
 ```
 
-### `convert(html)`
+### `convert(input)`
 
-Converts the specified `html` into Markdown.
+Converts the specified `input` into Markdown.
 
-`html` can either be an HTML string or a DOM element whose HTML contents are to be converted into Markdown.
+`input` can either be an HTML string or DOM node(s) to be converted into Markdown. For a DOM node to be converted, it
+must be compatible with the `AnyNode` type as declared in the [domhandler](https://www.npmjs.com/package/domhandler)
+package to ensure that it works. This can be easily done using [cheerio](https://cheerio.js.org), which helps power
+Europa Node under-the-hood.
 
-``` javascript
+``` typescript
 const europa = new Europa();
 
-europa.convert('<blockquote>This <i>is</i> great!</blockquote>');
-//=> "> This *is* great!"
-europa.convert(document.querySelector('.lead'));
-//=> "We ♥ **Europa**!"
+europa.convert('<blockquote><b>Europa</b> is great!</blockquote>');
+//=> "> **Europa** is great!"
+europa.convert($('.lead')[0]);
+//=> "_Everyone_ ♥ **Europa**!"
 
-const div = document.createElement('div');
-div.innerHTML = 'Please keep my <span style="display: none">treasure</span> secret safe...';
-
-europa.convert(div);
+europa.convert($('<div>').html('Please keep my <span style="display: none">treasure</span> secret safe...')[0]);
 //=> "Please keep my secret safe..."
-```
-
-## `release()`
-
-Releases the window being used.
-
-As `node-europa` uses virtual windows and, since each `Europa` instance will have its own window, calling this method
-when you're done with the instance can help to free up resources.
-
-However, a new window will be used if you attempt to call `convert` on the same instance. So you don't have to worry
-about creating lots of instances, just ensuring that you `release` them after its done its job to free up resources.
-
-Windows are only ever created when `convert` is called and *not* when you instantiate `Europa`!
-
-You may well want to keep the window "open" in order to speed up consecutive conversions (e.g. in an iteration).
-
-``` javascript
-cpmst europa = new Europa({ inline: true });
-
-const input = [
-  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>',
-  '<p>Etiam sed felis ligula. Maecenas sit amet tristique risus...</p>',
-  '<p>In dictum consequat nulla at lobortis...</p>'
-];
-const output = input.map((html) => europa.convert(html));
-
-europa.release();
-
-// ...
-
-europa.convert('Wow! <a href="https://github.com/neocotic/europa">Europa</a> is awesome!');
-//=> "Wow! [Europa](https://github.com/neocotic/europa) is awesome!"
 ```
 
 ## Plugins
@@ -132,18 +102,24 @@ implementations with no extra effort.
 The API for plugins is simple on a high level, but you'll need to get to grips with the internal API to understand what
 you can really do:
 
-``` javascript
-Europa.registerPlugin((api) => ({
+``` typescript
+import Europa from 'node-europa';
+import { Plugin, PluginApi } from 'europa-core';
+
+const examplePluginProvider = (api: PluginApi): Plugin => ({
   // All fields and methods are optional
   converters: {
     TAGNAME: {
-      startTag(conversion, context) { /* ... */ },
+      startTag(conversion, context): boolean { /* ... */ },
       endTag(conversion, context) { /* ... */ },
     },
   },
+  convertText(value, conversion): boolean { /* ... */ },
   startConversion(conversion) { /* ... */ },
   endConversion(conversion) { /* ... */ },
-}));
+});
+
+Europa.registerPlugin(examplePluginProvider);
 ```
 
 It's highly recommended to look at existing plugins to get a better understanding of how things work.
@@ -156,6 +132,9 @@ A good practice for naming plugin packages is `europa-plugin-<markdown-feature>`
 not `europa-plugin-a`, and `europa-plugin-quote` and not `europa-plugin-q`. Each plugin should aim to support a specific
 Markdown feature.
 
+Take a look at [Europa Build](https://github.com/neocotic/europa/tree/main/packages/europa-build) to quickly generate a
+Europa plugin package.
+
 ### Presets
 
 Europa also has the concept of a "preset", which is essentially a bundle of plugins. In fact, all the default plugins
@@ -163,22 +142,30 @@ are provided by a default preset.
 
 A preset simply imports a collection of plugins and declares them so that they can be registered together. For example;
 
-``` javascript
-const examplePluginProvider = require('europa-plugin-example');
+``` typescript
+import Europa from 'node-europa';
+import { PluginApi, PluginProvider, Preset } from 'europa-core';
+import examplePluginProvider from 'europa-plugin-example';
 
-const pluginProviders = [
+const pluginProviders: PluginProvider[] = [
   examplePluginProvider,
-  /* ... */
+  // ...
 ];
 
-Europa.registerPreset((api) => ({
+const examplePresetProvider = (api: PluginApi): Preset => ({
+  // All fields and methods are optional
   plugins: pluginProviders.map((pluginProvider) => pluginProvider(api)),
-}));
+});
+
+Europa.registerPreset(examplePresetProvider);
 ```
 
 A good practice for naming preset packages is `europa-preset-<markdown-feature-set>`. For example;
 `europa-preset-github` could be used to register plugins that converts HTML to GitHub-flavoured Markdown. Each preset
 should include plugins that aim to support a related Markdown feature set.
+
+Take a look at [Europa Build](https://github.com/neocotic/europa/tree/main/packages/europa-build) to quickly generate a
+Europa preset package.
 
 ## Bugs
 

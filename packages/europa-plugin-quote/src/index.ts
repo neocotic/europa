@@ -30,7 +30,7 @@ export default function (api: PluginApi): Plugin {
         startTag(conversion) {
           conversion.output('"');
 
-          conversion.atNoWhiteSpace = true;
+          conversion.atNoWhitespace = true;
 
           return true;
         },

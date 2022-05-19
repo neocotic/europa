@@ -41,7 +41,7 @@ Since the primary usage of this package is the CLI the API is simply what is use
 
 You can generate plugin/preset packages:
 
-``` javascript
+``` typescript
 import { TemplateManager, TemplateProviderType } from 'europa-build';
 
 const templateManager = new TemplateManager();
@@ -56,7 +56,7 @@ const templateGenerator = templateProvider.createGenerator();
     name: 'example', // Transformed to "europa-plugin-example"
     repositoryUrl: 'https://github.com/ghost/europa-plugin-example.git',
     authorEmail: 'ghost@github.com', // Optional
-    authorUrl: 'https://github.com/ghost', // Optioanl
+    authorUrl: 'https://github.com/ghost', // Optional
     bugsUrl: 'https://github.com/ghost/europa-plugin-example/issues', // Optional
     description: 'Europa plugin example', // Optional; defaults to "TODO: Description"
     homepageUrl: 'https://github.com/ghost/europa-plugin-example', // Optional
@@ -69,7 +69,7 @@ const templateGenerator = templateProvider.createGenerator();
 
 Or run scripts to maintain your plugin/preset package:
 
-``` javascript
+``` typescript
 import { ScriptRunner } from 'europa-build';
 
 const scriptRunner = new ScriptRunner();

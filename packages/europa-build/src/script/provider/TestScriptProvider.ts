@@ -29,7 +29,7 @@ import { CommonScriptProvider, CommonScriptProviderOptions } from 'europa-build/
  */
 export class TestScriptProvider extends CommonScriptProvider {
   /**
-   * Creates a {@link TestScriptProvider} using the `options` provided.
+   * Creates an instance of {@link TestScriptProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

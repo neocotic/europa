@@ -52,5 +52,15 @@ export default function (): Plugin {
         },
       },
     },
+
+    convertText(value, conversion): boolean {
+      if (conversion.inPreformattedBlock) {
+        conversion.output(value, { preserveLeadingWhitespace: true });
+
+        return true;
+      }
+
+      return false;
+    },
   };
 }

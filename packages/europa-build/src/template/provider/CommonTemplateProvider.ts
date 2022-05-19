@@ -36,7 +36,7 @@ export abstract class CommonTemplateProvider<C extends O, O extends TemplateCont
   private readonly [_parentLogger]: Logger;
 
   /**
-   * Creates a {@link CommonTemplateProvider} using the `options` provided.
+   * Creates an instance of {@link CommonTemplateProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

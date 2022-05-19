@@ -23,7 +23,7 @@ $ npm install --save europa-plugin-link
 
 Then, in order to activate this plugin;
 
-``` javascript
+``` typescript
 // Import europa-core implementation (e.g. `europa`, `node-europa`)
 import plugin from 'europa-plugin-link';
 
@@ -67,7 +67,7 @@ Assume the following example is converted on <https://github.com/neocotic/europa
 
 Setup:
 
-``` javascript
+``` typescript
 const europa = new Europa({ absolute: true });
 ```
 
@@ -92,7 +92,7 @@ Markdown:
 
 Setup:
 
-``` javascript
+``` typescript
 const europa = new Europa({ inline: true });
 ```
 

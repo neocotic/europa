@@ -35,7 +35,7 @@ const executeFile = promisify(execFile);
  */
 export abstract class CommandScriptProvider extends CommonScriptProvider {
   /**
-   * Creates a {@link CommandScriptProvider} using the `options` provided.
+   * Creates an instance of {@link CommandScriptProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

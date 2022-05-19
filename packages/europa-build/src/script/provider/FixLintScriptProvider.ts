@@ -29,7 +29,7 @@ import { ESLintScriptProvider, ESLintScriptProviderOptions } from 'europa-build/
  */
 export class FixLintScriptProvider extends ESLintScriptProvider {
   /**
-   * Creates a {@link FixLintScriptProvider} using the `options` provided.
+   * Creates an instance of {@link FixLintScriptProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

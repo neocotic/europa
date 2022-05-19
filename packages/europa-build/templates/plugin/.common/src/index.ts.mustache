@@ -19,6 +19,11 @@ export default function (api: PluginApi): Plugin {
       },
     },
 
+    convertText(value, conversion): boolean {
+      // TODO: Complete or remove method if this plugin does not need to hook into the conversion of text nodes
+      return false;
+    },
+
     startConversion(conversion) {
       // TODO: Complete or remove method if this plugin does not need to hook into the start of conversion
     },

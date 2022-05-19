@@ -20,38 +20,51 @@
  * SOFTWARE.
  */
 
-import { Conversion, ElementConversionContext } from 'europa-core/Conversion';
+import { Conversion, ConversionElementContext } from 'europa-core/Conversion';
 import { PluginApi } from 'europa-core/plugin/PluginApi';
 
 /**
- * A plugin that hooks into the {@link Europa} conversion process.
+ * A plugin that hooks into the {@link EuropaCore} conversion process.
  *
  * Any declared converters will override any previously associated tag name to converter mappings when the plugin is
- * added to {@link Europa}.
+ * added to {@link EuropaCore}.
  */
 export interface Plugin {
+  /**
+   * Called whenever a text node is being converted with the specified `value`, allowing this plugin to perform any
+   * alternative conversion of the text by the given `conversion`.
+   *
+   * It is extremely important that, if this plugin does perform any alternative conversion of the specified `value`,
+   * that this method returns `true` in order to prevent `conversion` from also processing `value` which would result in
+   * duplication and would likely have other unexpected and unwanted side effects.
+   *
+   * @param value - The text value to potentially be converted.
+   * @param conversion - The current {@link Conversion}.
+   * @return `true` if `value` has been converted by this plugin; otherwise `false`.
+   */
+  readonly convertText?: PluginTextConverter;
   /**
    * A map containing tag name to converter pairs.
    */
   readonly converters?: { readonly [key: string]: PluginConverter };
   /**
-   * Called after all elements have been converted for a single input, allowing this plugin to perform any necessary
-   * clean up or tear down steps.
+   * Called after all nodes have been converted for a single input, allowing this plugin to perform any necessary clean
+   * up or tear down steps.
    *
    * @param conversion - The current {@link Conversion}.
    */
   readonly endConversion?: (conversion: Conversion) => void;
   /**
-   * Called before any elements are converted for a single input, allowing this plugin to perform any necessary setup
+   * Called before any nodes are converted for a single input, allowing this plugin to perform any necessary setup
    * steps.
    *
-   * @param {Conversion} conversion - the current {@link Conversion}
+   * @param conversion - The current {@link Conversion}.
    */
   readonly startConversion?: (conversion: Conversion) => void;
 }
 
 /**
- * Responsible for converting an individual HTML element to Markdown as defined in a plugin.
+ * Responsible for converting an individual element to Markdown as defined in a plugin.
  */
 export interface PluginConverter {
   /**
@@ -62,9 +75,9 @@ export interface PluginConverter {
    * by this converter.
    *
    * @param conversion - The current {@link Conversion}.
-   * @param context - The current {@link ElementConversionContext}.
+   * @param context - The context for the current element within the {@link Conversion}.
    */
-  readonly endTag?: (conversion: Conversion, context: ElementConversionContext) => void;
+  readonly endTag?: (conversion: Conversion, context: ConversionElementContext) => void;
   /**
    * Called at the start of the current element within the specified `conversion` which can be used to provide control
    * over the conversion and returns whether the children of the element should be converted.
@@ -73,14 +86,24 @@ export interface PluginConverter {
    * converter.
    *
    * @param conversion - The current {@link Conversion}.
-   * @param context - The current {@link ElementConversionContext}.
+   * @param context - The context for the current element within the {@link Conversion}.
    * @return `true` if the children of the current element should be converted; otherwise `false`.
    */
-  readonly startTag?: (conversion: Conversion, context: ElementConversionContext) => boolean;
+  readonly startTag?: (conversion: Conversion, context: ConversionElementContext) => boolean;
 }
 
 /**
- * Provides a plugin compatible with {@link Europa}.
+ * The name of a hook on a {@link PluginConverter}.
+ */
+export type PluginConverterHook = keyof PluginConverter;
+
+/**
+ * The name of a hook on a {@link Plugin}.
+ */
+export type PluginHook = Exclude<keyof Plugin, 'convertText' | 'converters'>;
+
+/**
+ * Provides a plugin compatible with {@link EuropaCore}.
  *
  * Invoked internally by {@link PluginManager#addPlugin} in order to get the plugin and is passed an `api`, which it can
  * choose to use or not.
@@ -92,3 +115,17 @@ export interface PluginConverter {
  * @throws If a problem occurs while providing the plugin.
  */
 export type PluginProvider = (api: PluginApi) => Plugin;
+
+/**
+ * Conditionally performs an alternative conversion of the specified `value` which has been taken from a text node being
+ * converted by the given `conversion`.
+ *
+ * It is extremely important that, if any alternative conversion of the specified `value` is performed, that this method
+ * returns `true` in order to prevent `conversion` from also processing `value` which would result in duplication and
+ * would likely have other unexpected and unwanted side effects.
+ *
+ * @param value - The text value to potentially be converted.
+ * @param conversion - The current {@link Conversion}.
+ * @return `true` if `value` has been converted by this method; otherwise `false`.
+ */
+export type PluginTextConverter = (value: string, conversion: Conversion) => boolean;

@@ -28,7 +28,7 @@ import { ESLintScriptProvider, ESLintScriptProviderOptions } from 'europa-build/
  */
 export class LintScriptProvider extends ESLintScriptProvider {
   /**
-   * Creates a {@link LintScriptProvider} using the `options` provided.
+   * Creates an instance of {@link LintScriptProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */

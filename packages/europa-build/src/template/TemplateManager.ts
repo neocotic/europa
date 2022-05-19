@@ -41,7 +41,7 @@ export class TemplateManager {
   private readonly [_providers]: readonly TemplateProvider<any>[];
 
   /**
-   * Creates a {@link TemplateManager} using the `options` provided.
+   * Creates an instance of {@link TemplateManager} using the `options` provided.
    *
    * @param [options] - The options to be used.
    */

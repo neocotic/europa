@@ -38,20 +38,22 @@ $ npm install --save-dev jasmine
 ## API
 
 As this framework has to work in various environments, it only provides a high level test coverage of the core engine
-using a selection of fixtures. In order to use this framework, you only have to provide `Europa`, loaded with your
-implementation's `WindowService`, and a function which can be used to asynchronously load the test fixtures within this
-framework on demand.
+using a selection of fixtures. In order to use this framework, you only have to provide a means of instantiating your
+`EuropaCore` implementation, as well as a function which can be used to asynchronously load the test fixtures on-demand.
 
 Most modules that use Europa Test will look something like the following:
 
 ``` typescript
-import testEuropa from 'europa-test';
+import { test } from 'europa-test';
 
-import Europa from '../path/to/ExampleEuropa';
+import Europa from 'example-europa/index';
 
-testEuropa({
-  Europa,
-  loadFixture: (path) => someAsyncFileLoader(`../path/to/node_modules/europa-test/${path}`),
+test({
+  createEuropa: (options) => new Europa(options),
+  loadFixtureFile: (path, bundled) => someAsyncFileLoader(path),
+  packageName: 'europa-example',
+  // Optional; you can provide additional implementation-specific fixtures to be tested
+  extraFixtures: [ /* ... */ ],
 });
 ```
 

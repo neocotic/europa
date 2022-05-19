@@ -25,7 +25,6 @@ import boldPluginProvider from 'europa-plugin-bold';
 import codePluginProvider from 'europa-plugin-code';
 import descriptionPluginProvider from 'europa-plugin-description';
 import detailsPluginProvider from 'europa-plugin-details';
-import framePluginProvider from 'europa-plugin-frame';
 import headerPluginProvider from 'europa-plugin-header';
 import horizontalRulePluginProvider from 'europa-plugin-horizontal-rule';
 import imagePluginProvider from 'europa-plugin-image';
@@ -42,7 +41,6 @@ const pluginProviders: PluginProvider[] = [
   codePluginProvider,
   descriptionPluginProvider,
   detailsPluginProvider,
-  framePluginProvider,
   headerPluginProvider,
   horizontalRulePluginProvider,
   imagePluginProvider,

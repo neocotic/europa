@@ -20,14 +20,15 @@
  * SOFTWARE.
  */
 
-import testEuropa from 'europa-test';
+import { AnyNode, Element } from 'cheerio';
+import { test } from 'europa-test';
 import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 
 import Europa from 'node-europa/index';
 
-testEuropa({
-  Europa,
-  loadFixture: (path) => readFile(resolve(__dirname, '../node_modules/europa-test', path), 'utf8'),
+test<Europa, AnyNode, Element>({
+  createEuropa: (options) => new Europa(options),
+  loadFixtureFile: (path) => readFile(resolve(__dirname, '..', path), 'utf8'),
   packageName: 'node-europa',
 });

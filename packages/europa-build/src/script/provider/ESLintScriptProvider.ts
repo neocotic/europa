@@ -30,7 +30,7 @@ import {
  */
 export abstract class ESLintScriptProvider extends CommandScriptProvider {
   /**
-   * Creates a {@link ESLintScriptProvider} using the `options` provided.
+   * Creates an instance of {@link ESLintScriptProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */
