@@ -27,7 +27,7 @@ export default function (api: PluginApi): Plugin {
     converters: {
       BLOCKQUOTE: api.createBlockQuoteConverter(),
       Q: {
-        startTag(conversion) {
+        startTag(conversion): boolean {
           conversion.output('"');
 
           conversion.atNoWhitespace = true;

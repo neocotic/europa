@@ -23,6 +23,8 @@
 import { Plugin } from 'europa-core';
 
 export default function (): Plugin {
+  const _value = Symbol();
+
   return {
     converters: {
       A: {
@@ -37,15 +39,17 @@ export default function (): Plugin {
 
           const title = element.attr('title');
           const url = absolute ? conversion.resolveUrl(href) : href;
-          const value = title ? `${url} "${title}"` : url;
+          let value = title ? `${url} "${title}"` : url;
 
           if (inline) {
-            context.value = `(${value})`;
+            value = `(${value})`;
           } else {
             const reference = conversion.addReference('link', value);
 
-            context.value = `[${reference}]`;
+            value = `[${reference}]`;
           }
+
+          context.set(_value, value);
 
           conversion.output('[');
 
@@ -55,8 +59,8 @@ export default function (): Plugin {
         },
 
         endTag(conversion, context) {
-          if (context.value != null) {
-            conversion.output(`]${context.value}`);
+          if (context.has(_value)) {
+            conversion.output(`]${context.get<string>(_value)}`);
           }
         },
       },

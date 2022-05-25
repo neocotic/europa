@@ -28,6 +28,7 @@ This monorepo contains the following packages:
 * [europa-plugin-quote](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-quote)
 * [europa-preset-default](https://github.com/neocotic/europa/tree/main/packages/europa-preset-default)
 * [europa-test](https://github.com/neocotic/europa/tree/main/packages/europa-test)
+* [europa-test-jasmine-reporter](https://github.com/neocotic/europa/tree/main/packages/europa-test-jasmine-reporter)
 * [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa)
 
 The `europa` and `node-europa` packages are the most important as those are used to convert HTML into valid Markdown in

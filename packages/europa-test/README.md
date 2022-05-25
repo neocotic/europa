@@ -18,7 +18,7 @@
 Install using your preferred package manager. For example;
 
 ``` bash
-$ npm install --save-dev europa-test
+$ npm install --save-dev europa-test jasmine
 ```
 
 You will most likely never need to depend on `europa-test` as it's only intended to be used to provide some general test
@@ -28,12 +28,7 @@ example:
 * [europa](https://github.com/neocotic/europa/tree/main/packages/europa)
 * [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa)
 
-Your implementation will also need to have `jasmine` installed as dependencies as these are used by this framework.
-This too can be installed using your preferred package manager. For example;
-
-``` bash
-$ npm install --save-dev jasmine
-```
+[Jasmine](https://jasmine.github.io) also needs to be installed (see above) as it is required by this test framework.
 
 ## API
 

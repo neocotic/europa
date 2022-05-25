@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "europa-test-jasmine-reporter/*": ["src/*"]
+    },
+    "lib": [
+      "ES2017"
+    ],
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ]
+  }
+}

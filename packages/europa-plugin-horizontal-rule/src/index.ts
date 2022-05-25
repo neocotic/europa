@@ -26,7 +26,7 @@ export default function (): Plugin {
   return {
     converters: {
       HR: {
-        startTag(conversion) {
+        startTag(conversion): boolean {
           conversion.appendParagraph().output('---').appendParagraph();
 
           return false;

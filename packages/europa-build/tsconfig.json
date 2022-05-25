@@ -11,8 +11,6 @@
       "europa-build/*": ["src/*"]
     },
     "lib": [
-      "DOM",
-      "DOM.Iterable",
       "ES2017"
     ],
     "plugins": [

@@ -1,0 +1,30 @@
+{{>copyright_header}}
+
+import { Environment, EuropaCore, EuropaOptions } from 'europa-core';
+import { NodeEnvironment } from 'europa-environment-node';
+
+import preset from '../src/index';
+
+describe('{{name}}', () => {
+  let environment: Environment<any, any>;
+  let europa: EuropaCore<any, any>;
+
+  class TestEuropa extends EuropaCore<any, any> {
+    constructor(options?: EuropaOptions) {
+      super({ environment, options });
+    }
+  }
+
+  beforeAll(() => {
+    TestEuropa.registerPreset(preset);
+  });
+
+  beforeEach(() => {
+    environment = new NodeEnvironment();
+    europa = new TestEuropa();
+  });
+
+  it('should convert HTML to Markdown using preset plugins', () => {
+    expect(europa.convert('HTML')).toBe('Markdown');
+  });
+});

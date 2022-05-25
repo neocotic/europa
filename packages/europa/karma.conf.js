@@ -11,11 +11,11 @@ module.exports = (config) => {
         served: true,
         watched: false,
       },
-      'spec/test.ts',
+      'spec/index.spec.ts',
     ],
     exclude: [],
     preprocessors: {
-      'spec/test.ts': ['webpack'],
+      'spec/index.spec.ts': ['webpack'],
     },
     webpack: {
       module: webpackConfig.module,

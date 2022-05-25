@@ -26,7 +26,7 @@ export default function (): Plugin {
   return {
     converters: {
       IMG: {
-        startTag(conversion) {
+        startTag(conversion): boolean {
           const absolute = conversion.getOption('absolute');
           const inline = conversion.getOption('inline');
           const { element } = conversion;

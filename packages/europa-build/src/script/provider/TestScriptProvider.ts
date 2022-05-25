@@ -20,20 +20,23 @@
  * SOFTWARE.
  */
 
-import { CommonScriptProvider, CommonScriptProviderOptions } from 'europa-build/script/provider/CommonScriptProvider';
+import { EOL } from 'os';
+
+import {
+  CommandScriptProvider,
+  CommandScriptProviderOptions,
+} from 'europa-build/script/provider/CommandScriptProvider';
 
 /**
- * A {@link ScriptProvider} that runs a test suite against the package's source code.
- *
- * Currently, no tests are executed by this script.
+ * A {@link ScriptProvider} that runs a test suite against the package's source code using the Jasmine test framework.
  */
-export class TestScriptProvider extends CommonScriptProvider {
+export class TestScriptProvider extends CommandScriptProvider {
   /**
    * Creates an instance of {@link TestScriptProvider} using the `options` provided.
    *
    * @param options - The options to be used.
    */
-  constructor(options: CommonScriptProviderOptions) {
+  constructor(options: CommandScriptProviderOptions) {
     super(options);
   }
 
@@ -46,6 +49,13 @@ export class TestScriptProvider extends CommonScriptProvider {
   }
 
   override async runScript(directoryPath: string): Promise<void> {
-    this.getLogger().info('No tests');
+    const output = await this.exec(directoryPath, 'node', [
+      '-r',
+      await this.getBundledPath('node_modules/ts-node/register'),
+      await this.getBundledCommandPath('jasmine'),
+      `--config=${await this.getBundledConfigFilePath('spec/support/jasmine.json')}`,
+    ]);
+
+    this.getLogger().info(`Test suite complete!${EOL}${output}`);
   }
 }

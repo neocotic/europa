@@ -23,11 +23,52 @@
 import { Plugin, PluginConverter } from 'europa-core';
 
 export default function (): Plugin {
+  const _inOrderedList = Symbol();
+  const _previousInOrderedList = Symbol();
+  const _previousListIndex = Symbol();
+
+  function createListConverter(ordered: boolean): PluginConverter {
+    return {
+      startTag(conversion, context): boolean {
+        context.set(_previousInOrderedList, conversion.context.get(_inOrderedList));
+        context.set(_previousListIndex, conversion.listIndex);
+
+        if (conversion.listDepth === 0) {
+          conversion.appendParagraph();
+        }
+
+        conversion.context.set(_inOrderedList, ordered);
+        conversion.listIndex = 1;
+        conversion.listDepth++;
+
+        return true;
+      },
+
+      endTag(conversion, context) {
+        conversion.context.set(_inOrderedList, context.get(_previousInOrderedList));
+        conversion.listIndex = context.get(_previousListIndex);
+        conversion.listDepth--;
+      },
+    };
+  }
+
+  function leftPad(str = '', times = 0, padding = ' '): string {
+    if (!padding) {
+      return str;
+    }
+
+    for (let i = 0; i < times; i++) {
+      str = padding + str;
+    }
+
+    return str;
+  }
+
   return {
     converters: {
       LI: {
-        startTag(conversion) {
-          const value = conversion.inOrderedList ? `${conversion.listIndex++}. ` : '* ';
+        startTag(conversion): boolean {
+          const value = conversion.context.get<boolean>(_inOrderedList) ? `${conversion.listIndex++}. ` : '* ';
 
           if (!conversion.atLeft) {
             conversion.append(conversion.left.replace(/ {2,4}$/, conversion.eol));
@@ -47,42 +88,13 @@ export default function (): Plugin {
       OL: createListConverter(true),
       UL: createListConverter(false),
     },
-  };
-}
 
-function createListConverter(ordered: boolean): PluginConverter {
-  return {
-    startTag(conversion, context) {
-      context.previousInOrderedList = conversion.inOrderedList;
-      context.previousListIndex = conversion.listIndex;
-
-      if (conversion.listDepth === 0) {
-        conversion.appendParagraph();
-      }
-
-      conversion.inOrderedList = ordered;
-      conversion.listIndex = 1;
-      conversion.listDepth++;
-
-      return true;
+    startConversion(conversion) {
+      conversion.context.set(_inOrderedList, false);
     },
 
-    endTag(conversion, context) {
-      conversion.inOrderedList = context.previousInOrderedList;
-      conversion.listIndex = context.previousListIndex;
-      conversion.listDepth--;
+    escapeText(value): string {
+      return value.replace(/^\s*([+-])(\s+|$)/, '\\$1$2').replace(/^\s*(\d+)\.(\s+|$)/, '$1\\.$2');
     },
   };
-}
-
-function leftPad(str = '', times = 0, padding = ' '): string {
-  if (!padding) {
-    return str;
-  }
-
-  for (let i = 0; i < times; i++) {
-    str = padding + str;
-  }
-
-  return str;
 }

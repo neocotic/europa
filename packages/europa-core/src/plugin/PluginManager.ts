@@ -20,7 +20,8 @@
  * SOFTWARE.
  */
 
-import { Conversion, ConversionElementContext } from 'europa-core/Conversion';
+import { Conversion } from 'europa-core/Conversion';
+import { ConversionContext } from 'europa-core/ConversionContext';
 import {
   Plugin,
   PluginConverter,
@@ -28,6 +29,7 @@ import {
   PluginHook,
   PluginProvider,
   PluginTextConverter,
+  PluginTextEscaper,
 } from 'europa-core/plugin/Plugin';
 import { PluginApi } from 'europa-core/plugin/PluginApi';
 import { PresetProvider } from 'europa-core/plugin/Preset';
@@ -35,9 +37,9 @@ import { PresetProvider } from 'europa-core/plugin/Preset';
 const _addProvidedPlugin = Symbol();
 const _api = Symbol();
 const _converters = Symbol();
-const _getTextConverters = Symbol();
+const _hookCache = Symbol();
+const _getHookCache = Symbol();
 const _plugins = Symbol();
-const _textConverters = Symbol();
 
 /**
  * A basic manager for plugins and presets (collections of plugins) that can be hooked into {@link EuropaCore}.
@@ -46,7 +48,7 @@ export class PluginManager {
   private readonly [_api] = new PluginApi();
   private readonly [_converters]: Record<string, PluginConverter> = {};
   private readonly [_plugins]: Plugin[] = [];
-  private [_textConverters]: PluginTextConverter[] | null = null;
+  private [_hookCache]: PluginManagerHookCache | null = null;
 
   /**
    * Invokes the specified plugin `provider` and adds the resulting plugin to this {@link PluginManager}.
@@ -131,7 +133,7 @@ export class PluginManager {
     tagName: string,
     hookName: PluginConverterHook,
     conversion: Conversion,
-    context: ConversionElementContext,
+    context: ConversionContext,
   ): boolean | void {
     const hook = this[_converters][tagName]?.[hookName];
     if (typeof hook !== 'function') {
@@ -173,9 +175,27 @@ export class PluginManager {
    * @return `true` if `value` has been converted by a plugin; otherwise `false`.
    */
   invokeTextConverterHook(value: string, conversion: Conversion): boolean {
-    const textConverters = this[_getTextConverters]();
+    const hookCache = this[_getHookCache]();
 
-    return textConverters.some((textConverter) => textConverter(value, conversion));
+    return hookCache.textConverters.some((textConverter) => textConverter(value, conversion));
+  }
+
+  /**
+   * Invokes a special hook on all plugins within this {@link PluginManager} that allows plugins to perform any
+   * additional escaping of special characters within the specified `value` which has been taken from a text node being
+   * converted by the given `conversion`.
+   *
+   * This relies on plugins ensuring that they do not double-escape characters that have either been previously escaped
+   * by `conversion` or another plugin.
+   *
+   * @param value - The text value to be escaped.
+   * @param conversion - The current {@link Conversion}.
+   * @return The escaped `str` or `str` if no escaping is required.
+   */
+  invokeTextEscaperHook(value: string, conversion: Conversion): string {
+    const hookCache = this[_getHookCache]();
+
+    return hookCache.textEscapers.reduce((acc, textEscaper) => textEscaper(acc, conversion), value);
   }
 
   private [_addProvidedPlugin](plugin: Plugin) {
@@ -184,29 +204,49 @@ export class PluginManager {
         this[_converters][tagName.toUpperCase()] = converter;
       });
     }
-    if (typeof plugin.convertText === 'function') {
-      this[_textConverters] = null;
+    if (typeof plugin.convertText === 'function' || typeof plugin.escapeText === 'function') {
+      this[_hookCache] = null;
     }
 
     this[_plugins].push(plugin);
   }
 
-  private [_getTextConverters](): PluginTextConverter[] {
-    const cachedTextConverters = this[_textConverters];
-    if (cachedTextConverters) {
-      return cachedTextConverters;
+  private [_getHookCache](): PluginManagerHookCache {
+    let hookCache = this[_hookCache];
+    if (hookCache) {
+      return hookCache;
     }
 
     const textConverters: PluginTextConverter[] = [];
+    const textEscapers: PluginTextEscaper[] = [];
 
     this[_plugins].forEach((plugin) => {
       if (typeof plugin.convertText === 'function') {
         textConverters.push(plugin.convertText);
       }
+      if (typeof plugin.escapeText === 'function') {
+        textEscapers.push(plugin.escapeText);
+      }
     });
 
-    this[_textConverters] = textConverters;
+    hookCache = { textConverters, textEscapers };
 
-    return textConverters;
+    this[_hookCache] = hookCache;
+
+    return hookCache;
   }
 }
+
+/**
+ * A cache containing special hooks for registered all registered plugins within a {@link PluginManager}.
+ */
+export type PluginManagerHookCache = {
+  /**
+   * The text converter special hooks existing on registered plugins within the {@link PluginManager}.
+   */
+  readonly textConverters: readonly PluginTextConverter[];
+  /**
+   * The text escaper special hooks existing on registered plugins within the {@link PluginManager}.
+   */
+  readonly textEscapers: readonly PluginTextEscaper[];
+};

@@ -24,7 +24,7 @@ import { Plugin, PluginConverter } from 'europa-core';
 
 export default function (): Plugin {
   const headingConverter: PluginConverter = {
-    startTag(conversion) {
+    startTag(conversion): boolean {
       const level = parseInt(conversion.element.tagName().match(/([1-6])$/)![1], 10);
 
       let headerPrefix = '';
