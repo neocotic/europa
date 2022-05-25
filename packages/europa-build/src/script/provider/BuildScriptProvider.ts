@@ -54,29 +54,24 @@ export class BuildScriptProvider extends CommandScriptProvider {
     await this.compileTypeScript(directoryPath, 'es2020', 'lib/esm');
   }
 
-  private compileTypeScript(directoryPath: string, module: string, outDir: string): Promise<void> {
-    return this.execCommand(
-      directoryPath,
-      'tsc',
-      ...[
-        '--baseUrl',
-        '.',
-        '--declaration',
-        '--lib',
-        'DOM,DOM.Iterable,ES2017',
-        '--module',
-        module,
-        '--moduleResolution',
-        'node',
-        '--outDir',
-        outDir,
-        '--removeComments',
-        '--sourceMap',
-        '--strict',
-        '--target',
-        'ES2017',
-        'src/index.ts',
-      ],
-    );
+  private async compileTypeScript(directoryPath: string, module: string, outDir: string): Promise<void> {
+    await this.execBundledCommand(directoryPath, 'tsc', [
+      '--baseUrl',
+      '.',
+      '--declaration',
+      '--lib',
+      'ES2017',
+      '--module',
+      module,
+      '--moduleResolution',
+      'node',
+      '--outDir',
+      outDir,
+      '--sourceMap',
+      '--strict',
+      '--target',
+      'ES2017',
+      'src/index.ts',
+    ]);
   }
 }

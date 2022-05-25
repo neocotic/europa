@@ -37,8 +37,11 @@
     "europa-core": "^5.0.1"
   },
   "devDependencies": {
+    "@types/jasmine": "^4.0.3",
     "europa-build": "^5.0.1",
-    "europa-core": "^5.0.1"
+    "europa-core": "^5.0.1",
+    "europa-environment-node": "^5.0.1",
+    "europa-test-jasmine-reporter": "^5.0.1"
   },
   "scripts": {
     "build": "europa-build run-script build",

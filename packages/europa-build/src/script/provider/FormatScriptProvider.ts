@@ -48,13 +48,11 @@ export class FormatScriptProvider extends CommandScriptProvider {
   }
 
   override async runScript(directoryPath: string): Promise<void> {
-    return this.execCommand(
-      directoryPath,
-      'prettier',
+    await this.execBundledCommand(directoryPath, 'prettier', [
       '--write',
       '--config',
-      await this.getBundledConfigFilePath('prettierrc.json'),
+      await this.getBundledConfigFilePath('.prettierrc.json'),
       'src/**/*.ts',
-    );
+    ]);
   }
 }

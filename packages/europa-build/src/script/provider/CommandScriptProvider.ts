@@ -20,14 +20,13 @@
  * SOFTWARE.
  */
 
-import { ExecFileException, execFile } from 'child_process';
+import { exec, execFile } from 'child_process';
 import { EOL } from 'os';
-import { resolve } from 'path';
 import { promisify } from 'util';
 
-import { PackageInfo } from 'europa-build/PackageInfo';
 import { CommonScriptProvider, CommonScriptProviderOptions } from 'europa-build/script/provider/CommonScriptProvider';
 
+const execute = promisify(exec);
 const executeFile = promisify(execFile);
 
 /**
@@ -44,16 +43,44 @@ export abstract class CommandScriptProvider extends CommonScriptProvider {
   }
 
   /**
-   * Executes the bundled command with the specified name using the `args` provided within the given directory.
+   * Executes the command with the specified name using the `args` provided within the given directory and returns
+   * anything written to STDOUT by the command.
+   *
+   * @param directoryPath - The path of the directory in which the command should be executed.
+   * @param commandName - The name of the command to be executed.
+   * @param [args] - Any arguments to be passed to the command during execution.
+   * @return Anything written to STDOUT by the command.
+   * @throws If an error occurs while attempting to execute the command.
+   */
+  protected async exec(directoryPath: string, commandName: string, args: string[] = []): Promise<string> {
+    this.getLogger().debug(
+      `Executing '${commandName}' command  with arguments [${args}] in directory: '${directoryPath}'`,
+    );
+
+    try {
+      const command = args.length ? [commandName].concat(...args).join(' ') : commandName;
+      const { stdout } = await execute(command, { cwd: directoryPath });
+
+      this.logCommandOutput(commandName, stdout);
+
+      return stdout;
+    } catch (e) {
+      throw new Error(`Failed to execute '${commandName}' command: ${CommandScriptProvider.getExecErrorMessage(e)}`);
+    }
+  }
+
+  /**
+   * Executes the bundled command with the specified name using the `args` provided within the given directory and
+   * returns anything written to STDOUT by the command.
    *
    * @param directoryPath - The path of the directory in which the command should be executed.
    * @param commandName - The name of the bundled command to be executed.
-   * @param args - Any arguments to be passed to the bundled command during execution.
+   * @param [args] - Any arguments to be passed to the bundled command during execution.
+   * @return Anything written to STDOUT by the bundled command.
    * @throws If an error occurs while attempting to execute the bundled command.
    */
-  protected async execCommand(directoryPath: string, commandName: string, ...args: string[]): Promise<void> {
-    const packageInfo = await PackageInfo.getSingleton();
-    const commandPath = resolve(packageInfo.directoryPath, 'node_modules/.bin', commandName);
+  protected async execBundledCommand(directoryPath: string, commandName: string, args: string[] = []): Promise<string> {
+    const commandPath = await this.getBundledCommandPath(commandName);
 
     this.getLogger().debug(
       `Executing '${commandName}' command  with arguments [${args}] in directory: '${directoryPath}'`,
@@ -61,32 +88,64 @@ export abstract class CommandScriptProvider extends CommonScriptProvider {
 
     try {
       const { stdout } = await executeFile(commandPath, args, { cwd: directoryPath });
-      if (stdout) {
-        this.getLogger().debug(`Output from '${commandName}' command:${EOL}${stdout}`);
-      }
+
+      this.logCommandOutput(commandName, stdout);
+
+      return stdout;
     } catch (e) {
-      throw new Error(
-        `Failed to execute '${commandName}' command: ${CommandScriptProvider.getExecFileExceptionMessage(e)}`,
-      );
+      throw new Error(`Failed to execute '${commandName}' command: ${CommandScriptProvider.getExecErrorMessage(e)}`);
     }
   }
 
-  private static getExecFileExceptionMessage(error: unknown): string {
+  /**
+   * Returns the path of the bundled command.
+   *
+   * @param commandName - The name of the bundled command whose path is to be returned.
+   * @return The path of the bundled command.
+   */
+  protected getBundledCommandPath(commandName: string): Promise<string> {
+    return this.getBundledPath('node_modules/.bin', commandName);
+  }
+
+  private static getExecErrorMessage(error: unknown): string {
     if (!error) {
-      return '';
+      return 'An unknown error occurred';
     }
 
     if (error instanceof Error) {
-      const exception = error as ExecFileException & { stderr: string; stdout: string };
-      if (exception.stderr) {
-        return exception.stderr;
+      if (CommandScriptProvider.hasErrorStderr(error)) {
+        return error.stderr;
       }
-      if (exception.stdout) {
-        return exception.stdout;
+      if (CommandScriptProvider.hasErrorStdout(error)) {
+        return error.stdout;
       }
     }
 
     return `${error}`;
+  }
+
+  private static hasErrorField(error: any, fieldName: string): boolean {
+    return fieldName in error && typeof error[fieldName] === 'string' && !!error[fieldName];
+  }
+
+  private static hasErrorStderr(error: any): error is Error & { stderr: string } {
+    return CommandScriptProvider.hasErrorField(error, 'stderr');
+  }
+
+  private static hasErrorStdout(error: any): error is Error & { stdout: string } {
+    return CommandScriptProvider.hasErrorField(error, 'stdout');
+  }
+
+  private logCommandOutput(commandName: string, output: string) {
+    const logger = this.getLogger();
+
+    if (logger.isDebugEnabled()) {
+      logger.debug(
+        output
+          ? `'${commandName}' command provided output:${EOL}${output}`
+          : `'${commandName}' command provided no output`,
+      );
+    }
   }
 }
 

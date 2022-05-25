@@ -24,10 +24,14 @@ import { Plugin, PluginConverter } from 'europa-core';
 
 export default function (): Plugin {
   const paragraphConverter: PluginConverter = {
-    startTag(conversion) {
+    startTag(conversion): boolean {
       conversion.appendParagraph();
 
       return true;
+    },
+
+    endTag(conversion) {
+      conversion.appendParagraph();
     },
   };
 

@@ -32,11 +32,15 @@ export class PluginApi {
    * @return A block quote {@link PluginConverter}.
    */
   createBlockQuoteConverter(): PluginConverter {
+    const _previousLeft = Symbol();
+
     return {
       startTag(conversion, context): boolean {
         const value = '> ';
 
-        context.previousLeft = conversion.left;
+        conversion.appendParagraph();
+
+        context.set(_previousLeft, conversion.left);
         conversion.left += value;
 
         if (conversion.atParagraph) {
@@ -51,7 +55,7 @@ export class PluginApi {
       endTag(conversion, context) {
         conversion.atLeft = false;
         conversion.atParagraph = false;
-        conversion.left = context.previousLeft;
+        conversion.left = context.get(_previousLeft);
 
         conversion.appendParagraph();
       },

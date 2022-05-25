@@ -144,10 +144,20 @@ export abstract class CommonScriptProvider implements ScriptProvider {
    * @param fileName - The name of the bundled config file to be resolved.
    * @return The absolute path of the bundled config file.
    */
-  protected async getBundledConfigFilePath(fileName: string): Promise<string> {
+  protected getBundledConfigFilePath(fileName: string): Promise<string> {
+    return this.getBundledPath('bundled-config', fileName);
+  }
+
+  /**
+   * Returns the absolute path of the bundled file/directory at the specified paths.
+   *
+   * @param filePaths - The paths of the bundled file/directory to be resolved.
+   * @return The absolute path of the bundled file/directory.
+   */
+  protected async getBundledPath(...filePaths: string[]): Promise<string> {
     const packageInfo = await PackageInfo.getSingleton();
 
-    return resolve(packageInfo.directoryPath, 'bundled-config', fileName);
+    return resolve(packageInfo.directoryPath, ...filePaths);
   }
 
   /**

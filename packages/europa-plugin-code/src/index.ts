@@ -23,27 +23,26 @@
 import { Plugin, PluginConverter } from 'europa-core';
 
 export default function (): Plugin {
+  const _inCodeBlock = Symbol();
+  const _previousInCodeBlock = Symbol();
+
   const codeConverter: PluginConverter = {
-    startTag(conversion, context) {
-      context.previousInCodeBlock = conversion.inCodeBlock;
+    startTag(conversion, context): boolean {
+      const previousInCodeBlock = conversion.context.get<boolean>(_inCodeBlock);
+      context.set(_previousInCodeBlock, previousInCodeBlock);
 
-      if (conversion.inPreformattedBlock) {
-        context.skipped = true;
-      } else {
-        conversion.output('`');
+      conversion.append(previousInCodeBlock ? '\\`' : '`');
 
-        conversion.inCodeBlock = true;
-      }
+      conversion.context.set(_inCodeBlock, true);
 
       return true;
     },
 
     endTag(conversion, context) {
-      if (!context.skipped) {
-        conversion.inCodeBlock = context.previousInCodeBlock;
+      const previousInCodeBlock = context.get<boolean>(_previousInCodeBlock);
+      conversion.context.set(_inCodeBlock, previousInCodeBlock);
 
-        conversion.output('`');
-      }
+      conversion.append(previousInCodeBlock ? '\\`' : '`');
     },
   };
 
@@ -54,9 +53,13 @@ export default function (): Plugin {
       SAMP: codeConverter,
     },
 
+    startConversion(conversion) {
+      conversion.context.set(_inCodeBlock, false);
+    },
+
     convertText(value, conversion): boolean {
-      if (conversion.inCodeBlock) {
-        conversion.output(value.replace(/`/g, '\\`'));
+      if (conversion.context.get<boolean>(_inCodeBlock)) {
+        conversion.output(conversion.escape(value, '`'));
 
         return true;
       }

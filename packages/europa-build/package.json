@@ -46,6 +46,7 @@
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "jasmine": "^4.1.0",
     "mkdirp": "^1.0.4",
     "mustache": "^4.2.0",
     "prettier": "^2.6.2",
@@ -60,6 +61,7 @@
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
     "del-cli": "^4.0.1",
+    "ts-node": "^10.7.0",
     "ttypescript": "^1.5.13",
     "typescript-transform-paths": "^3.3.1"
   },

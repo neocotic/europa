@@ -20,7 +20,8 @@
  * SOFTWARE.
  */
 
-import { Conversion, ConversionElementContext } from 'europa-core/Conversion';
+import { Conversion } from 'europa-core/Conversion';
+import { ConversionContext } from 'europa-core/ConversionContext';
 import { PluginApi } from 'europa-core/plugin/PluginApi';
 
 /**
@@ -55,6 +56,18 @@ export interface Plugin {
    */
   readonly endConversion?: (conversion: Conversion) => void;
   /**
+   * Called whenever a text node is being converted with the specified `value`, allowing this plugin to perform any
+   * additional escaping of special characters within the text which has been taken by the given `conversion`.
+   *
+   * It's important to note that `value` will have already been escaped by `conversion` (or another plugin) and that
+   * only additional escaping should be applied, and with extra care as to not double-escape characters.
+   *
+   * @param value - The text value to be escaped.
+   * @param conversion - The current {@link Conversion}.
+   * @return The escaped `str` or `str` if no escaping is required.
+   */
+  readonly escapeText?: PluginTextEscaper;
+  /**
    * Called before any nodes are converted for a single input, allowing this plugin to perform any necessary setup
    * steps.
    *
@@ -77,7 +90,7 @@ export interface PluginConverter {
    * @param conversion - The current {@link Conversion}.
    * @param context - The context for the current element within the {@link Conversion}.
    */
-  readonly endTag?: (conversion: Conversion, context: ConversionElementContext) => void;
+  readonly endTag?: (conversion: Conversion, context: ConversionContext) => void;
   /**
    * Called at the start of the current element within the specified `conversion` which can be used to provide control
    * over the conversion and returns whether the children of the element should be converted.
@@ -89,7 +102,7 @@ export interface PluginConverter {
    * @param context - The context for the current element within the {@link Conversion}.
    * @return `true` if the children of the current element should be converted; otherwise `false`.
    */
-  readonly startTag?: (conversion: Conversion, context: ConversionElementContext) => boolean;
+  readonly startTag?: (conversion: Conversion, context: ConversionContext) => boolean;
 }
 
 /**
@@ -100,7 +113,7 @@ export type PluginConverterHook = keyof PluginConverter;
 /**
  * The name of a hook on a {@link Plugin}.
  */
-export type PluginHook = Exclude<keyof Plugin, 'convertText' | 'converters'>;
+export type PluginHook = Exclude<keyof Plugin, 'convertText' | 'converters' | 'escapeText'>;
 
 /**
  * Provides a plugin compatible with {@link EuropaCore}.
@@ -129,3 +142,16 @@ export type PluginProvider = (api: PluginApi) => Plugin;
  * @return `true` if `value` has been converted by this method; otherwise `false`.
  */
 export type PluginTextConverter = (value: string, conversion: Conversion) => boolean;
+
+/**
+ * Conditionally performs additional escaping of special characters within the specified `value` which has been taken
+ * from a text node being converted by the given `conversion`.
+ *
+ * It's important to note that `value` will have already been escaped by `conversion` (or another plugin) and that only
+ * additional escaping should be applied, and with extra care as to not double-escape characters.
+ *
+ * @param value - The text value to be escaped.
+ * @param conversion - The current {@link Conversion}.
+ * @return The escaped `str` or `str` if no escaping is required.
+ */
+export type PluginTextEscaper = (value: string, conversion: Conversion) => string;

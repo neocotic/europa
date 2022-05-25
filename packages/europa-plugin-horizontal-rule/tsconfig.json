@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "lib": [
+      "ES2017"
+    ]
+  }
+}

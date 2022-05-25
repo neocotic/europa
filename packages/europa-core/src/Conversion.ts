@@ -20,12 +20,15 @@
  * SOFTWARE.
  */
 
+import { ConversionContext } from 'europa-core/ConversionContext';
 import { EuropaOptions } from 'europa-core/EuropaOptions';
 import { Environment } from 'europa-core/environment/Environment';
 import { DomElement } from 'europa-core/environment/dom/DomElement';
 import { DomNode } from 'europa-core/environment/dom/DomNode';
 import { PluginManager } from 'europa-core/plugin/PluginManager';
 
+const _buffer = Symbol();
+const _context = Symbol();
 const _environment = Symbol();
 const _options = Symbol();
 const _pluginManager = Symbol();
@@ -37,47 +40,6 @@ const _skipTagNames = Symbol();
  * Contains contextual information for a single conversion process.
  */
 export class Conversion {
-  /**
-   * A map of special characters and their replacements.
-   */
-  static readonly replacements: Readonly<Record<string, string>> = {
-    '\\\\': '\\\\',
-    '\\[': '\\[',
-    '\\]': '\\]',
-    '>': '\\>',
-    _: '\\_',
-    '\\*': '\\*',
-    '`': '\\`',
-    '#': '\\#',
-    '([0-9])\\.(\\s|$)': '$1\\.$2',
-    '\u00a9': '(c)',
-    '\u00ae': '(r)',
-    '\u2122': '(tm)',
-    '\u00a0': ' ',
-    '\u00b7': '\\*',
-    '\u2002': ' ',
-    '\u2003': ' ',
-    '\u2009': ' ',
-    '\u2018': "'",
-    '\u2019': "'",
-    '\u201c': '"',
-    '\u201d': '"',
-    '\u2026': '...',
-    '\u2013': '--',
-    '\u2014': '---',
-  };
-
-  /**
-   * A map of special characters and the regular expression used to identify them.
-   */
-  static readonly replacementsRegExp: Readonly<Record<string, RegExp>> = Object.keys(Conversion.replacements).reduce(
-    (acc, key) => {
-      acc[key] = new RegExp(key, 'g');
-      return acc;
-    },
-    {} as Record<string, RegExp>,
-  );
-
   /**
    * Whether the buffer is at the start of the current line.
    */
@@ -94,34 +56,9 @@ export class Conversion {
   atParagraph = true;
 
   /**
-   * The conversion output buffer to which the Markdown will be written.
-   */
-  buffer = '';
-
-  /**
-   * The context for this {@link Conversion}.
-   */
-  readonly context: ConversionContext = {};
-
-  /**
    * The current element for this {@link Conversion}.
    */
   element: DomElement;
-
-  /**
-   * Whether the buffer is currently within a code block.
-   */
-  inCodeBlock = false;
-
-  /**
-   * Whether the buffer is currently within an ordered list.
-   */
-  inOrderedList = false;
-
-  /**
-   * Whether the buffer is currently within a preformatted block.
-   */
-  inPreformattedBlock = false;
 
   /**
    * The last string to be output next to the buffer.
@@ -143,6 +80,8 @@ export class Conversion {
    */
   listIndex = 1;
 
+  private [_buffer] = '';
+  private readonly [_context] = new ConversionContext();
   private readonly [_environment]: Environment<any, any>;
   private readonly [_options]: Required<EuropaOptions>;
   private readonly [_pluginManager]: PluginManager;
@@ -239,7 +178,7 @@ export class Conversion {
    */
   append(str: string): this {
     if (this.last != null) {
-      this.buffer += this.last;
+      this[_buffer] += this.last;
     }
 
     this.last = str;
@@ -298,7 +237,7 @@ export class Conversion {
         return this;
       }
 
-      const context: ConversionElementContext = {};
+      const context = new ConversionContext();
       const convertChildren = pluginManager.hasConverterHook(tagName, 'startTag')
         ? pluginManager.invokeConverterHook(tagName, 'startTag', this, context)
         : true;
@@ -342,7 +281,46 @@ export class Conversion {
         .forEach((reference) => this.append(`[${reference.key}${reference.id}]: ${reference.value}${eol}`));
     }
 
-    return this.append('').buffer.trim();
+    return this.append('')[_buffer].trim();
+  }
+
+  /**
+   * Escapes special characters from the specified `str`.
+   *
+   * If `character` is provided, this method escapes all occurrences of the specified special `character` within the
+   * `str` provided by prefixing them with a backslash. Otherwise, some special characters in Markdown are escaped using
+   * backslashes, others are simple replacements of potentially confusing Unicode characters, before finally allowing
+   * plugins to hook in and provide any additional escaping.
+   *
+   * @param str - The string to be escaped.
+   * @param [character] - The special character to be escaped by prefixing with a backslash in all cases.
+   * @return The escaped `str`.
+   */
+  escape(str: string, character?: string): string {
+    if (character) {
+      return str.replace(new RegExp(`(${character})`, 'g'), '\\$1');
+    }
+
+    return this[_pluginManager].invokeTextEscaperHook(
+      str
+        .replace(/([\\`*_\[\]#])/g, (character) => `\\${character}`)
+        .replace(
+          /([\u00a0\u2002\u2003\u2009])|([\u2018\u2019])|([\u201c\u201d])/g,
+          (character, group1, group2, group3) => {
+            if (group1) {
+              return ' ';
+            }
+            if (group2) {
+              return "'";
+            }
+            if (group3) {
+              return '"';
+            }
+            return character;
+          },
+        ),
+      this,
+    );
   }
 
   /**
@@ -387,26 +365,22 @@ export class Conversion {
       return this;
     }
 
-    const eol = this.eol;
+    const newLine = '\n';
 
-    str = str.replace(/\r\n/g, eol);
+    str = str.replace(/\r\n/g, newLine);
 
     if (options.clean) {
-      str = str
-        .replace(/\n([ \t]*\n)+/g, eol)
-        .replace(/\n[ \t]+/g, eol)
+      str = this.escape(str)
+        .replace(/\n([ \t]*\n)+/g, newLine)
+        .replace(/\n[ \t]+/g, newLine)
         .replace(/[ \t]+/g, ' ');
-
-      Object.entries(Conversion.replacements).forEach(([key, value]) => {
-        str = str.replace(Conversion.replacementsRegExp[key], value);
-      });
     }
 
     if (!options.preserveLeadingWhitespace) {
       if (this.atNoWhitespace) {
         str = str.replace(/^[ \t\n]+/, '');
       } else if (/^[ \t]*\n/.test(str)) {
-        str = str.replace(/^[ \t\n]+/, eol);
+        str = str.replace(/^[ \t\n]+/, newLine);
       } else {
         str = str.replace(/^[ \t]+/, ' ');
       }
@@ -424,26 +398,6 @@ export class Conversion {
   }
 
   /**
-   * Replaces the start of the current line with the `str` provided.
-   *
-   * @param str - the string to replace the start of the current line
-   * @return A reference to this {@link Conversion} for chaining purposes.
-   */
-  replaceLeft(str: string): this {
-    if (!this.atLeft) {
-      this.append(this.left.replace(/ {2,4}$/, str));
-
-      this.atLeft = true;
-      this.atNoWhitespace = true;
-      this.atParagraph = true;
-    } else if (this.last) {
-      this.last = this.last.replace(/ {2,4}$/, str);
-    }
-
-    return this;
-  }
-
-  /**
    * Returns the specified `url` relative to the `baseUri` option in a manner similar to that of a browser resolving an
    * anchor element.
    *
@@ -454,6 +408,13 @@ export class Conversion {
    */
   resolveUrl(url: string): string {
     return this[_environment].resolveUrl(this.getOption('baseUri'), url);
+  }
+
+  /**
+   * The global context for this {@link Conversion}.
+   */
+  get context(): ConversionContext {
+    return this[_context];
   }
 
   /**
@@ -477,16 +438,6 @@ export class Conversion {
     return this[_skipTagNames];
   }
 }
-
-/**
- * The context for a {@link Conversion}.
- */
-export type ConversionContext = Record<string, any>;
-
-/**
- * The context for an element being converted during a {@link Conversion}.
- */
-export type ConversionElementContext = Record<string, any>;
 
 /**
  * The options used by {@link Conversion}.
@@ -515,7 +466,7 @@ export type ConversionOptions = {
  */
 export type ConversionOutputOptions = {
   /**
-   * Replace certain special characters as well as some whitespace before appending to the output buffer.
+   * Escape certain special characters as well as some whitespace before appending to the output buffer.
    */
   readonly clean?: boolean;
   /**

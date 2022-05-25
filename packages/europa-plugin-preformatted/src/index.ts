@@ -26,41 +26,27 @@ export default function (): Plugin {
   return {
     converters: {
       PRE: {
-        startTag(conversion, context) {
-          const value = '    ';
+        startTag(conversion, context): boolean {
+          const value = '```';
 
-          context.previousInPreformattedBlock = conversion.inPreformattedBlock;
-          context.previousLeft = conversion.left;
-          conversion.left += value;
+          conversion.appendParagraph().append(value).append(conversion.left);
 
-          if (conversion.atParagraph) {
-            conversion.append(value);
-          } else {
-            conversion.appendParagraph();
+          const content = conversion.element.innerHtml();
+          if (content) {
+            conversion.output(content, { preserveLeadingWhitespace: true });
           }
 
-          return true;
-        },
+          if (!conversion.atLeft) {
+            conversion.append(conversion.left);
+          }
 
-        endTag(conversion, context) {
-          conversion.atLeft = false;
-          conversion.atParagraph = false;
-          conversion.inPreformattedBlock = context.previousInPreformattedBlock;
-          conversion.left = context.previousLeft;
+          conversion.atLeft = conversion.atParagraph = false;
 
-          conversion.appendParagraph();
+          conversion.append(value).appendParagraph();
+
+          return false;
         },
       },
-    },
-
-    convertText(value, conversion): boolean {
-      if (conversion.inPreformattedBlock) {
-        conversion.output(value, { preserveLeadingWhitespace: true });
-
-        return true;
-      }
-
-      return false;
     },
   };
 }

@@ -38,10 +38,6 @@ export abstract class ESLintScriptProvider extends CommandScriptProvider {
     super(options);
   }
 
-  override afterScript(directoryPath: string): Promise<void> {
-    return this.deleteFile(directoryPath, 'tsconfig.json');
-  }
-
   /**
    * Returns any additional arguments to be passed to the ESLint command.
    *
@@ -50,17 +46,14 @@ export abstract class ESLintScriptProvider extends CommandScriptProvider {
   protected abstract getESLintArgs(): string[];
 
   override async runScript(directoryPath: string): Promise<void> {
-    await this.copyBundledConfigFile(directoryPath, 'tsconfig.json');
-
-    await this.execCommand(
-      directoryPath,
-      'eslint',
+    await this.execBundledCommand(directoryPath, 'eslint', [
       ...this.getESLintArgs(),
       '--no-eslintrc',
       '--config',
-      await this.getBundledConfigFilePath('eslintrc.json'),
+      await this.getBundledConfigFilePath('.eslintrc.json'),
       'src/**/*.ts',
-    );
+      'spec/**/*.ts',
+    ]);
   }
 }
 
