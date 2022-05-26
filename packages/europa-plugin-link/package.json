@@ -1,6 +1,6 @@
 {
   "name": "europa-plugin-link",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "Europa plugin to convert HTML tags to Markdown links",
   "keywords": [
     "anchor",
@@ -35,14 +35,14 @@
     "directory": "packages/europa-plugin-link"
   },
   "peerDependencies": {
-    "europa-core": "^5.0.1"
+    "europa-core": "^6.0.0"
   },
   "devDependencies": {
     "@types/jasmine": "^4.0.3",
-    "europa-build": "^5.0.1",
-    "europa-core": "^5.0.1",
-    "europa-environment-node": "^5.0.1",
-    "europa-test-jasmine-reporter": "^5.0.1"
+    "europa-build": "^6.0.0",
+    "europa-core": "^6.0.0",
+    "europa-environment-node": "^6.0.0",
+    "europa-test-jasmine-reporter": "^6.0.0"
   },
   "scripts": {
     "build": "europa-build run-script build",

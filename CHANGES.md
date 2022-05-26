@@ -1,3 +1,23 @@
+## Version 6.0.0, 2022.05.27
+
+* Improve compatibility with Markdown standards
+* Completely refactor plugin and preset API
+* Move built-in plugins and default preset into separate packages
+* Add tests for all official plugins and presets
+* Change reference numbering for anchor and image tags to a one-based index
+* Rename anchor tag referencing from `anchorN` to `linkN`
+* Simplify reference management for plugins
+* Refactor options API to ensure immutability
+* Move plugin-specific text conversion and escape logic to plugins
+* Refactor internal environment management for Europa Core implementations and introduce DOM wrappers
+* Create **europa-worker** package to allow usage of Europa within a service/web worker
+* Add `eol` option to override the environment-specific end of line character
+* Create **europa-build** package to simplify generation and maintenance of plugin/preset packages
+* Include comments in generated TypeScript declaration files
+* Fix build status shields
+* **node-europa**: Replace `jsdom` with `cheerio`
+* **node-europa**: Move CLI into a new **europa-cli** package
+
 ## Version 5.0.1, 2022.05.06
 
 * Remove copyright header from build files
