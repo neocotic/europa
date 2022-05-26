@@ -1,6 +1,6 @@
 {
   "name": "europa-cli",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "CLI for converting HTML into valid Markdown via Europa",
   "keywords": [
     "europa",
@@ -43,7 +43,7 @@
     "commander": "^9.2.0",
     "glob": "^8.0.1",
     "mkdirp": "^1.0.4",
-    "node-europa": "^5.0.1",
+    "node-europa": "^6.0.0",
     "read-pkg-up": "^7.0.1"
   },
   "devDependencies": {

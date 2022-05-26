@@ -1,6 +1,5 @@
 {
   "name": "europa-parent",
-  "version": "5.0.1",
   "private": true,
   "license": "MIT",
   "devDependencies": {
@@ -16,7 +15,8 @@
     "format": "lerna run format --stream",
     "generate:plugin": "./packages/europa-build/bin/europa-build generate-plugin official packages --preset=default",
     "generate:preset": "./packages/europa-build/bin/europa-build generate-preset official packages",
-    "install:clean": "npm run clean && npm install && npm run bootstrap && npm run build && npm run bootstrap",
+    "install:all": "npm install && npm run bootstrap",
+    "install:clean": "npm run clean && npm run install:all && npm run build && npm run bootstrap",
     "lint": "lerna run lint --stream",
     "publish:packages": "lerna publish from-package",
     "test": "lerna run test --stream",

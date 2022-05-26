@@ -1,6 +1,6 @@
 {
   "name": "europa-preset-default",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "Default Europa preset",
   "keywords": [
     "default",
@@ -33,30 +33,30 @@
     "directory": "packages/europa-preset-default"
   },
   "dependencies": {
-    "europa-plugin-bold": "^5.0.1",
-    "europa-plugin-code": "^5.0.1",
-    "europa-plugin-description": "^5.0.1",
-    "europa-plugin-details": "^5.0.1",
-    "europa-plugin-header": "^5.0.1",
-    "europa-plugin-horizontal-rule": "^5.0.1",
-    "europa-plugin-image": "^5.0.1",
-    "europa-plugin-italic": "^5.0.1",
-    "europa-plugin-line-break": "^5.0.1",
-    "europa-plugin-link": "^5.0.1",
-    "europa-plugin-list": "^5.0.1",
-    "europa-plugin-paragraph": "^5.0.1",
-    "europa-plugin-preformatted": "^5.0.1",
-    "europa-plugin-quote": "^5.0.1"
+    "europa-plugin-bold": "^6.0.0",
+    "europa-plugin-code": "^6.0.0",
+    "europa-plugin-description": "^6.0.0",
+    "europa-plugin-details": "^6.0.0",
+    "europa-plugin-header": "^6.0.0",
+    "europa-plugin-horizontal-rule": "^6.0.0",
+    "europa-plugin-image": "^6.0.0",
+    "europa-plugin-italic": "^6.0.0",
+    "europa-plugin-line-break": "^6.0.0",
+    "europa-plugin-link": "^6.0.0",
+    "europa-plugin-list": "^6.0.0",
+    "europa-plugin-paragraph": "^6.0.0",
+    "europa-plugin-preformatted": "^6.0.0",
+    "europa-plugin-quote": "^6.0.0"
   },
   "peerDependencies": {
-    "europa-core": "^5.0.1"
+    "europa-core": "^6.0.0"
   },
   "devDependencies": {
     "@types/jasmine": "^4.0.3",
-    "europa-build": "^5.0.1",
-    "europa-core": "^5.0.1",
-    "europa-environment-node": "^5.0.1",
-    "europa-test-jasmine-reporter": "^5.0.1"
+    "europa-build": "^6.0.0",
+    "europa-core": "^6.0.0",
+    "europa-environment-node": "^6.0.0",
+    "europa-test-jasmine-reporter": "^6.0.0"
   },
   "scripts": {
     "build": "europa-build run-script build",

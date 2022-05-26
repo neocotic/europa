@@ -1,6 +1,6 @@
 {
   "name": "europa-build",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "Tool for generating and maintaining Europa plugins and presets",
   "keywords": [
     "europa",
