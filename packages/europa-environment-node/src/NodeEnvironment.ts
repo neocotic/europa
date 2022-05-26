@@ -37,12 +37,12 @@ export class NodeEnvironment implements Environment<AnyNode, Element> {
     return `file:///${process.cwd().replace(/\\/g, '/')}`;
   }
 
-  getDom(): Dom<AnyNode, Element, CheerioDomRoot> {
-    return this[_dom];
+  getDefaultEndOfLineCharacter(): string {
+    return EOL;
   }
 
-  getEndOfLineCharacter(): string {
-    return EOL;
+  getDom(): Dom<AnyNode, Element, CheerioDomRoot> {
+    return this[_dom];
   }
 
   resolveUrl(baseUri: string, url: string): string {

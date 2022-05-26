@@ -54,14 +54,14 @@ $ europa index.html --output docs
     Usage: europa [options] [file ...]
 
     Options:
-
-      -h, --help            output usage information
       -V, --version         output the version number
       -a, --absolute        use absolute URLs for elements (e.g. anchors, images)
       -b, --base-uri <uri>  base URI for elements (e.g. anchors, images)
       -e, --eval <html>     evaluate HTML string
+      --eol <character>     end of line character
       -i, --inline          insert URLs for elements (e.g. anchors, images) inline
       -o, --output <path>   output directory (for files) or file (for eval/stdin)
+      -h, --help            display help for command
 
 ## Bugs
 

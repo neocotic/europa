@@ -38,11 +38,11 @@ class ExampleEnvironment implements Environment<AnyNode, Element> {
 
   getDefaultBaseUri(): string { /* ... */ }
 
+  getDefaultEndOfLineCharacter(): string { /* ... */ }
+
   getDom(): Dom<AnyNode, Element, CheerioDomRoot> {
     return this[_dom];
   }
-
-  getEndOfLineCharacter(): string { /* ... */ }
 
   resolveUrl(baseUri: string, url: string): string { /* ... */ }
 }

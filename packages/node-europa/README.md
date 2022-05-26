@@ -53,16 +53,18 @@ app.listen(3000);
 Simply create an instance of `Europa` and you've done most of the work. You can control many aspects of the HTML to
 Markdown conversion by passing the following options to the constructor:
 
-| Option   | Type    | Description                                                                         | Default                   |
-|----------|---------|-------------------------------------------------------------------------------------|---------------------------|
-| absolute | Boolean | Whether absolute URLs should be used for elements (e.g. anchors, images)            | `false`                   |
-| baseUri  | String  | The base URI used to resolve relative URLs used for elements (e.g. anchors, images) | `file://${process.cwd()}` |
-| inline   | Boolean | Whether URLs for elements (e.g. anchors, images) are to be inserted inline          | `false`                   |
+| Option     | Type    | Description                                                                         | Default                   |
+|------------|---------|-------------------------------------------------------------------------------------|---------------------------|
+| `absolute` | Boolean | Whether absolute URLs should be used for elements (e.g. anchors, images)            | `false`                   |
+| `baseUri`  | String  | The base URI used to resolve relative URLs used for elements (e.g. anchors, images) | `file://${process.cwd()}` |
+| `eol`      | String  | The end of line character to be inserted into generated Markdown                    | `os.EOL`                  |
+| `inline`   | Boolean | Whether URLs for elements (e.g. anchors, images) are to be inserted inline          | `false`                   |
 
 ``` typescript
 const europa = new Europa({
   absolute: true,
   baseUri: 'https://example.com',
+  eol: '\r\n',
   inline: true,
 });
 ```

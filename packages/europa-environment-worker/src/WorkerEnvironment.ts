@@ -35,12 +35,12 @@ export class WorkerEnvironment implements Environment<AnyNode, Element> {
     return this.resolveUrl(location.href, '.');
   }
 
-  getDom(): Dom<AnyNode, Element, CheerioDomRoot> {
-    return this[_dom];
+  getDefaultEndOfLineCharacter(): string {
+    return '\n';
   }
 
-  getEndOfLineCharacter(): string {
-    return '\n';
+  getDom(): Dom<AnyNode, Element, CheerioDomRoot> {
+    return this[_dom];
   }
 
   resolveUrl(baseUri: string, url: string): string {

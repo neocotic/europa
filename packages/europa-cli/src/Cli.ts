@@ -106,6 +106,7 @@ export class Cli {
       .option('-a, --absolute', 'use absolute URLs for elements (e.g. anchors, images)')
       .option('-b, --base-uri <uri>', 'base URI for elements (e.g. anchors, images)')
       .option('-e, --eval <html>', 'evaluate HTML string')
+      .option('--eol <character>', 'end of line character')
       .option('-i, --inline', 'insert URLs for elements (e.g. anchors, images) inline')
       .option('-o, --output <path>', 'output directory (for files) or file (for eval/stdin)');
 

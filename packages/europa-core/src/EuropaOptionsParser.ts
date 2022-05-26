@@ -59,6 +59,7 @@ export class EuropaOptionsParser {
     const definitions: EuropaOptionDefinitions = {
       absolute: false,
       baseUri: () => this[_environment].getDefaultBaseUri(),
+      eol: () => this[_environment].getDefaultEndOfLineCharacter(),
       inline: false,
     };
 
@@ -78,7 +79,7 @@ export class EuropaOptionsParser {
  */
 export type EuropaOptionsParserOptions = {
   /**
-   * The {@link Environment} to be used to provide the default base URI, if needed.
+   * The {@link Environment} to be used to provide environment-specific defaults, if needed.
    */
   readonly environment: Environment<any, any>;
 };
