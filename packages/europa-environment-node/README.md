@@ -17,11 +17,8 @@ A [Europa](https://github.com/neocotic/europa) environment for [Node.js](https:/
 Install using your preferred package manager. For example;
 
 ``` bash
-$ npm install --save europa-environment-node cheerio
+$ npm install --save europa-environment-node
 ```
-
-[cheerio](https://cheerio.js.org) also needs to be installed (see above) as it's used under-the-hood as for the DOM
-wrapper.
 
 You will most likely never need to depend on `europa-environment-node` directly. Instead, you will probably want to
 install the [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa) package in order to use
@@ -30,15 +27,16 @@ Europa within [Node.js](https://nodejs.org).
 ## API
 
 ``` typescript
-import { AnyNode, Element } from 'cheerio';
 import { EuropaCore, EuropaOptions } from 'europa-core';
-import { NodeEnvironment } from 'europa-environment-node';
+import { AnyNode, Element, NodeEnvironment } from 'europa-environment-node';
 
-const environment = new NodeEnvironment();
+const _environment = Symbol();
 
 class Europa extends EuropaCore<AnyNode, Element> {
+  private static readonly [_environment] = new NodeEnvironment();
+
   constructor(options?: EuropaOptions) {
-    super({ environment, options });
+    super({ environment: Europa[_environment], options });
   }
 }
 ```

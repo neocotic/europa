@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "strict": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "europa-worker/*": ["src/*"]
+    },
+    "lib": [
+      "ES2017",
+      "WebWorker"
+    ],
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ]
+  }
+}

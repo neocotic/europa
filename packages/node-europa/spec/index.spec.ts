@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import { AnyNode, Element } from 'cheerio';
+import { AnyNode, Element } from 'europa-environment-node';
 import { test } from 'europa-test';
 import { readFile } from 'fs/promises';
 import { resolve } from 'path';

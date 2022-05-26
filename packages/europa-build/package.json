@@ -66,7 +66,7 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "scripts": {
-    "build": "del lib && npm run build:cjs && npm run build:esm",
+    "build": "del-cli lib && npm run build:cjs && npm run build:esm",
     "build:cjs": "ttsc --p tsconfig.build.cjs.json",
     "build:esm": "ttsc --p tsconfig.build.esm.json",
     "flint": "eslint \"src/**/*.ts\" --fix",

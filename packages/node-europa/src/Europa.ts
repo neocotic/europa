@@ -20,16 +20,15 @@
  * SOFTWARE.
  */
 
-import { AnyNode, Element } from 'cheerio';
 import { EuropaCore, EuropaOptions } from 'europa-core';
-import { NodeEnvironment } from 'europa-environment-node';
+import { AnyNode, Element, NodeEnvironment } from 'europa-environment-node';
 
 const _environment = Symbol();
 
 /**
  * A transformer capable of converting HTML into Markdown that supports HTML strings and DOM elements and nodes.
  *
- * This implementation is intended for use with Node.js.
+ * This implementation is intended for use within Node.js.
  */
 export class Europa extends EuropaCore<AnyNode, Element> {
   private static readonly [_environment] = new NodeEnvironment();

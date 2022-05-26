@@ -1,0 +1,67 @@
+{
+  "name": "europa-dom-web",
+  "version": "5.0.1",
+  "description": "Europa DOM wrapper for a web browser",
+  "keywords": [
+    "browser",
+    "web",
+    "europa-dom"
+  ],
+  "homepage": "https://github.com/neocotic/europa",
+  "bugs": {
+    "url": "https://github.com/neocotic/europa/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "neocotic",
+    "url": "https://github.com/neocotic"
+  },
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://github.com/sponsors/neocotic"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/neocotic"
+    }
+  ],
+  "main": "lib/cjs/index",
+  "module": "lib/esm/index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neocotic/europa.git",
+    "directory": "packages/europa-dom-web"
+  },
+  "peerDependencies": {
+    "europa-core": "^5.0.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "europa-core": "^5.0.1",
+    "prettier": "^2.6.2",
+    "rimraf": "^3.0.2",
+    "tsconfig-paths": "^4.0.0",
+    "ttypescript": "^1.5.13",
+    "typescript": "^4.6.4",
+    "typescript-transform-paths": "^3.3.1"
+  },
+  "scripts": {
+    "build": "rimraf lib && npm run build:cjs && npm run build:esm",
+    "build:cjs": "ttsc --p tsconfig.build.cjs.json",
+    "build:esm": "ttsc --p tsconfig.build.esm.json",
+    "flint": "eslint \"src/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "echo \"No tests\""
+  },
+  "engines": {
+    "node": "^12.20.0 || >=14"
+  }
+}

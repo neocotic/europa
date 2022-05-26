@@ -1,7 +1,7 @@
 ![Europa Node](https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/node-europa/node-europa-banner-754x200.png)
 
-[Europa Node](https://github.com/neocotic/europa/tree/main/packages/node-europa) is a [Node.js](https://nodejs.org)
-module for converting HTML into valid Markdown.
+[Europa Node](https://github.com/neocotic/europa/tree/main/packages/node-europa) is a library for converting HTML into
+valid Markdown within [Node.js](https://nodejs.org).
 
 [cheerio](https://cheerio.js.org) is used to parse HTML input without the need for complexity. 
 
@@ -26,21 +26,21 @@ $ npm install --save node-europa
 
 You'll need to have at least [Node.js](https://nodejs.org) 12.22.0 or newer.
 
-Check out [europa](https://github.com/neocotic/europa/tree/main/packages/europa) or
+Check out [europa](https://github.com/neocotic/europa/tree/main/packages/europa),
+[europa-worker](https://github.com/neocotic/europa/tree/main/packages/europa-worker), or
 [europa-cli](https://github.com/neocotic/europa/tree/main/packages/europa-cli) if you want to install it for use within
-the browser or as a CLI respectively.
+a web browser, worker, or as a CLI respectively.
 
 ## Examples
 
 ``` typescript
-const Europa = require('node-europa');
-const express = require('express');
+import Europa from 'node-europa';
+import * as express from 'express';
 
 const app = express();
+const europa = new Europa();
 
 app.get('/md', (req, res) => {
-  const europa = new Europa();
-
   res.set('Content-Type', 'text/markdown; charset=utf-8');
   res.send(europa.convert('<a href="https://github.com/neocotic/europa">Europa</a>'));
 });
@@ -63,7 +63,7 @@ Markdown conversion by passing the following options to the constructor:
 const europa = new Europa({
   absolute: true,
   baseUri: 'https://example.com',
-  inline: true
+  inline: true,
 });
 ```
 
@@ -103,8 +103,8 @@ The API for plugins is simple on a high level, but you'll need to get to grips w
 you can really do:
 
 ``` typescript
-import Europa from 'node-europa';
 import { Plugin, PluginApi } from 'europa-core';
+import Europa from 'node-europa';
 
 const examplePluginProvider = (api: PluginApi): Plugin => ({
   // All fields and methods are optional
@@ -143,9 +143,9 @@ are provided by a default preset.
 A preset simply imports a collection of plugins and declares them so that they can be registered together. For example;
 
 ``` typescript
-import Europa from 'node-europa';
 import { PluginApi, PluginProvider, Preset } from 'europa-core';
 import examplePluginProvider from 'europa-plugin-example';
+import Europa from 'node-europa';
 
 const pluginProviders: PluginProvider[] = [
   examplePluginProvider,

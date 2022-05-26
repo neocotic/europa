@@ -1,7 +1,7 @@
 {
   "name": "node-europa",
   "version": "5.0.1",
-  "description": "Node.js module for converting HTML into valid Markdown via Europa",
+  "description": "Library for converting HTML into valid Markdown within Node.js",
   "keywords": [
     "europa",
     "html",
@@ -36,7 +36,6 @@
     "directory": "packages/node-europa"
   },
   "dependencies": {
-    "cheerio": "1.0.0-rc.11",
     "europa-core": "^5.0.1",
     "europa-environment-node": "^5.0.1",
     "europa-preset-default": "^5.0.1"

@@ -4,16 +4,19 @@
   "private": true,
   "license": "MIT",
   "devDependencies": {
+    "del-cli": "^4.0.1",
     "lerna": "^4.0.0"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
+    "clean": "del-cli node_modules package-lock.json \"packages/*/node_modules\" \"packages/*/package-lock.json\"",
     "europa": "./packages/europa-cli/bin/europa",
     "flint": "lerna run flint --stream",
     "format": "lerna run format --stream",
     "generate:plugin": "./packages/europa-build/bin/europa-build generate-plugin official packages --preset=default",
     "generate:preset": "./packages/europa-build/bin/europa-build generate-preset official packages",
+    "install:clean": "npm run clean && npm install && npm run bootstrap && npm run build && npm run bootstrap",
     "lint": "lerna run lint --stream",
     "publish:packages": "lerna publish from-package",
     "test": "lerna run test --stream",

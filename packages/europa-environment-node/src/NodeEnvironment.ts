@@ -20,13 +20,10 @@
  * SOFTWARE.
  */
 
-import { AnyNode, Element } from 'cheerio';
 import { Dom, Environment } from 'europa-core';
+import { AnyNode, CheerioDom, CheerioDomRoot, Element } from 'europa-dom-cheerio';
 import { EOL } from 'os';
 import { URL } from 'url';
-
-import { NodeDom } from 'europa-environment-node/dom/NodeDom';
-import { NodeDomRoot } from 'europa-environment-node/dom/NodeDomRoot';
 
 const _dom = Symbol();
 
@@ -34,13 +31,13 @@ const _dom = Symbol();
  * An implementation of {@link Environment} intended for use within Node.js.
  */
 export class NodeEnvironment implements Environment<AnyNode, Element> {
-  private readonly [_dom] = new NodeDom();
+  private readonly [_dom] = new CheerioDom();
 
   getDefaultBaseUri(): string {
     return `file:///${process.cwd().replace(/\\/g, '/')}`;
   }
 
-  getDom(): Dom<AnyNode, Element, NodeDomRoot> {
+  getDom(): Dom<AnyNode, Element, CheerioDomRoot> {
     return this[_dom];
   }
 
