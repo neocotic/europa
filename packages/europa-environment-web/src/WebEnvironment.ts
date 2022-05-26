@@ -35,12 +35,12 @@ export class WebEnvironment implements Environment<Node, Element> {
     return window.document.baseURI;
   }
 
-  getDom(): Dom<Node, Element, WebDomRoot> {
-    return this[_dom];
+  getDefaultEndOfLineCharacter(): string {
+    return '\n';
   }
 
-  getEndOfLineCharacter(): string {
-    return '\n';
+  getDom(): Dom<Node, Element, WebDomRoot> {
+    return this[_dom];
   }
 
   resolveUrl(baseUri: string, url: string): string {

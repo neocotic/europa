@@ -133,7 +133,7 @@ export class Conversion {
     this[_options] = europaOptions;
     this[_pluginManager] = pluginManager;
     this.element = element;
-    this.left = environment.getEndOfLineCharacter();
+    this.left = europaOptions.eol;
   }
 
   /**
@@ -421,7 +421,7 @@ export class Conversion {
    * The end of line character to be used by this {@link Conversion}.
    */
   get eol(): string {
-    return this[_environment].getEndOfLineCharacter();
+    return this[_options].eol;
   }
 
   /**

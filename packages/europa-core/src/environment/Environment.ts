@@ -35,6 +35,13 @@ export interface Environment<N, E extends N> {
   getDefaultBaseUri(): string;
 
   /**
+   * Returns the default end of line character to be inserted into generated Markdown.
+   *
+   * @return The default end of line character.
+   */
+  getDefaultEndOfLineCharacter(): string;
+
+  /**
    * Returns the DOM wrapper to be used in this {@link Environment}.
    *
    * This method should always return the same {@link Dom} instance when called multiple times.
@@ -42,13 +49,6 @@ export interface Environment<N, E extends N> {
    * @return The {@link Dom}.
    */
   getDom(): Dom<N, E, DomRoot>;
-
-  /**
-   * Returns the end of line character to be inserted into generated Markdown.
-   *
-   * @return The end of line character.
-   */
-  getEndOfLineCharacter(): string;
 
   /**
    * Returns the specified `url` relative to the `baseUri` provided in a manner similar to that of a web browser

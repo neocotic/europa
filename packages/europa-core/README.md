@@ -44,9 +44,9 @@ import defaultPresetProvider from 'europa-preset-default';
 class ExampleEnvironment implements Environment<any, any> {
   getDefaultBaseUri(): string { /* ... */ }
 
-  getDom(): Dom<any, any, any> { /* ... */ }
+  getDefaultEndOfLineCharacter(): string { /* ... */ }
 
-  getEndOfLineCharacter(): string { /* ... */ }
+  getDom(): Dom<any, any, any> { /* ... */ }
 
   resolveUrl(baseUri: string, url: string): string { /* ... */ }
 }

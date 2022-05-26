@@ -34,6 +34,11 @@ export interface EuropaOptions {
    */
   readonly baseUri?: string;
   /**
+   * The end of line character to be inserted into generated Markdown. Defaults to an environment-specific end of line
+   * character.
+   */
+  readonly eol?: string;
+  /**
    * Whether URLs for elements (e.g. anchors, images) are to be inserted inline. Defaults to `false`.
    */
   readonly inline?: boolean;

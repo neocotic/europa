@@ -37,11 +37,11 @@ class ExampleEnvironment implements Environment<Node, Element> {
 
   getDefaultBaseUri(): string { /* ... */ }
 
+  getDefaultEndOfLineCharacter(): string { /* ... */ }
+
   getDom(): Dom<Node, Element, WebDomRoot> {
     return this[_dom];
   }
-
-  getEndOfLineCharacter(): string { /* ... */ }
 
   resolveUrl(baseUri: string, url: string): string { /* ... */ }
 }
