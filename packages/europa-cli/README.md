@@ -30,9 +30,10 @@ That said; you'll most likely want to install it globally so that you can run `e
 $ npm install --global europa-cli
 ```
 
-Check out [europa](https://github.com/neocotic/europa/tree/main/packages/europa) or
+Check out [europa](https://github.com/neocotic/europa/tree/main/packages/europa),
+[europa-worker](https://github.com/neocotic/europa/tree/main/packages/europa-worker), or
 [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa) if you want to install it for use
-within the browser or [Node.js](https://nodejs.org) respectively.
+within a web browser, worker, or [Node.js](https://nodejs.org) respectively.
 
 ## Examples
 

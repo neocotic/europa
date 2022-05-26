@@ -10,8 +10,11 @@ This monorepo contains the following packages:
 * [europa-build](https://github.com/neocotic/europa/tree/main/packages/europa-build)
 * [europa-cli](https://github.com/neocotic/europa/tree/main/packages/europa-cli)
 * [europa-core](https://github.com/neocotic/europa/tree/main/packages/europa-core)
-* [europa-environment-browser](https://github.com/neocotic/europa/tree/main/packages/europa-environment-browser)
+* [europa-dom-cheerio](https://github.com/neocotic/europa/tree/main/packages/europa-dom-cheerio)
+* [europa-dom-web](https://github.com/neocotic/europa/tree/main/packages/europa-dom-web)
 * [europa-environment-node](https://github.com/neocotic/europa/tree/main/packages/europa-environment-node)
+* [europa-environment-web](https://github.com/neocotic/europa/tree/main/packages/europa-environment-web)
+* [europa-environment-worker](https://github.com/neocotic/europa/tree/main/packages/europa-environment-worker)
 * [europa-plugin-bold](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-bold)
 * [europa-plugin-code](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-code)
 * [europa-plugin-description](https://github.com/neocotic/europa/tree/main/packages/europa-plugin-description)
@@ -29,10 +32,11 @@ This monorepo contains the following packages:
 * [europa-preset-default](https://github.com/neocotic/europa/tree/main/packages/europa-preset-default)
 * [europa-test](https://github.com/neocotic/europa/tree/main/packages/europa-test)
 * [europa-test-jasmine-reporter](https://github.com/neocotic/europa/tree/main/packages/europa-test-jasmine-reporter)
+* [europa-worker](https://github.com/neocotic/europa/tree/main/packages/europa-worker)
 * [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa)
 
-The `europa` and `node-europa` packages are the most important as those are used to convert HTML into valid Markdown in
-the browser and [Node.js](https://nodejs.org) environments respectively.
+The `europa`, `europa-worker`, and `node-europa` packages are the most important as those are used to convert HTML into
+valid Markdown within a web browser, worker, and [Node.js](https://nodejs.org) respectively.
 
 The `europa-cli` package provides a useful CLI.
 

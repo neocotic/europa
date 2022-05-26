@@ -19,7 +19,7 @@
   "env": {
     "browser": true
   },
-  "ignorePatterns": ["karma.config.js", "webpack.*.config.js"],
+  "ignorePatterns": ["karma.conf.js", "webpack.*.config.js"],
   "rules": {
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",

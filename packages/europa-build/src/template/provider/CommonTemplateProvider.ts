@@ -145,7 +145,7 @@ export abstract class CommonTemplateProvider<C extends O, O extends TemplateCont
   ): Exclude<OP[N], undefined> {
     const value = options[name];
     if (typeof value === 'undefined') {
-      throw new Error(`Missing required option: ${name}`);
+      throw new Error(`Missing required option: ${String(name)}`);
     }
 
     return value as any;

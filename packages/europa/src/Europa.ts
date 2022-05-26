@@ -21,17 +21,17 @@
  */
 
 import { EuropaCore, EuropaOptions } from 'europa-core';
-import { BrowserEnvironment } from 'europa-environment-browser';
+import { WebEnvironment } from 'europa-environment-web';
 
 const _environment = Symbol();
 
 /**
  * A transformer capable of converting HTML into Markdown that supports HTML strings and DOM elements and nodes.
  *
- * This implementation is intended for use with a web browser.
+ * This implementation is intended for use within a web browser.
  */
 export class Europa extends EuropaCore<Node, Element> {
-  private static readonly [_environment] = new BrowserEnvironment();
+  private static readonly [_environment] = new WebEnvironment();
 
   /**
    * Creates an instance of {@link Europa} using the `options` provided.

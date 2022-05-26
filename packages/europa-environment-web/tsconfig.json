@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "europa-environment-web/*": ["src/*"]
+    },
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2017"
+    ],
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ]
+  }
+}

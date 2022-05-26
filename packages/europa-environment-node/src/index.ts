@@ -20,10 +20,6 @@
  * SOFTWARE.
  */
 
-export * from 'europa-environment-node/dom/AbstractNodeDomNode';
-export * from 'europa-environment-node/dom/AbstractNodeDomParentNode';
-export * from 'europa-environment-node/dom/NodeDom';
-export * from 'europa-environment-node/dom/NodeDomElement';
-export * from 'europa-environment-node/dom/NodeDomNode';
-export * from 'europa-environment-node/dom/NodeDomRoot';
+export { AnyNode, Element } from 'europa-dom-cheerio';
+
 export * from 'europa-environment-node/NodeEnvironment';

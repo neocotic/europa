@@ -1,7 +1,7 @@
 {
   "name": "europa",
   "version": "5.0.1",
-  "description": "Library for converting HTML into valid Markdown",
+  "description": "Library for converting HTML into valid Markdown within a web browser",
   "keywords": [
     "europa",
     "html",
@@ -46,7 +46,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "europa-core": "^5.0.1",
-    "europa-environment-browser": "^5.0.1",
+    "europa-environment-web": "^5.0.1",
     "europa-preset-default": "^5.0.1",
     "europa-test": "^5.0.1",
     "jasmine": "^4.1.0",

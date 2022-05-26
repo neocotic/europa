@@ -24,8 +24,9 @@ $ npm install --save europa-core
 You will most likely never need to depend on `europa-core` directly. Instead, you will probably want to install a module
 that supports your desired environment. For example:
 
-* [europa](https://github.com/neocotic/europa/tree/main/packages/europa) for browser
-* [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa) for Node.js
+* [europa](https://github.com/neocotic/europa/tree/main/packages/europa) for a web browser
+* [europa-worker](https://github.com/neocotic/europa/tree/main/packages/europa) for a worker
+* [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa) for [Node.js](https://nodejs.org)
 
 ## API
 
@@ -50,11 +51,13 @@ class ExampleEnvironment implements Environment<any, any> {
   resolveUrl(baseUri: string, url: string): string { /* ... */ }
 }
 
-const environment = new ExampleEnvironment();
+const _environment = Symbol();
 
 class Europa extends EuropaCore<any, any> {
+  private static readonly [_environment] = new ExampleEnvironment();
+
   constructor(options?: EuropaOptions) {
-    super({ environment, options });
+    super({ environment: Europa[_environment], options });
   }
 }
 
@@ -69,6 +72,7 @@ within implementing the `Dom`.
 
 You will find the primary API documentation on one of the official Europa Core implementation packages (e.g.
 [europa](https://github.com/neocotic/europa/tree/main/packages/europa),
+[europa-worker](https://github.com/neocotic/europa/tree/main/packages/europa-worker),
 [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa)). All Europa Core implementations
 should also reference this to help developers find the information easily. However, they are encouraged to provide
 environment-specific examples.

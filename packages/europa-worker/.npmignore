@@ -1,0 +1,6 @@
+!lib
+spec
+src
+karma.*
+tsconfig.*
+webpack.*

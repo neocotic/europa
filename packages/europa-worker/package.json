@@ -1,0 +1,87 @@
+{
+  "name": "europa-worker",
+  "version": "5.0.1",
+  "description": "Library for converting HTML into valid Markdown within a worker",
+  "keywords": [
+    "europa",
+    "html",
+    "markdown",
+    "convert",
+    "converter"
+  ],
+  "homepage": "https://github.com/neocotic/europa",
+  "bugs": {
+    "url": "https://github.com/neocotic/europa/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "neocotic",
+    "url": "https://github.com/neocotic"
+  },
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://github.com/sponsors/neocotic"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/neocotic"
+    }
+  ],
+  "main": "lib/umd/europa-worker",
+  "module": "lib/esm/europa-worker",
+  "types": "lib/esm/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neocotic/europa.git",
+    "directory":  "packages/europa-worker"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^4.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "europa-core": "^5.0.1",
+    "europa-environment-worker": "^5.0.1",
+    "europa-preset-default": "^5.0.1",
+    "europa-test": "^5.0.1",
+    "jasmine": "^4.1.0",
+    "karma": "^6.3.19",
+    "karma-cli": "^2.0.0",
+    "karma-chrome-launcher": "^3.1.1",
+    "karma-jasmine": "^5.0.0",
+    "karma-spec-reporter": "^0.0.34",
+    "karma-webpack": "^5.0.0",
+    "prettier": "^2.6.2",
+    "puppeteer": "^13.7.0",
+    "rimraf": "^3.0.2",
+    "terser-webpack-plugin": "^5.3.1",
+    "ts-loader": "^9.3.0",
+    "tsconfig-paths": "^4.0.0",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "typescript": "^4.6.4",
+    "typescript-declaration-webpack-plugin": "^0.2.2",
+    "typescript-transform-paths": "^3.3.1",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-bundle-analyzer": "^4.5.0"
+  },
+  "scripts": {
+    "analyze:esm": "webpack --config webpack.esm.config.js --analyze",
+    "analyze:umd": "webpack --config webpack.umd.config.js --analyze",
+    "build": "npm run build:esm && npm run build:umd",
+    "build:esm": "rimraf lib/esm && webpack --config webpack.esm.config.js",
+    "build:umd": "rimraf lib/umd && webpack --config webpack.umd.config.js",
+    "flint": "eslint \"src/**/*.ts\" \"spec/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" \"spec/**/*.ts\"",
+    "test": "karma start karma.conf.js"
+  },
+  "engines": {
+    "node": "^12.20.0 || >=14"
+  }
+}

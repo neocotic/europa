@@ -1,6 +1,7 @@
 ![Europa](https://raw.githubusercontent.com/neocotic/europa-branding/main/assets/banner/europa/europa-banner-500x200.png)
 
-[Europa](https://github.com/neocotic/europa) is a pure JavaScript library for converting HTML into valid Markdown.
+[Europa](https://github.com/neocotic/europa/tree/main/packages/europa) is a library for converting HTML into valid
+Markdown within a web browser.
 
 [![Demo](https://img.shields.io/badge/demo-live-brightgreen.svg?style=flat-square)](https://codepen.io/neocotic/pen/YzeKvzG)
 [![Build Status](https://img.shields.io/github/workflow/status/neocotic/europa/CI/main?style=flat-square)](https://github.com/neocotic/europa/actions/workflows/ci.yml)
@@ -26,9 +27,10 @@ $ npm install --save europa
 If you want to simply download the file to be used in the browser you can find them on
 [cdnjs](https://cdnjs.com/libraries/europa).
 
-Check out [node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa) or
+Check out [europa-worker](https://github.com/neocotic/europa/tree/main/packages/europa-worker),
+[node-europa](https://github.com/neocotic/europa/tree/main/packages/node-europa), or
 [europa-cli](https://github.com/neocotic/europa/tree/main/packages/europa-cli) if you want to install it for use within
-[Node.js](https://nodejs.org) or as a CLI respectively.
+a worker, [Node.js](https://nodejs.org), or as a CLI respectively.
 
 ## Examples
 
@@ -74,7 +76,7 @@ Markdown conversion by passing the following options to the constructor:
 const europa = new Europa({
   absolute: true,
   baseUri: 'https://example.com',
-  inline: true
+  inline: true,
 });
 ```
 
